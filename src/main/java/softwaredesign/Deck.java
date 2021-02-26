@@ -3,11 +3,8 @@ package softwaredesign;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,7 +18,6 @@ public class Deck {
         put("nope", new nope());
         put("favor", new favor());
         put("see_future", new see_future());
-        put("alter_future", new alter_future());
         put("shuffle", new shuffle());
         put("skip", new skip());
         put("catermelon", new catermelon());
@@ -42,6 +38,11 @@ public class Deck {
 
     public void reshuffle(){
         Collections.shuffle(cardDeck);
+    }
+
+    public Card getDefuse(){
+        cardDeck.remove(new defuse());
+        return new defuse();
     }
 
     public Card draw(){
