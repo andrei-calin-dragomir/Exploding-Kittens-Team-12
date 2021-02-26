@@ -55,13 +55,29 @@ public class Deck {
         return cardDeck.size();
     }
 
+    public void insertCard(Card cardToInsert){ insertCard(cardToInsert, 0); }
+
+    public void insertCard(Card cardToInsert, int index){ cardDeck.add(index, cardToInsert); }
+
+    public ArrayList<Card> getStartCards(){
+        ArrayList<Card> tempHand = new ArrayList<>();
+        while(true){
+            Card cardDrawn = draw();
+            if(cardDrawn.getName().equals("exploding_kitten")) insertCard(cardDrawn, getDeckSize() - 1);
+            else tempHand.add(cardDrawn);
+            if(tempHand.size() == 7) {
+                reshuffle();
+                return tempHand;
+            }
+        }
+    }
+
     public void deckConstruct() throws IOException {
         String fileContent = Files.readString(Paths.get("src/main/java/softwaredesign/decks/default.json"), StandardCharsets.US_ASCII);
         ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
 
-        for(int i = 0; i < cardAmounts.size(); i++){
-            LinkedTreeMap<Object, Object> cardTree = cardAmounts.get(i);
-            for(double j = 0; j < Double.parseDouble(cardTree.get("deckAmount").toString()); j++){
+        for (LinkedTreeMap<Object, Object> cardTree : cardAmounts) {
+            for (double j = 0; j < Double.parseDouble(cardTree.get("deckAmount").toString()); j++) {
                 cardDeck.add(cardMap.get(cardTree.get("className").toString()));
             }
         }
