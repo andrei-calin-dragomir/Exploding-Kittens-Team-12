@@ -5,6 +5,9 @@ import java.util.ArrayList;
 public class Hand {
     ArrayList<Card> currentHand = new ArrayList<>();
 
+    public boolean contains(Card target){
+        return currentHand.contains(target);
+    }
     public Hand(Deck newDeck){
         currentHand.add(newDeck.getDefuse());
         currentHand.addAll(newDeck.getStartCards());
@@ -39,12 +42,16 @@ public class Hand {
         }
     }
 
-    public void playCard(int index, Deck newDeck){
+    public Card playCard(int index, Deck newDeck){
         Card playCard = getCard(index - 1);
-        if(playCard == null) System.out.println("You only have " + getHandSize() + " cards in your hand.");
+        if(playCard == null){
+            System.out.println("You only have " + getHandSize() + " cards in your hand.");
+            return null;
+        }
         else {
             removeCard(index - 1);
             playCard.action(newDeck, this);
+            return playCard;
         }
     }
 }
