@@ -7,7 +7,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Game game = new Game();
-        game.start(2);
+        game.start(4);
 
     }
 

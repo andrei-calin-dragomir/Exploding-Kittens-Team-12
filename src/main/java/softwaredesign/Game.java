@@ -38,7 +38,9 @@ public class Game {
                     Card cardDrawn = mainDeck.draw();
                     gameManager.getCurrentPlayerHand().addToHand(cardDrawn);
                     boolean playerExploded = false;
+                    boolean drewExplodingKitten = false;
                     if(cardDrawn.equals(new exploding_kitten())){
+                        drewExplodingKitten = true;
                         System.out.println("You drew an exploding kitten! You have to defuse it!");
                         while(gameManager.getCurrentPlayerHand().contains(new exploding_kitten())){
                             if(!gameManager.getCurrentPlayerHand().contains(new defuse())){ //TODO the section below needs some IO
@@ -64,9 +66,12 @@ public class Game {
                         }
                     }
                     else {
+                        drewExplodingKitten = false;
                         System.out.println("You drew a: " + cardDrawn.getName() + " card.");
                     }
-                    if(discardDeck.top() != null && discardDeck.top().getName().equals("defuse") && !playerExploded){
+                    if(discardDeck.top() != null && discardDeck.top().getName().equals("defuse")
+                       && !playerExploded && drewExplodingKitten
+                      ){
                         System.out.println("Choose a location to place the card\n" +
                                 "(1 - on top; 2 - second; 3 - bottom; 4 - random");
                         String index = scanner.nextLine().toLowerCase().trim();
