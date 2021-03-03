@@ -1,12 +1,12 @@
 package softwaredesign;
 
 import java.io.IOException;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import java.util.Random;
 
 
-public class Game {
+public class ServerHeldGame {
     private GameManager gameManager;
     private Deck mainDeck;
     private DiscardDeck discardDeck;
@@ -18,8 +18,9 @@ public class Game {
         mainDeck = new Deck();
         discardDeck = new DiscardDeck();
         gameManager = new GameManager();
-
-        mainDeck = gameManager.addPlayers(sizeOfGame,numberOfComputers,mainDeck);
+        int playersToBeReady = sizeOfGame-numberOfComputers;
+        while(playersToBeReady != 0){
+        }
 
         System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn" );
         while(gameManager.getAlivePlayers().size() != 1){
