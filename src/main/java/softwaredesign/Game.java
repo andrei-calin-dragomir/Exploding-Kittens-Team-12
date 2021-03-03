@@ -13,13 +13,21 @@ public class Game {
     private Scanner scanner = new Scanner(System.in);
     private Random rand = new Random();
 
-    public void start(int sizeOfGame, int numberOfComputers) throws IOException, InterruptedException {
+    public void start(int numberOfPlayers) throws IOException, InterruptedException {
 
         mainDeck = new Deck();
         discardDeck = new DiscardDeck();
         gameManager = new GameManager();
+        gameManager.addPlayers(numberOfPlayers);
 
-        mainDeck = gameManager.addPlayers(sizeOfGame,numberOfComputers,mainDeck);
+        for(int i = 0; i < numberOfPlayers; i++) {
+            //TODO IO
+            System.out.println("Name?");
+            gameManager.getAlivePlayers().get(i).setName(scanner.nextLine());
+            gameManager.getAlivePlayers().get(i).initHand(mainDeck);
+            gameManager.getTurns().addNode(gameManager.getAlivePlayers().get(i));
+        }
+
 
         System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn" );
         while(gameManager.getAlivePlayers().size() != 1){
@@ -29,7 +37,10 @@ public class Game {
                 if (action.split("\\s+")[0].equals("draw")) {
                     Card cardDrawn = mainDeck.draw();
                     gameManager.getCurrentPlayerHand().addToHand(cardDrawn);
+                    boolean playerExploded = false;
+                    boolean drewExplodingKitten = false;
                     if(cardDrawn.equals(new exploding_kitten())){
+                        drewExplodingKitten = true;
                         System.out.println("You drew an exploding kitten! You have to defuse it!");
                         while(gameManager.getCurrentPlayerHand().contains(new exploding_kitten())){
                             if(!gameManager.getCurrentPlayerHand().contains(new defuse())){ //TODO the section below needs some IO
@@ -39,20 +50,42 @@ public class Game {
                                 System.out.println(gameManager.getCurrentPlayer().getName() + " exploded!");
                                 gameManager.killPlayer(gameManager.getCurrentPlayer());
                                 TimeUnit.MILLISECONDS.sleep(1);
+                                playerExploded = true;
                                 break;
                             }
                             action = scanner.nextLine().toLowerCase().trim();
-                            if(action.equals("hand")) printHand(gameManager.getCurrentPlayerHand());  //i think this could be turned into a function
+                            if(action.equals("hand")){printHand(gameManager.getCurrentPlayerHand());} //i think this could be turned into a function
                             else if(action.split("\\s+")[0].equals("play")) {                   //in order to avoid repeating code from below
                                 if(action.split("\\s+").length != 2) return;
                                 int cardIndex = Integer.parseInt(action.split("\\s+")[1]);
-                                discardDeck.discardCard(gameManager.getCurrentPlayerHand().playCard(cardIndex, mainDeck));
+                                discardDeck.discardCard(
+                                                        gameManager.getCurrentPlayerHand().playCard(cardIndex, mainDeck)
+                                                        );
                             }
                             else System.out.println("Unknown action, please try again.");
                         }
                     }
                     else {
+                        drewExplodingKitten = false;
                         System.out.println("You drew a: " + cardDrawn.getName() + " card.");
+                    }
+                    if(discardDeck.top() != null && discardDeck.top().getName().equals("defuse")
+                       && !playerExploded && drewExplodingKitten
+                      ){
+                        System.out.println("Choose a location to place the card\n" +
+                                "(1 - on top; 2 - second; 3 - bottom; 4 - random");
+                        String index = scanner.nextLine().toLowerCase().trim();
+                        switch(Integer.parseInt(index)){
+                            case 4:
+                                mainDeck.insertCard(new exploding_kitten(),rand.nextInt(mainDeck.getDeckSize()));
+                                break;
+                            case 3:
+                                mainDeck.insertCard(new exploding_kitten(),mainDeck.getDeckSize());
+                                break;
+                            default:
+                                mainDeck.insertCard(new exploding_kitten(),Integer.parseInt(index)-1);
+                                break;
+                        }
                     }
                     gameManager.endTurn();
                     System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn" );
