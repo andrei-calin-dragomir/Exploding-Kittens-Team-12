@@ -21,8 +21,7 @@ public class Game {
         gameManager.addPlayers(numberOfPlayers);
 
         for(int i = 0; i < numberOfPlayers; i++) {
-            //TODO IO
-            System.out.println("Name?");
+            System.out.println("Choose a name for player " + (i+1));
             gameManager.getAlivePlayers().get(i).setName(scanner.nextLine());
             gameManager.getAlivePlayers().get(i).initHand(mainDeck);
             gameManager.getTurns().addNode(gameManager.getAlivePlayers().get(i));
@@ -38,12 +37,12 @@ public class Game {
                     Card cardDrawn = mainDeck.draw();
                     gameManager.getCurrentPlayerHand().addToHand(cardDrawn);
                     boolean playerExploded = false;
-                    boolean drewExplodingKitten = false;
+                    boolean drewExplodingKitten;
                     if(cardDrawn.equals(new exploding_kitten())){
                         drewExplodingKitten = true;
                         System.out.println("You drew an exploding kitten! You have to defuse it!");
                         while(gameManager.getCurrentPlayerHand().contains(new exploding_kitten())){
-                            if(!gameManager.getCurrentPlayerHand().contains(new defuse())){ //TODO the section below needs some IO
+                            if(!gameManager.getCurrentPlayerHand().contains(new defuse())){
                                 TimeUnit.MILLISECONDS.sleep(1);
                                 System.out.println("You have no defuse cards!");
                                 TimeUnit.SECONDS.sleep(1);
@@ -54,8 +53,8 @@ public class Game {
                                 break;
                             }
                             action = scanner.nextLine().toLowerCase().trim();
-                            if(action.equals("hand")){printHand(gameManager.getCurrentPlayerHand());} //i think this could be turned into a function
-                            else if(action.split("\\s+")[0].equals("play")) {                   //in order to avoid repeating code from below
+                            if(action.equals("hand")){printHand(gameManager.getCurrentPlayerHand());}
+                            else if(action.split("\\s+")[0].equals("play")) {
                                 if(action.split("\\s+").length != 2) return;
                                 int cardIndex = Integer.parseInt(action.split("\\s+")[1]);
                                 discardDeck.discardCard(
@@ -94,8 +93,6 @@ public class Game {
                 else if (action.equals("deck")) {
                     System.out.println("The deck has " + (mainDeck.getDeckSize()) + " cards left.");
                 }
-                else if(action.equals("players")){System.out.println("numplayers = " + gameManager.getAlivePlayers().size());} //TODO some IO here too
-                else if(action.equals("ddeck")){System.out.println("dd" + discardDeck.top().getName());}
                 else if(action.equals("hand")){printHand(gameManager.getCurrentPlayerHand());}
                 else if(action.split("\\s+")[0].equals("play")) {
                     if(action.split("\\s+").length != 2) return;
