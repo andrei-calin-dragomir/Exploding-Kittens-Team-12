@@ -7,7 +7,10 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Game game = new Game();
-        game.start(4);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("How many players would you like in your game?");
+        int numPlayer = scanner.nextInt();
+        game.start(numPlayer);
 
     }
 

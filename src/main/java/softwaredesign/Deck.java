@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class Deck {
-    public HashMap<String, Card> cardMap = new HashMap<>(){{
+    private HashMap<String, Card> cardMap = new HashMap<>(){{
         put("exploding_kitten", new exploding_kitten());
         put("defuse", new defuse());
         put("attack", new attack());
@@ -26,10 +26,18 @@ public class Deck {
         put("rainbow_cat", new rainbow_cat());
         put("beard_cat", new beard_cat());
     }};
-    public ArrayList<Card> cardDeck = new ArrayList<>();
+    private ArrayList<Card> cardDeck = new ArrayList<>();
 
     public Deck() throws IOException {
-        deckConstruct();
+        String fileContent = Files.readString(Paths.get("src/main/java/softwaredesign/decks/default.json"), StandardCharsets.US_ASCII);
+        ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
+
+        for (LinkedTreeMap<Object, Object> cardTree : cardAmounts) {
+            for (double j = 0; j < Double.parseDouble(cardTree.get("deckAmount").toString()); j++) {
+                cardDeck.add(cardMap.get(cardTree.get("className").toString()));
+            }
+        }
+        reshuffle();
     }
 
     public ArrayList<Card> getFullDeck(){
@@ -70,18 +78,5 @@ public class Deck {
                 return tempHand;
             }
         }
-    }
-
-    public void deckConstruct() throws IOException {
-        String fileContent = Files.readString(Paths.get("src/main/java/softwaredesign/decks/default.json"), StandardCharsets.US_ASCII);
-        ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
-
-        for (LinkedTreeMap<Object, Object> cardTree : cardAmounts) {
-            for (double j = 0; j < Double.parseDouble(cardTree.get("deckAmount").toString()); j++) {
-                cardDeck.add(cardMap.get(cardTree.get("className").toString()));
-            }
-        }
-        reshuffle();
-//        cardDeck.forEach(x -> System.out.println(x.action()));
     }
 }

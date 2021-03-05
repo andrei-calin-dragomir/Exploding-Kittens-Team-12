@@ -37,31 +37,32 @@ class defuse extends Card {
 
 class attack extends Card {
     public void action(Deck currDeck, Hand playerHand){
-        System.out.println(className);
+        System.out.println("To be implemented");
     }
 }
 
 class nope extends Card {
     public void action(Deck currDeck, Hand playerHand){
-        System.out.println(className);
+        System.out.println("To be implemented");
     }
 }
 
 class shuffle extends Card {
     public void action(Deck currDeck, Hand playerHand){
         currDeck.reshuffle();
+        System.out.println("The cards have been shuffled!");
     }
 }
 
 class favor extends Card {
     public void action(Deck currDeck, Hand playerHand){
-        System.out.println(className);
+        System.out.println("To be implemented");
     }
 }
 
 class skip extends Card {
     public void action(Deck currDeck, Hand playerHand){
-        System.out.println(className);
+        System.out.println("To be implemented");
     }
 }
 
@@ -75,7 +76,7 @@ class see_future extends Card {
 
 class cat_card extends Card {
     public void action(Deck currDeck, Hand playerHand){
-        System.out.println(className);
+        System.out.println("To be implemented");
     }
 }
 
