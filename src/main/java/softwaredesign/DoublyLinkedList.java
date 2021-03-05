@@ -2,9 +2,9 @@ package softwaredesign;
 
 class DoublyLinkedList {
     class Node {
-        Player item;
-        Node previous;
-        Node next;
+        protected Player item;
+        protected Node previous;
+        protected Node next;
 
         public Node(Player item) {
             this.item = item;
