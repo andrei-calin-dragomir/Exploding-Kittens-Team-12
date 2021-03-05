@@ -53,7 +53,7 @@ public class Game {
                                 break;
                             }
                             action = scanner.nextLine().toLowerCase().trim();
-                            if(action.equals("hand")){printHand(gameManager.getCurrentPlayerHand());}
+                            if(action.equals("hand")){gameManager.getCurrentPlayerHand().printHand();}
                             else if(action.split("\\s+")[0].equals("play")) {
                                 if(action.split("\\s+").length != 2) return;
                                 int cardIndex = Integer.parseInt(action.split("\\s+")[1]);
@@ -93,7 +93,7 @@ public class Game {
                 else if (action.equals("deck")) {
                     System.out.println("The deck has " + (mainDeck.getDeckSize()) + " cards left.");
                 }
-                else if(action.equals("hand")){printHand(gameManager.getCurrentPlayerHand());}
+                else if(action.equals("hand")){gameManager.getCurrentPlayerHand().printHand();}
                 else if(action.split("\\s+")[0].equals("play")) {
                     if(action.split("\\s+").length != 2) return;
                     int cardIndex = Integer.parseInt(action.split("\\s+")[1]);
@@ -106,12 +106,5 @@ public class Game {
         }
         System.out.println(gameManager.getAlivePlayers().get(0).getName() + " won!");
     }
-    public static void printHand(Hand myHand){
-        if(myHand.getHand().isEmpty()) System.out.println("Your hand is empty");
-        else{
-            System.out.println("Your hand consists off:");
-            myHand.getHand().forEach(x -> System.out.printf("%s - ", x.getName()));
-            System.out.print("\b\b\n");
-        }
-    }
+
 }

@@ -3,8 +3,8 @@ package softwaredesign;
 import java.util.ArrayList;
 
 public abstract class Card {
-    String className = this.getClass().getSimpleName();
-    int deckAmount = 0;
+    protected String className = this.getClass().getSimpleName();
+    private int deckAmount = 0;
 
     @SuppressWarnings("unused")
     public int getAmount(){
@@ -22,7 +22,6 @@ class exploding_kitten extends Card {
     public void action(Deck currDeck, Hand playerHand){
         System.out.println(className);
     }
-
 }
 
 class defuse extends Card {
