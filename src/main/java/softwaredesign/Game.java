@@ -30,7 +30,7 @@ public class Game {
 
         System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn" );
         while(gameManager.getAlivePlayers().size() != 1){
-            System.out.println("Enter action (draw | deck | players | ddeck | hand | play): ");
+            System.out.println("Enter action (draw | deck | hand | play): ");
             if(scanner.hasNextLine()) {
                 String action = scanner.nextLine().toLowerCase().trim();
                 if (action.split("\\s+")[0].equals("draw")) {
