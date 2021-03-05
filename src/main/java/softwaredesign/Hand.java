@@ -54,4 +54,13 @@ public class Hand {
             return playCard;
         }
     }
+
+    public void printHand(){
+        if(this.getHand().isEmpty()) System.out.println("Your hand is empty");
+        else{
+            System.out.println("Your hand consists off:");
+            this.getHand().forEach(x -> System.out.printf("%s - ", x.getName()));
+            System.out.print("\b\b\n");
+        }
+    }
 }

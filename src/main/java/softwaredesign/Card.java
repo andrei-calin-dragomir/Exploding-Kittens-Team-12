@@ -22,7 +22,6 @@ class exploding_kitten extends Card {
     public void action(Deck currDeck, Hand playerHand){
         System.out.println(className);
     }
-
 }
 
 class defuse extends Card {
