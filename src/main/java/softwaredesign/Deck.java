@@ -29,7 +29,13 @@ public class Deck {
     private ArrayList<Card> cardDeck = new ArrayList<>();
 
     public Deck() throws IOException {
-        String fileContent = Files.readString(Paths.get("src/main/java/softwaredesign/decks/default.json"), StandardCharsets.US_ASCII);
+        String fileContent;
+        try {
+            fileContent = Files.readString(Paths.get("src/main/java/softwaredesign/decks/default.json"), StandardCharsets.US_ASCII);
+        }
+        catch (Exception e){
+            fileContent = Files.readString(Paths.get("decks/default.json"), StandardCharsets.US_ASCII);
+        }
         ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
 
         for (LinkedTreeMap<Object, Object> cardTree : cardAmounts) {
