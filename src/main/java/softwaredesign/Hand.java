@@ -3,7 +3,7 @@ package softwaredesign;
 import java.util.ArrayList;
 
 public class Hand {
-    ArrayList<Card> currentHand = new ArrayList<>();
+    private ArrayList<Card> currentHand = new ArrayList<>();
 
     public boolean contains(Card target){
         return currentHand.contains(target);
