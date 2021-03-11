@@ -12,10 +12,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import softwaredevelopmentvu.explodingkittens.game.Game;
+import softwaredevelopmentvu.explodingkittens.game.cards.AttackCard;
+import softwaredevelopmentvu.explodingkittens.game.cards.CatCardZombie;
+import softwaredevelopmentvu.explodingkittens.game.cards.DefuseCard;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class MainGuiController implements Initializable {
@@ -79,12 +80,7 @@ public class MainGuiController implements Initializable {
 
     private void populateHand(){
         for (int i = 0; i < 6; i++) {
-            Image img;
-            if (i % 2 == 0) {
-                img = new Image("file:src/main/resources/images/normal/DefuseCard1.png");
-            } else {
-                img = new Image("file:src/main/resources/images/normal/AttackCard3.png");
-            }
+            Image img = new Image(CardHelper.getCardImageUrl(new DefuseCard()));
             addCardToHand(img);
         }
     }

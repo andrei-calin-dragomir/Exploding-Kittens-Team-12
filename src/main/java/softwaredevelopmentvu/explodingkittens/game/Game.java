@@ -1,5 +1,9 @@
 package softwaredevelopmentvu.explodingkittens.game;
 
+import softwaredevelopmentvu.explodingkittens.game.cards.Card;
+import softwaredevelopmentvu.explodingkittens.game.cards.DefuseCard;
+import softwaredevelopmentvu.explodingkittens.game.cards.ExplodingKittenCard;
+
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -38,11 +42,11 @@ public class Game {
                     gameManager.getCurrentPlayerHand().addToHand(cardDrawn);
                     boolean playerExploded = false;
                     boolean drewExplodingKitten;
-                    if(cardDrawn.equals(new exploding_kitten())){
+                    if(cardDrawn.equals(new ExplodingKittenCard())){
                         drewExplodingKitten = true;
                         System.out.println("You drew an exploding kitten! You have to defuse it!");
-                        while(gameManager.getCurrentPlayerHand().contains(new exploding_kitten())){
-                            if(!gameManager.getCurrentPlayerHand().contains(new defuse())){
+                        while(gameManager.getCurrentPlayerHand().contains(new ExplodingKittenCard())){
+                            if(!gameManager.getCurrentPlayerHand().contains(new DefuseCard())){
                                 TimeUnit.MILLISECONDS.sleep(1);
                                 System.out.println("You have no defuse cards!");
                                 TimeUnit.SECONDS.sleep(1);
@@ -76,13 +80,13 @@ public class Game {
                         String index = scanner.nextLine().toLowerCase().trim();
                         switch(Integer.parseInt(index)){
                             case 4:
-                                mainDeck.insertCard(new exploding_kitten(),rand.nextInt(mainDeck.getDeckSize()));
+                                mainDeck.insertCard(new ExplodingKittenCard(),rand.nextInt(mainDeck.getDeckSize()));
                                 break;
                             case 3:
-                                mainDeck.insertCard(new exploding_kitten(),mainDeck.getDeckSize());
+                                mainDeck.insertCard(new ExplodingKittenCard(),mainDeck.getDeckSize());
                                 break;
                             default:
-                                mainDeck.insertCard(new exploding_kitten(),Integer.parseInt(index)-1);
+                                mainDeck.insertCard(new ExplodingKittenCard(),Integer.parseInt(index)-1);
                                 break;
                         }
                     }

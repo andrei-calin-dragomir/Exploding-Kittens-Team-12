@@ -1,5 +1,7 @@
 package softwaredevelopmentvu.explodingkittens.game;
 
+import softwaredevelopmentvu.explodingkittens.game.cards.Card;
+
 import java.util.ArrayList;
 import java.util.List;
 
