@@ -63,7 +63,6 @@ public class ServerHeldGame {
                     System.out.println("The deck has " + (mainDeck.getDeckSize()) + " cards left.");
                 }
                 else if(action.equals("players")){System.out.println("numplayers = " + gameManager.getAlivePlayers().size());} //TODO some IO here too
-                else if(action.equals("ddeck")){System.out.println("dd" + discardDeck.top().getName());}
                 else if(action.equals("hand")){printHand(gameManager.getCurrentPlayerHand());}
                 else if(action.split("\\s+")[0].equals("play")) {
                     if(action.split("\\s+").length != 2) return;

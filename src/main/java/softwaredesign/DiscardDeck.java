@@ -14,10 +14,20 @@ public class DiscardDeck {
         d_deck.add(card);
     }
 
-    public Card top() {
-        if(d_deck.size() == 0)
-            return null;
-        else
-            return d_deck.get(0);
+    public boolean isEmpty(){ return d_deck.isEmpty(); }
+
+    public boolean isTopDefuse(){
+        if(!isEmpty())
+            if(d_deck.get(0).getName().equals("defuse"))
+                return true;
+        return false;
+    }
+    public String top() {
+        try {
+            return d_deck.get(0).getName();
+        }
+        catch (Exception NullPointerException){
+            return "Empty deck";
+        }
     }
 }

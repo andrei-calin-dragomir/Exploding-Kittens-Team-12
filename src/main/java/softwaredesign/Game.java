@@ -12,76 +12,135 @@ public class Game {
     private DiscardDeck discardDeck;
     private Scanner scanner = new Scanner(System.in);
     private Random rand = new Random();
+    private boolean drawnExplodingKitten;
 
-    public void start(int sizeOfGame, int numberOfComputers) throws IOException, InterruptedException {
+
+    private int validIntInput(){
+        int index;
+        try{ index = scanner.nextInt(); }
+        catch(Exception notAnInt){
+            while (!scanner.hasNextInt()){
+                System.out.println("Invalid input, try again");
+                scanner.next();
+            }
+            index = scanner.nextInt();
+        }
+        scanner.nextLine();
+        return index;
+    }
+
+    public void handleExplodingKitten(){
+        System.out.println("You drew an exploding kitten! You have to defuse it!");
+        drawnExplodingKitten = true;
+        boolean justExploded = false;
+        while(gameManager.getCurrentPlayerHand().contains(new exploding_kitten())) {
+            if (!gameManager.getCurrentPlayerHand().contains(new defuse())) {
+                System.out.println("You have no defuse cards!");
+                System.out.println(gameManager.getCurrentPlayer().getName() + " exploded!");
+                gameManager.killPlayer(gameManager.getCurrentPlayer());
+                justExploded = true;
+                break;
+            } else {
+                handleAction(scanner.nextLine().toLowerCase().trim());
+                justExploded = false;
+            }
+        }
+        if(discardDeck.isTopDefuse() && !justExploded){
+            System.out.println("Choose a location to place the card\n" +
+                    "(1 - on top; 2 - second; 3 - bottom; 4 - random");
+            int index = validIntInput();
+            while(index > 4 || index < 1){
+                System.out.println("Invalid index, try again");
+                index = validIntInput();
+            }
+
+            switch(index){
+                case 4:
+                    mainDeck.insertCard(new exploding_kitten(),rand.nextInt(mainDeck.getDeckSize()));
+                    break;
+                case 3:
+                    mainDeck.insertCard(new exploding_kitten(),mainDeck.getDeckSize());
+                    break;
+                default:
+                    mainDeck.insertCard(new exploding_kitten(),index - 1);
+                    break;
+            }
+        }
+        drawnExplodingKitten = false;
+    }
+
+    public void handleDrawAction(){
+        if(!drawnExplodingKitten) {
+            Card cardDrawn = mainDeck.draw();
+            gameManager.getCurrentPlayerHand().addToHand(cardDrawn);
+
+            if (cardDrawn.equals(new exploding_kitten()))
+                handleExplodingKitten();
+            else
+                System.out.println("You drew a: " + cardDrawn.getName() + " card.");
+
+            gameManager.endTurn();
+            System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn");
+        }
+        else {
+            System.out.println("You cannot draw whilst having an exploding kitten in your hand!");
+        }
+    }
+
+    public void handlePlayAction(int index){
+        if(drawnExplodingKitten &&
+                !(gameManager.getCurrentPlayerHand().getCard(index - 1).equals(new defuse())))
+            System.out.println("You can only play a defuse card if you have an exploding kitten!");
+
+        else
+            discardDeck.discardCard(
+                    gameManager.getCurrentPlayerHand().playCard(index, mainDeck)
+            );
+    }
+
+    public void handleAction(String action){
+        switch (action.split("\\s+")[0]){
+            case "draw":
+                handleDrawAction();
+                break;
+            case "hand":
+                gameManager.getCurrentPlayerHand().printHand();
+                break;
+            case "players":
+                System.out.println("There are " + gameManager.getAlivePlayers().size() + " players alive");
+                break;
+            case "deck":
+                System.out.println("The deck has " + (mainDeck.getDeckSize()) + " cards left.");
+                break;
+            case "ddeck":
+                System.out.println(discardDeck.top());
+                break;
+            case "play":
+                try {
+                    int cardIndex = Integer.parseInt(action.split("\\s+")[1]);
+                    handlePlayAction(cardIndex);
+                }
+                catch(Exception invalidInput){ System.out.println("Invalid card index, try again"); }
+                break;
+            default:
+                System.out.println("Unknown action, please try again");
+        }
+    }
+
+    public void start(int sizeOfGame, int numberOfComputers) throws IOException {
 
         mainDeck = new Deck();
         discardDeck = new DiscardDeck();
         gameManager = new GameManager();
-
         mainDeck = gameManager.addPlayers(sizeOfGame,numberOfComputers,mainDeck);
 
-        System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn" );
+        System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn" ); //Initial player
         while(gameManager.getAlivePlayers().size() != 1){
             System.out.println("Enter action: ");
-            if(scanner.hasNextLine()) {
-                String action = scanner.nextLine().toLowerCase().trim();
-                if (action.split("\\s+")[0].equals("draw")) {
-                    Card cardDrawn = mainDeck.draw();
-                    gameManager.getCurrentPlayerHand().addToHand(cardDrawn);
-                    if(cardDrawn.equals(new exploding_kitten())){
-                        System.out.println("You drew an exploding kitten! You have to defuse it!");
-                        while(gameManager.getCurrentPlayerHand().contains(new exploding_kitten())){
-                            if(!gameManager.getCurrentPlayerHand().contains(new defuse())){ //TODO the section below needs some IO
-                                TimeUnit.MILLISECONDS.sleep(1);
-                                System.out.println("You have no defuse cards!");
-                                TimeUnit.SECONDS.sleep(1);
-                                System.out.println(gameManager.getCurrentPlayer().getName() + " exploded!");
-                                gameManager.killPlayer(gameManager.getCurrentPlayer());
-                                TimeUnit.MILLISECONDS.sleep(1);
-                                break;
-                            }
-                            action = scanner.nextLine().toLowerCase().trim();
-                            if(action.equals("hand")) printHand(gameManager.getCurrentPlayerHand());  //i think this could be turned into a function
-                            else if(action.split("\\s+")[0].equals("play")) {                   //in order to avoid repeating code from below
-                                if(action.split("\\s+").length != 2) return;
-                                int cardIndex = Integer.parseInt(action.split("\\s+")[1]);
-                                discardDeck.discardCard(gameManager.getCurrentPlayerHand().playCard(cardIndex, mainDeck));
-                            }
-                            else System.out.println("Unknown action, please try again.");
-                        }
-                    }
-                    else {
-                        System.out.println("You drew a: " + cardDrawn.getName() + " card.");
-                    }
-                    gameManager.endTurn();
-                    System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn" );
-                }
-
-                else if (action.equals("deck")) {
-                    System.out.println("The deck has " + (mainDeck.getDeckSize()) + " cards left.");
-                }
-                else if(action.equals("players")){System.out.println("numplayers = " + gameManager.getAlivePlayers().size());} //TODO some IO here too
-                else if(action.equals("ddeck")){System.out.println("dd" + discardDeck.top().getName());}
-                else if(action.equals("hand")){printHand(gameManager.getCurrentPlayerHand());}
-                else if(action.split("\\s+")[0].equals("play")) {
-                    if(action.split("\\s+").length != 2) return;
-                    int cardIndex = Integer.parseInt(action.split("\\s+")[1]);
-                    discardDeck.discardCard(
-                            gameManager.getCurrentPlayerHand().playCard(cardIndex, mainDeck)
-                    );
-                }
-                else System.out.println("Unknown action, please try again.");
-            }
+            if(scanner.hasNextLine())
+                handleAction(scanner.nextLine().toLowerCase().trim());
         }
         System.out.println(gameManager.getAlivePlayers().get(0).getName() + " won!");
     }
-    public static void printHand(Hand myHand){
-        if(myHand.getHand().isEmpty()) System.out.println("Your hand is empty");
-        else{
-            System.out.println("Your hand consists off:");
-            myHand.getHand().forEach(x -> System.out.printf("%s - ", x.getName()));
-            System.out.print("\b\b\n");
-        }
-    }
+
 }
