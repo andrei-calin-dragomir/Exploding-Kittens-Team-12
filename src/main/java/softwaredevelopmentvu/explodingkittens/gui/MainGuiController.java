@@ -12,9 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import softwaredevelopmentvu.explodingkittens.game.cards.AttackCard;
-import softwaredevelopmentvu.explodingkittens.game.cards.CatCardZombie;
-import softwaredevelopmentvu.explodingkittens.game.cards.DefuseCard;
+import softwaredevelopmentvu.explodingkittens.game.cards.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -60,7 +58,7 @@ public class MainGuiController implements Initializable {
         iv.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             Node src = (Node) e.getSource();
             playCard((ImageView)src);
-            updateAnnouncement("poop");
+            updateAnnouncement("test");
         });
         //zoom on hover
         iv.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> iv.setFitHeight(250));
