@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class GameManager {
-    private List<Player> alivePlayers = new ArrayList<>();
-    private DoublyLinkedList turns = new DoublyLinkedList();
-    private Scanner scanner = new Scanner(System.in);
+    public List<Player> alivePlayers = new ArrayList<>();
+    public DoublyLinkedList turns = new DoublyLinkedList();
+    public Scanner scanner = new Scanner(System.in);
 
     public Deck addPlayers(int sizeOfGame,int numberOfComputers,Deck mainDeck) {
         Deck remainingDeck = mainDeck;

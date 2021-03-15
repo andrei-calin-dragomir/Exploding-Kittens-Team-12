@@ -2,36 +2,56 @@ package softwaredesign;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-
-import java.util.Scanner;
+import org.javatuples.Pair;
 
 public class ClientHandler extends SimpleChannelInboundHandler<String>{
     /*
-     * Print chat message received from server.
+     * Handle message received from server.
      */
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-        System.out.println(msg);
-        channelRespond(ctx,msg);
-    }
-    public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
-        Scanner scanner = new Scanner(System.in);
-        if(msg.equals("NOROOMS")) System.out.println("There are no rooms available, create one? Yes/No");
-        if(scanner.hasNext()){
-            if(scanner.nextLine().equals("Yes")){
-                String roomDetails = "";   //0: RoomName, 1: RoomSize, 2: NumberOfComputers
-                System.out.println("What should the room be named?");
-                if (scanner.hasNext()) roomDetails.concat(scanner.nextLine() + ",");
-                System.out.println("How many players do you want in your game? Answer options: 2-5");
-                if (scanner.hasNext()) {
-                    String roomSize = scanner.nextLine();
-                    roomDetails.concat(roomSize + ",");
-                    System.out.println("How many computers do you want in your game? Minimum: 0 Maximum: " + (Integer.parseInt(roomSize) - 1));
+    public void channelRead0(ChannelHandlerContext ctx, String message){
+        System.out.println(message);
+        String[] commands = message.split(" ");
+        switch(commands[0]){
+            case "START":
+                System.out.println("The game started");
+                break;
+            case "ROOMCREATED":
+                System.out.println("Room has been created. Waiting for players to connect...");
+                break;
+            case "ROOMFULL":
+                System.out.println("The room is full, play offline or quit? Answer option: offline/quit");
+                break;
+            case "CONNECTEDTOSERVER":
+                System.out.println("Connection Successful.");
+                if(commands[1].equals("NOROOM")){
+                    System.out.println("No room has been created, create one now or play offline?" +
+                            "Answer options: create,offline");
+                }else if(commands[1].equals("ROOMAVAILABLE")){
+                    System.out.println("A room has already been created, try to join or play offline? " +
+                            "Answer options: join/offline");
                 }
-                if (scanner.hasNext()) roomDetails.concat(scanner.nextLine());
-                System.out.println(roomDetails);
-                ClientProgram.sendRequestToServer("CREATE " + roomDetails,ClientProgram.correspondenceChannel);
-            }
+                break;
+            case "JOINED":
+                System.out.println(commands[1] + " joined the game.");
+                if(commands[1].equals("START")) System.out.println("The game started");
+                break;
+            case "JOINSUCCESS":
+                System.out.println("You joined the game.");
+                System.out.println("Players in the room: " + commands[2]);
+                if(commands[1].equals("START")) System.out.println("The game started");
+                break;
+            case "LEFT":
+                System.out.println(commands[1] + " left the game.\n Players:" + commands[2]);
+                break;
+            case "UPDATEDECKS":
+                ClientProgram.deck = Pair.with(commands[1],commands[2]);
+                ClientProgram.discardDeck = Pair.with(commands[3],commands[4]);
+                break;
+            case "UPDATEHAND":
+                for(int i = 1; i < commands.length;i++) ClientProgram.ownHand.add(commands[i]);
+                break;
+
         }
     }
 }

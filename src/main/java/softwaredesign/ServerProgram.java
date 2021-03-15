@@ -16,7 +16,7 @@ public final class ServerProgram {
     // Port where chat server will listen for connections.
     static final int PORT = 8007;
 
-    public void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         /*
          * Configure the server.
@@ -50,7 +50,6 @@ public final class ServerProgram {
             // Start the server.
             ChannelFuture f = b.bind(PORT).sync();
             System.out.println("Exploding Kittens Server started. Ready to accept players.");
-
             // Wait until the server socket is closed.
             f.channel().closeFuture().sync();
         } finally {
