@@ -42,13 +42,7 @@ public class GameManager {
 
     public void killPlayer(Player target){
         alivePlayers.remove(target);
-        //System.out.println("BEFORE////" + turns.head.item.getName() + " " + turns.head.previous.item.getName() + " " + turns.head.next.item.getName());
-        turns.head.previous.next = turns.head.next;
-        turns.head.next.previous = turns.head.previous;
-        turns.head = turns.head.previous; //Since the draw function ends turn regardless if the person exploded or not
-                                          //this must be set to previous in order to not skip a person
-        //System.out.println("BEFORE////" + turns.head.item.getName() + " " + turns.head.previous.item.getName() + " " + turns.head.next.item.getName());
-
+        getTurns().deleteHeadNode();
     }
 
     public DoublyLinkedList getTurns(){
