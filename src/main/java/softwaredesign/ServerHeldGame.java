@@ -18,9 +18,6 @@ public class ServerHeldGame {
         mainDeck = new Deck();
         discardDeck = new DiscardDeck();
         gameManager = new GameManager();
-        int playersToBeReady = sizeOfGame-numberOfComputers;
-        while(playersToBeReady != 0){
-        }
 
         System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn" );
         while(gameManager.getAlivePlayers().size() != 1){
@@ -76,6 +73,7 @@ public class ServerHeldGame {
         }
         System.out.println(gameManager.getAlivePlayers().get(0).getName() + " won!");
     }
+
     public static void printHand(Hand myHand){
         if(myHand.getHand().isEmpty()) System.out.println("Your hand is empty");
         else{
