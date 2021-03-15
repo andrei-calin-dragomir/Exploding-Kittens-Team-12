@@ -127,7 +127,29 @@ public class Game {
         }
     }
 
-    public void start(int sizeOfGame, int numberOfComputers) throws IOException {
+    public void handleComputerAction() throws InterruptedException {
+        Card cardDrawn = mainDeck.draw();
+        gameManager.getCurrentPlayerHand().addToHand(cardDrawn);
+        System.out.println("The Computer drew a card");
+        if(cardDrawn.equals(new exploding_kitten())){
+            System.out.println("The Computer drew an exploding kitten!");
+            if(gameManager.getCurrentPlayerHand().contains(new defuse())){
+                int defuseCardIndex = gameManager.getCurrentPlayerHand().currentHand.indexOf(new defuse()) + 1;
+                handlePlayAction(defuseCardIndex);
+                mainDeck.insertCard(new exploding_kitten(),rand.nextInt(mainDeck.getDeckSize()));
+                System.out.println("The Computer defused the kitten");
+            }
+            else{
+                System.out.println("The Computer exploded!");
+                gameManager.killPlayer(gameManager.getCurrentPlayer());
+            }
+        }
+        TimeUnit.SECONDS.sleep(1); //In order for the text to not go too fast
+        gameManager.endTurn();
+        System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn");
+    }
+
+    public void start(int sizeOfGame, int numberOfComputers) throws IOException, InterruptedException {
 
         mainDeck = new Deck();
         discardDeck = new DiscardDeck();
@@ -136,9 +158,13 @@ public class Game {
 
         System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn" ); //Initial player
         while(gameManager.getAlivePlayers().size() != 1){
-            System.out.println("Enter action: ");
-            if(scanner.hasNextLine())
-                handleAction(scanner.nextLine().toLowerCase().trim());
+            if(gameManager.getCurrentPlayer().isComputer()){
+                handleComputerAction();
+            } else {
+                System.out.println("Enter action: ");
+                if (scanner.hasNextLine())
+                    handleAction(scanner.nextLine().toLowerCase().trim());
+            }
         }
         System.out.println(gameManager.getAlivePlayers().get(0).getName() + " won!");
     }
