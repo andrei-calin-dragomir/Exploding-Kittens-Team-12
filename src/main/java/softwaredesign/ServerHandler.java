@@ -16,12 +16,12 @@ import java.util.Hashtable;
  */
 public class ServerHandler extends SimpleChannelInboundHandler<String>{
 //    String: Username Channel: connection
-    private static Hashtable<String,ChannelHandlerContext> clientDetails = new Hashtable<>();
+    public static Hashtable<String,ChannelHandlerContext> clientDetails = new Hashtable<>();
     private static Hashtable<ChannelHandlerContext,String> reversedClientDetails = new Hashtable<>();
 
-    private static ArrayList<String> roomPlayerList = new ArrayList<>();
+    public static ArrayList<String> roomPlayerList = new ArrayList<>();
     private static String[] gameDetails = {"0","0"}; // 0: RoomSize, 1: NumberOfComputers
-    private static Game onlineGame = new Game();
+    private static ServerHeldGame onlineGame = new ServerHeldGame();
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
@@ -42,6 +42,14 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
     public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
         String[] message = msg.split("\\s+");
         switch(message[0]){
+            case "START":
+                if(!roomPlayerList.contains("free")) {
+                    sendMessageToRoomClients(null,"START");
+                    onlineGame.start(Integer.parseInt(gameDetails[0]), Integer.parseInt(gameDetails[1]));
+                }else{
+                    sendMessageToSingleRoomClient(null,"NOSTART");
+                }
+                break;
             case "USERNAME":
                 clientDetails.put(message[1],ctx);
                 reversedClientDetails.put(ctx,message[1]);
@@ -54,20 +62,19 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 else{
                     ctx.write("JOINSUCCESS ");
                     updatePlayerList(reversedClientDetails.get(ctx));
-                    sendMessageToRoomClients(ctx,"JOINED " + reversedClientDetails.get(ctx));
-                    if(!roomPlayerList.contains("free")) {
-                        ctx.writeAndFlush("START");
-                        sendMessageToRoomClients(ctx, "START");
-                        onlineGame.start(Integer.parseInt(gameDetails[0]), Integer.parseInt(gameDetails[1]));
-                    }
                     for(int i =0; i < roomPlayerList.size() - 1; i++) ctx.write(roomPlayerList.get(i) + ",");
                     ctx.writeAndFlush(roomPlayerList.get(roomPlayerList.size() - 1));
+                    sendMessageToRoomClients(ctx,"JOINED " + reversedClientDetails.get(ctx));
                 }
                 break;
             case "LEAVE":
                 updatePlayerList(reversedClientDetails.get(ctx));
                 sendMessageToRoomClients(ctx,"LEFT " + reversedClientDetails.get(ctx) + " " + roomPlayerList);
                 break;
+            case "PLACE":
+                onlineGame.gameManager.mainDeck.insertCard(new exploding_kitten(),Integer.parseInt(message[1]));
+                ServerHandler.sendMessageToRoomClients(null, "UPDATEDECKS " + onlineGame.gameManager.mainDeck.getDeckSize()
+                        + " " + onlineGame.gameManager.discardDeck.getTopCard().getName());
             case "CREATE":
                 gameDetails = message[1].split(",");
                 createPlayerList(gameDetails);
@@ -75,6 +82,17 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 ctx.writeAndFlush("ROOMCREATED");
                 break;
             case "PLAY":
+                if(reversedClientDetails.get(ctx).equals(onlineGame.getCurrentPlayer())){
+//                    if(message[1].equals("defuse") & !onlineGame.drawnExplodingKitten) break;
+//                    if(!message[1].equals("defuse") & onlineGame.drawnExplodingKitten) break;
+                    ctx.writeAndFlush("PLAYCONFIRMED");
+                    onlineGame.handleAction("play " + message[1]);
+                }
+                break;
+            case "DRAW":
+                if(reversedClientDetails.get(ctx).equals(onlineGame.getCurrentPlayer())){
+                    onlineGame.handleAction("draw");
+                }
                 break;
         }
     }
@@ -85,7 +103,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 roomPlayerList.add(i,"free");
                 playerSpots--;
             }
-            else roomPlayerList.add(i,"Computer" + (i-Integer.parseInt(arg[1])));
+            else roomPlayerList.add(i,"Computer_" + (i-Integer.parseInt(arg[1]) + 1));
         }
     }
     private void updatePlayerList(String playerName){
@@ -110,13 +128,17 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         }
         return false;
     }
-    private void sendMessageToRoomClients(ChannelHandlerContext ctx,String message){
+    public static void sendMessageToRoomClients(ChannelHandlerContext ctx, String message){
         for(int i = 0; i < roomPlayerList.size(); i++){
             ChannelHandlerContext outgoingCtx = clientDetails.get(roomPlayerList.get(i));
-            if(outgoingCtx == ctx) continue;
             if(outgoingCtx == null) continue;
+            if(outgoingCtx == ctx) continue;
             outgoingCtx.writeAndFlush(message);
         }
+    }
+    public static void sendMessageToSingleRoomClient(String name, String message){
+        if(clientDetails.get(name) == null) return;
+        clientDetails.get(name).writeAndFlush(message);
     }
 
     @Override
@@ -125,8 +147,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         System.out.println("Closing connection for client - " + ctx);
         ctx.close();
         if(roomPlayerList.contains(reversedClientDetails.get(ctx))){
-            updatePlayerList(reversedClientDetails.get(ctx));
             sendMessageToRoomClients(ctx,"LEFT " + reversedClientDetails.get(ctx) + " " + roomPlayerList);
+            updatePlayerList(reversedClientDetails.get(ctx));
         }
         clientDetails.remove(reversedClientDetails.get(ctx));
         reversedClientDetails.remove(ctx);

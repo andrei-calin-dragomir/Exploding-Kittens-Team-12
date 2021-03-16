@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class Deck {
-    public HashMap<String, Card> cardMap = new HashMap<>(){{
+    public static HashMap<String, Card> cardMap = new HashMap<>(){{
         put("exploding_kitten", new exploding_kitten());
         put("defuse", new defuse());
         put("attack", new attack());

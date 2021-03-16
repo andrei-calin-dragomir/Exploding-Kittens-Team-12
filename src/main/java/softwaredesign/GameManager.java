@@ -9,24 +9,27 @@ public class GameManager {
     public DoublyLinkedList turns = new DoublyLinkedList();
     public Scanner scanner = new Scanner(System.in);
 
-    public Deck addPlayers(int sizeOfGame,int numberOfComputers,Deck mainDeck) {
+    public Deck addPlayers(Deck mainDeck) {
         Deck remainingDeck = mainDeck;
-        for(int i = 0; i < sizeOfGame; i++){
+        for(int i = 0; i < ServerHandler.roomPlayerList.size(); i++){
             alivePlayers.add(new Player());
-            if(i == 0) getAlivePlayers().get(i).setName(ClientProgram.username);
-            else if(i < (sizeOfGame - numberOfComputers)) {
-                System.out.println("Insert player " + i + "'s name here:");
-                getAlivePlayers().get(i).setName(scanner.nextLine());
-            }else {
-                getAlivePlayers().get(i).setName("Computer " + i);
-                System.out.println("Added " + getAlivePlayers().get(i).getName());
-            }
+            getAlivePlayers().get(i).setName(ServerHandler.roomPlayerList.get(i));
             getAlivePlayers().get(i).initHand(remainingDeck);
+            ServerHandler.sendMessageToSingleRoomClient(getAlivePlayers().get(i).getName(),
+                    "UPDATEHAND " + createInitialHandAsString(getAlivePlayers().get(i)));
             getTurns().addNode(getAlivePlayers().get(i));
         }
         return remainingDeck;
     }
 
+    private String createInitialHandAsString(Player player) {
+        StringBuilder constructorHand = new StringBuilder();
+        for(int i = 0;i < player.getHand().getHand().size() - 1;i++){
+            constructorHand.append(player.getHand().getHand().get(i)).append(" ");
+        }
+        constructorHand.append(player.getHand().getHand().get(player.getHand().getHand().size() - 1));
+        return constructorHand.toString();
+    }
     public Player getCurrentPlayer(){
         return turns.head.item;
     }

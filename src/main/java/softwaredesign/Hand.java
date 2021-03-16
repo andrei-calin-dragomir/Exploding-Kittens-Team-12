@@ -25,12 +25,7 @@ public class Hand {
         return currentHand.size();
     }
 
-    public Card getCard(int index){
-        if(getHandSize() - 1 < index){
-            return null;
-        }
-        return currentHand.get(index);
-    }
+    public Card getCard(int index) { return currentHand.get(index); }
 
     public <T> void removeCard(T index){
         try{
@@ -42,17 +37,12 @@ public class Hand {
         }
     }
 
-    public Card playCard(int index, Deck newDeck){
-        Card playCard = getCard(index - 1);
-        if(playCard == null){
-            System.out.println("You only have " + getHandSize() + " cards in your hand.");
-            return null;
-        }
-        else {
-            removeCard(index - 1);
-            playCard.action(newDeck, this);
-            return playCard;
-        }
+    public Card playCard(int index, ServerHeldGameManager gameManager){
+        Card playCard = getCard(index);
+        removeCard(index);
+        playCard.action(gameManager);
+        return playCard;
+
     }
     public void printHand(){
         if(this.getHand().isEmpty()) System.out.println("Your hand is empty");

@@ -18,9 +18,10 @@ public class ClientProgram {
 
     static String username;
     static ChannelFuture correspondenceChannel;
-    public static ArrayList<String> ownHand;
-    public static Pair<String, String> deck;
-    public static Pair<String, String> discardDeck;
+    public static ArrayList<String> ownHand = new ArrayList<>();
+    public static String requestedCard = "";
+    public static String deckSize;
+    public static String discardDeckTop;
     public static void main(String[] args) throws Exception {
         ClientProgram.startClient();
     }
@@ -73,11 +74,15 @@ public class ClientProgram {
             while (scanner.hasNext()) {
                 String[] input = scanner.nextLine().split(" ");
                 switch(input[0]) {
+                    case "start":
+                        sendRequestToServer("START");
+                        break;
                     case "leave":
                         sendRequestToServer("LEAVE");
                         break;
                     case "join":
                         sendRequestToServer("JOIN");
+                        break;
                     case "create":
                         sendRequestToServer("CREATE " + createGame());
                         break;
@@ -90,10 +95,18 @@ public class ClientProgram {
                         System.exit(0);
                         break;
                     case "play":
-                        ownHand.remove(input[1]);
-                        sendRequestToServer("PLAY " + input[1]);
+                        requestedCard = input[1];
+                        sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(input[1]));
+                        break;
+                    case "draw":
+                        sendRequestToServer("DRAW");
+                        break;
+                    case "place":
+                        sendRequestToServer("PLACE " + input[1]);
+                        break;
                     default:
                         System.out.println("Unexpected command, try again.");
+                        break;
 
                 }
             }

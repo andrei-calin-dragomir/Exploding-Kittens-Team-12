@@ -10,7 +10,7 @@ public abstract class Card {
     public int getAmount(){
         return deckAmount;
     }
-    abstract void action(Deck currDeck, Hand playerHand);
+    abstract void action(ServerHeldGameManager gameManager);
 
     @Override
     public boolean equals(Object object){ return object != null && object.getClass() == this.getClass(); }
@@ -19,62 +19,57 @@ public abstract class Card {
 }
 
 class exploding_kitten extends Card {
-    public void action(Deck currDeck, Hand playerHand){
+    public void action(ServerHeldGameManager gameManager){
         System.out.println(className);
     }
 
 }
 
 class defuse extends Card {
-    public void action(Deck currDeck, Hand playerHand){
-        if(playerHand.getHand().contains(new exploding_kitten())){
-            System.out.println("You defused the exploding kitten");
-            playerHand.removeCard(new exploding_kitten());
-        }
-        else System.out.println("You have no exploding kitten in hand");
+    public void action(ServerHeldGameManager gameManager){
+        gameManager.getCurrentPlayer().getHand().removeCard(new exploding_kitten());
+        ServerHandler.sendMessageToSingleRoomClient(gameManager.getCurrentPlayer().getName(),"PLACEKITTEN");
     }
 }
 
 class attack extends Card {
-    public void action(Deck currDeck, Hand playerHand){
+    public void action(ServerHeldGameManager gameManager){
         System.out.println(className);
     }
 }
 
 class nope extends Card {
-    public void action(Deck currDeck, Hand playerHand){
+    public void action(ServerHeldGameManager gameManager){
         System.out.println(className);
     }
 }
 
 class shuffle extends Card {
-    public void action(Deck currDeck, Hand playerHand){
-        currDeck.reshuffle();
+    public void action(ServerHeldGameManager gameManager){
+        gameManager.mainDeck.reshuffle();
     }
 }
 
 class favor extends Card {
-    public void action(Deck currDeck, Hand playerHand){
+    public void action(ServerHeldGameManager gameManager){
         System.out.println(className);
     }
 }
 
 class skip extends Card {
-    public void action(Deck currDeck, Hand playerHand){
+    public void action(ServerHeldGameManager gameManager){
         System.out.println(className);
     }
 }
 
 class see_future extends Card {
-    public void action(Deck currDeck, Hand playerHand){
-        ArrayList<Card> deck = currDeck.getFullDeck();
-        String futureCards = deck.get(0).getName() + " - " + deck.get(1).getName() + " - " + deck.get(2).getName();
-        System.out.println("The top 3 cards are: " + futureCards);
-    }
+    public void action(ServerHeldGameManager gameManager){
+        ArrayList<Card> deck = gameManager.mainDeck.cardDeck;
+        String futureCards = deck.get(0).getName() + " " + deck.get(1).getName() + " " + deck.get(2).getName(); }
 }
 
 class cat_card extends Card {
-    public void action(Deck currDeck, Hand playerHand){
+    public void action(ServerHeldGameManager gameManager){
         System.out.println(className);
     }
 }

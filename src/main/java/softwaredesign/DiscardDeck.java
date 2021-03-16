@@ -30,4 +30,7 @@ public class DiscardDeck {
             return "Empty deck";
         }
     }
+    public Card getTopCard(){
+        return d_deck.get(d_deck.size() - 1);
+    }
 }
