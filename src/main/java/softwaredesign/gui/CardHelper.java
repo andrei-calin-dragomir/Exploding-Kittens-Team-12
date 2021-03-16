@@ -1,7 +1,7 @@
-package softwaredevelopmentvu.explodingkittens.gui;
+package softwaredesign.gui;
 
 
-import softwaredevelopmentvu.explodingkittens.game.cards.Card;
+import softwaredesign.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,14 +18,13 @@ public class CardHelper {
             res = "file:src/main/resources/images/normal/"
                     + card.getName()
                     + ".png";
-            System.out.println("res = " + res);
         } else {
             res = "file:src/main/resources/images/normal/"
                     + card.getName()
                     + (rand.nextInt(3) + 1)
                     + ".png";
-            System.out.println("res = " + res);
         }
+        System.out.println("res = " + res);
         return res;
     }
 }

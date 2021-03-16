@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
 group 'org.example'
@@ -9,6 +10,9 @@ sourceCompatibility = 11
 
 repositories {
     mavenCentral()
+    flatDir{
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -17,4 +21,18 @@ dependencies {
     implementation group: 'io.netty', name: 'netty-all', version: '4.1.59.Final'
     testImplementation group: 'junit', name: 'junit', version: '4.13.1'
     implementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
+}
+
+javafx {
+    version = "15.0.1"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/java"]
+            includes = ["**/*.fxml"]
+        }
+    }
 }
