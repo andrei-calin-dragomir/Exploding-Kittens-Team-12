@@ -12,7 +12,7 @@ public abstract class Card {
     public int getAmount(){
         return deckAmount;
     }
-    public abstract void action(ServerHeldGameManager gameManager);
+    public abstract void action(ServerHeldGameManager gameManager) throws InterruptedException;
 
     @Override
     public boolean equals(Object object){ return object != null && object.getClass() == this.getClass(); }
