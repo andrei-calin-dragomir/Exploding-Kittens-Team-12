@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox fx:id="root" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredevelopmentvu.explodingkittens.gui.MainGuiController">
+   <children>
+      <HBox fx:id="enemyHBox" alignment="CENTER" prefHeight="158.0" prefWidth="1200.0" spacing="100.0">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="TOP_CENTER" prefHeight="63.0" prefWidth="1200.0">
+         <children>
+            <Text fx:id="announcementText" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the game!" textAlignment="CENTER">
+               <font>
+                  <Font size="39.0" />
+               </font>
+            </Text>
+         </children>
+      </HBox>
+      <HBox fx:id="decksHBox" alignment="CENTER" prefHeight="419.0" prefWidth="1200.0">
+         <children>
+            <ImageView fx:id="mainDeck" fitHeight="350.0" layoutX="490.0" layoutY="45.0" onMouseClicked="#pickCard" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/BackSide.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="20.0" right="20.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fx:id="discardDeck" fitHeight="350.0" layoutX="485.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/normal/DefuseCard2.png" />
+               </image>
+            </ImageView>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+      <ScrollPane fitToHeight="true" prefHeight="261.0" prefWidth="1208.0">
+         <content>
+            <GridPane fx:id="cardsGridPane" alignment="CENTER" prefHeight="230.0" prefWidth="200.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>
