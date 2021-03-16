@@ -5,31 +5,29 @@ import java.util.List;
 import java.util.Scanner;
 
 public class GameManager {
-    public List<Player> alivePlayers = new ArrayList<>();
-    public DoublyLinkedList turns = new DoublyLinkedList();
-    public Scanner scanner = new Scanner(System.in);
+    private List<Player> alivePlayers = new ArrayList<>();
+    private DoublyLinkedList turns = new DoublyLinkedList();
+    private Scanner scanner = new Scanner(System.in);
 
-    public Deck addPlayers(Deck mainDeck) {
+    public Deck addPlayers(int sizeOfGame,int numberOfComputers,Deck mainDeck) {
         Deck remainingDeck = mainDeck;
-        for(int i = 0; i < ServerHandler.roomPlayerList.size(); i++){
+        for(int i = 0; i < sizeOfGame; i++){
             alivePlayers.add(new Player());
-            getAlivePlayers().get(i).setName(ServerHandler.roomPlayerList.get(i));
+            if(i == 0) getAlivePlayers().get(i).setName(ClientProgram.username);
+            else if(i < (sizeOfGame - numberOfComputers)) {
+                System.out.println("Insert player " + i + "'s name here:");
+                getAlivePlayers().get(i).setName(scanner.nextLine());
+            }else {
+                getAlivePlayers().get(i).setName("Computer " + i);
+                getAlivePlayers().get(i).markAsComputer();
+                System.out.println("Added " + getAlivePlayers().get(i).getName());
+            }
             getAlivePlayers().get(i).initHand(remainingDeck);
-            ServerHandler.sendMessageToSingleRoomClient(getAlivePlayers().get(i).getName(),
-                    "UPDATEHAND " + createInitialHandAsString(getAlivePlayers().get(i)));
             getTurns().addNode(getAlivePlayers().get(i));
         }
         return remainingDeck;
     }
 
-    private String createInitialHandAsString(Player player) {
-        StringBuilder constructorHand = new StringBuilder();
-        for(int i = 0;i < player.getHand().getHand().size() - 1;i++){
-            constructorHand.append(player.getHand().getHand().get(i)).append(" ");
-        }
-        constructorHand.append(player.getHand().getHand().get(player.getHand().getHand().size() - 1));
-        return constructorHand.toString();
-    }
     public Player getCurrentPlayer(){
         return turns.head.item;
     }
@@ -44,10 +42,7 @@ public class GameManager {
 
     public void killPlayer(Player target){
         alivePlayers.remove(target);
-        turns.head.previous.next = turns.head.next;
-        turns.head.next.previous = turns.head.previous;
-        turns.head = turns.head.previous; //Since the draw function ends turn regardless if the person exploded or not
-                                          //this must be set to previous in order to not skip a person
+        getTurns().deleteHeadNode();
     }
 
     public DoublyLinkedList getTurns(){
@@ -63,4 +58,5 @@ public class GameManager {
         turns.head = turns.head.next;
     }
 
+    public void performComputerAction(){}
 }

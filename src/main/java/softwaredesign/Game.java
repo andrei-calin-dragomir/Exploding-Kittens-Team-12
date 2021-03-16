@@ -80,7 +80,7 @@ public class Game {
                 System.out.println("You drew a: " + cardDrawn.getName() + " card.");
 
             gameManager.endTurn();
-            System.out.println("It is " + getCurrentPlayer()+ "'s turn");
+            System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn");
         }
         else {
             System.out.println("You cannot draw whilst having an exploding kitten in your hand!");
@@ -92,10 +92,10 @@ public class Game {
                 !(gameManager.getCurrentPlayerHand().getCard(index - 1).equals(new defuse())))
             System.out.println("You can only play a defuse card if you have an exploding kitten!");
 
-        else return;
-//            discardDeck.discardCard(
-//                    gameManager.getCurrentPlayerHand().playCard(index, mainDeck)
-//            );
+        else
+            discardDeck.discardCard(
+                    gameManager.getCurrentPlayerHand().playCard(index, mainDeck)
+            );
     }
 
     public void handleAction(String action){
@@ -126,7 +126,6 @@ public class Game {
                 System.out.println("Unknown action, please try again");
         }
     }
-    public String getCurrentPlayer(){ return gameManager.getCurrentPlayer().getName(); }
 
     public void handleComputerAction() throws InterruptedException {
         Card cardDrawn = mainDeck.draw();
@@ -149,16 +148,23 @@ public class Game {
         gameManager.endTurn();
         System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn");
     }
-    public void start(int sizeOfGame, int numberOfComputers) throws IOException {
+
+    public void start(int sizeOfGame, int numberOfComputers) throws IOException, InterruptedException {
 
         mainDeck = new Deck();
         discardDeck = new DiscardDeck();
         gameManager = new GameManager();
-        mainDeck = gameManager.addPlayers(mainDeck);
-        ServerHandler.sendMessageToRoomClients(null, "UPDATEDECKS " + mainDeck.getDeckSize() + " " + discardDeck.getTopCard().getName());
-        ServerHandler.sendMessageToRoomClients(null, "TURN " + gameManager.getCurrentPlayer().getName()); //Initial player
+        mainDeck = gameManager.addPlayers(sizeOfGame,numberOfComputers,mainDeck);
+
+        System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn" ); //Initial player
         while(gameManager.getAlivePlayers().size() != 1){
-            handleAction(scanner.nextLine().toLowerCase().trim());
+            if(gameManager.getCurrentPlayer().isComputer()){
+                handleComputerAction();
+            } else {
+                System.out.println("Enter action: ");
+                if (scanner.hasNextLine())
+                    handleAction(scanner.nextLine().toLowerCase().trim());
+            }
         }
         System.out.println(gameManager.getAlivePlayers().get(0).getName() + " won!");
     }
