@@ -37,7 +37,8 @@ public class ClientProgram {
             switch (input[0]) {
                 case "offline": playOffline();
                 case "online" : goOnline();
-                default       : System.out.println("Unexpected command, try again.");
+                default       : System.out.println("Unexpected command, " +
+                        " again.");
             }
         }
     }

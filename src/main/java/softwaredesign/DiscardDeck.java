@@ -31,6 +31,7 @@ public class DiscardDeck {
         }
     }
     public Card getTopCard(){
+        if(d_deck.size() == 0) return null;
         return d_deck.get(d_deck.size() - 1);
     }
 }

@@ -11,7 +11,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String message){
         System.out.println(message);
-        String[] commands = message.split(" ");
+        String[] commands = message.trim().split(" ");
         switch(commands[0]){
             case "START":
                 System.out.println("The game started!");
@@ -65,8 +65,9 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println(commands[1] + " left the game.\n Players in the room:" + commands[2]);
                 break;
             case "UPDATEDECKS":
+                System.out.println(commands.toString());
                 ClientProgram.deckSize = commands[1];
-                ClientProgram.discardDeckTop = commands[2];
+                if(commands[2] != null) ClientProgram.discardDeckTop = commands[2];
                 break;
             case "COMPUTER":
                 switch(commands[2]){

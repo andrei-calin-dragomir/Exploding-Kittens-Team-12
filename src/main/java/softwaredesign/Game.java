@@ -92,10 +92,10 @@ public class Game {
                 !(gameManager.getCurrentPlayerHand().getCard(index - 1).equals(new defuse())))
             System.out.println("You can only play a defuse card if you have an exploding kitten!");
 
-        else
-            discardDeck.discardCard(
-                    gameManager.getCurrentPlayerHand().playCard(index, mainDeck)
-            );
+//        else
+//            discardDeck.discardCard(
+//                    gameManager.getCurrentPlayerHand().playCard(index, mainDeck)
+//            );
     }
 
     public void handleAction(String action){

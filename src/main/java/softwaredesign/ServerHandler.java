@@ -1,15 +1,12 @@
 package softwaredesign;
 
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Handles a server-side channel.
@@ -22,6 +19,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
     public static ArrayList<String> roomPlayerList = new ArrayList<>();
     private static String[] gameDetails = {"0","0"}; // 0: RoomSize, 1: NumberOfComputers
     private static ServerHeldGame onlineGame = new ServerHeldGame();
+    private static boolean canSend = true;
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
@@ -72,9 +70,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 sendMessageToRoomClients(ctx,"LEFT " + reversedClientDetails.get(ctx) + " " + roomPlayerList);
                 break;
             case "PLACE":
+                System.out.println(Arrays.toString(message));
                 onlineGame.gameManager.mainDeck.insertCard(new exploding_kitten(),Integer.parseInt(message[1]));
                 ServerHandler.sendMessageToRoomClients(null, "UPDATEDECKS " + onlineGame.gameManager.mainDeck.getDeckSize()
                         + " " + onlineGame.gameManager.discardDeck.getTopCard().getName());
+                break;
             case "CREATE":
                 gameDetails = message[1].split(",");
                 createPlayerList(gameDetails);
@@ -83,8 +83,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "PLAY":
                 if(reversedClientDetails.get(ctx).equals(onlineGame.getCurrentPlayer())){
-//                    if(message[1].equals("defuse") & !onlineGame.drawnExplodingKitten) break;
-//                    if(!message[1].equals("defuse") & onlineGame.drawnExplodingKitten) break;
+                    if(onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new defuse()) && !onlineGame.drawnExplodingKitten) break;
+                    if(!onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new defuse()) && onlineGame.drawnExplodingKitten) break;
                     ctx.writeAndFlush("PLAYCONFIRMED");
                     onlineGame.handleAction("play " + message[1]);
                 }
@@ -92,6 +92,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             case "DRAW":
                 if(reversedClientDetails.get(ctx).equals(onlineGame.getCurrentPlayer())){
                     onlineGame.handleAction("draw");
+                }
+                else{
+                    System.out.println("Not current turn");
                 }
                 break;
         }
@@ -128,21 +131,34 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         }
         return false;
     }
-    public static void sendMessageToRoomClients(ChannelHandlerContext ctx, String message){
+    public static void sendMessageToRoomClients(ChannelHandlerContext ctx, String message) throws InterruptedException {
         for(int i = 0; i < roomPlayerList.size(); i++){
             ChannelHandlerContext outgoingCtx = clientDetails.get(roomPlayerList.get(i));
-            if(outgoingCtx == null) continue;
-            if(outgoingCtx == ctx) continue;
-            outgoingCtx.writeAndFlush(message);
+            System.out.println("Sending message: " + message);
+            if(outgoingCtx == null || outgoingCtx == ctx) continue;
+            while(!canSend) {
+                System.out.println("Waiting to send");
+                TimeUnit.MILLISECONDS.sleep(100);
+            }
+            canSend = false;
+            ChannelFuture sentMsg = outgoingCtx.writeAndFlush(message + "\r");
+            System.out.println("Sent message: " + message);
+            System.out.println("Has sent message: " + sentMsg.isDone());
+            while(!sentMsg.isDone()) {
+                System.out.println("Waiting for response");
+                TimeUnit.MILLISECONDS.sleep(100);
+            }
+            canSend = true;
         }
     }
     public static void sendMessageToSingleRoomClient(String name, String message){
         if(clientDetails.get(name) == null) return;
-        clientDetails.get(name).writeAndFlush(message);
+        System.out.println("Sending message from singleroom");
+        clientDetails.get(name).writeAndFlush(message + "\r\n");
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException {
         System.out.println(cause);
         System.out.println("Closing connection for client - " + ctx);
         ctx.close();

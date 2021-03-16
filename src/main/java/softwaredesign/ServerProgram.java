@@ -41,6 +41,7 @@ public final class ServerProgram {
                             p.addLast(new StringEncoder());
 
                             // This is our custom server handler which will have logic for chat.
+                            System.out.println("Making server handler");
                             p.addLast(new ServerHandler());
                         }
                     });
