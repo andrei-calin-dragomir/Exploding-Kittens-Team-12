@@ -5,6 +5,8 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
@@ -37,11 +39,12 @@ public final class ServerProgram {
                              * Socket/channel communication happens in byte streams. String decoder &
                              * encoder helps conversion between bytes & String.
                              */
+                            p.addLast("framer", new LengthFieldBasedFrameDecoder(Short.MAX_VALUE,0,2,0,2));
+                            p.addLast("framer-prepender", new LengthFieldPrepender(2, false));
                             p.addLast(new StringDecoder());
                             p.addLast(new StringEncoder());
 
                             // This is our custom server handler which will have logic for chat.
-                            System.out.println("Making server handler");
                             p.addLast(new ServerHandler());
                         }
                     });

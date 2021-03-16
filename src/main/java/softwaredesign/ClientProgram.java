@@ -5,13 +5,13 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-import org.javatuples.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class ClientProgram {
@@ -56,6 +56,9 @@ public class ClientProgram {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipe = ch.pipeline();
+
+                            pipe.addLast("framer", new LengthFieldBasedFrameDecoder(Short.MAX_VALUE,0,2,0,2));
+                            pipe.addLast("framer-prepender", new LengthFieldPrepender(2, false));
                             pipe.addLast(new StringDecoder());
                             pipe.addLast(new StringEncoder());
                             // This is our custom client handler which will have logic for chat.
@@ -73,8 +76,10 @@ public class ClientProgram {
              * Iterate & take chat message inputs from user & then send to server.
              */
             while (scanner.hasNext()) {
-                String[] input = scanner.nextLine().split(" ");
-                switch(input[0]) {
+                String input = scanner.nextLine();
+                System.out.println(input);
+                String[] inputArray = input.split(" ");
+                switch(inputArray[0]) {
                     case "start":
                         sendRequestToServer("START");
                         break;
@@ -96,17 +101,17 @@ public class ClientProgram {
                         System.exit(0);
                         break;
                     case "play":
-                        requestedCard = input[1];
-                        sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(input[1]));
+                        requestedCard = inputArray[1];
+                        sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(inputArray[1]));
                         break;
                     case "draw":
                         sendRequestToServer("DRAW");
                         break;
                     case "place":
-                        sendRequestToServer("PLACE " + input[1]);
+                        sendRequestToServer("PLACE " + inputArray[1]);
                         break;
                     default:
-                        System.out.println("Unexpected command, try again.");
+                        sendRequestToServer(input);
                         break;
 
                 }

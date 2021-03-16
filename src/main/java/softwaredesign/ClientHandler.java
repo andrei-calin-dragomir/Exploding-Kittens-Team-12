@@ -10,11 +10,13 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
      */
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String message){
-        System.out.println(message + "\n");
         String[] commands = message.trim().split(" ");
         switch(commands[0]){
             case "START":
                 System.out.println("The game started!");
+                break;
+            case "LEAVEREGISTERED":
+                System.out.println("You have left the game!");
                 break;
             case "ROOMCREATED":
                 System.out.println("Room has been created. Waiting for players to connect...");
@@ -37,6 +39,12 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println("You played the " + ClientProgram.requestedCard + " card!");
                 if(ClientProgram.ownHand.contains("exploding_kitten")) ClientProgram.ownHand.remove("exploding_kitten");
                 ClientProgram.ownHand.remove(ClientProgram.requestedCard);
+                break;
+            case "CANTSTART":
+                System.out.println("You are not allowed to start the game, " + commands[1] + " is the game master.");
+                break;
+            case "NOSTART":
+                System.out.println("Not enough players, " + commands[1] + " more needed to start the game!");
                 break;
             case "CONNECTEDTOSERVER":
                 System.out.println("Connection Successful.");
@@ -65,7 +73,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println(commands[1] + " left the game.\n Players in the room:" + commands[2]);
                 break;
             case "UPDATEDECKS":
-                System.out.println(commands.toString());
                 ClientProgram.deckSize = commands[1];
                 if(commands[2] != null) ClientProgram.discardDeckTop = commands[2];
                 break;
@@ -89,7 +96,9 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 for(int i = 1; i < commands.length;i++) ClientProgram.ownHand.add(commands[i]);
                 System.out.println(ClientProgram.ownHand);
                 break;
-
+            default:
+                System.out.println(message);
+                break;
         }
     }
 }
