@@ -31,7 +31,10 @@ public class ServerHeldGame {
             System.out.println("Sending UPDATEHAND");
             ServerHandler.sendMessageToSingleRoomClient(getCurrentPlayer(),"UPDATEHAND " + cardDrawn.getName());
 
-            if (cardDrawn.equals(new exploding_kitten())) handleExplodingKitten();
+            if (cardDrawn.equals(new exploding_kitten())){
+                handleExplodingKitten();
+                return;
+            }
 
             gameManager.endTurn();
             if(getCurrentPlayer().split("_")[0].equals("Computer")) handleComputerAction();
@@ -86,12 +89,14 @@ public class ServerHeldGame {
                 gameManager.killPlayer(gameManager.getCurrentPlayer());
             }
         }
+        else{
+            String topCardName = "NOCARD";
+            Card topCard = gameManager.discardDeck.getTopCard();
+            if(topCard != null) topCardName = topCard.getName();
+            ServerHandler.sendMessageToRoomClients(null, "UPDATEDECKS " + gameManager.mainDeck.getDeckSize() + " " + topCardName);
+        }
 //        TimeUnit.SECONDS.sleep(1); //In order for the text to not go too fast
         gameManager.endTurn();
-        String topCardName = "NOCARD";
-        Card topCard = gameManager.discardDeck.getTopCard();
-        if(topCard != null) topCardName = topCard.getName();
-        ServerHandler.sendMessageToRoomClients(null, "UPDATEDECKS " + gameManager.mainDeck.getDeckSize() + " " + topCardName);
     }
     public void start(int sizeOfGame, int numberOfComputers) throws IOException, InterruptedException {
 

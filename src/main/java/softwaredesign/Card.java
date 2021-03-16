@@ -10,7 +10,7 @@ public abstract class Card {
     public int getAmount(){
         return deckAmount;
     }
-    abstract void action(ServerHeldGameManager gameManager);
+    abstract void action(ServerHeldGameManager gameManager) throws InterruptedException;
 
     @Override
     public boolean equals(Object object){ return object != null && object.getClass() == this.getClass(); }
@@ -26,7 +26,7 @@ class exploding_kitten extends Card {
 }
 
 class defuse extends Card {
-    public void action(ServerHeldGameManager gameManager){
+    public void action(ServerHeldGameManager gameManager) throws InterruptedException {
         gameManager.getCurrentPlayer().getHand().removeCard(new exploding_kitten());
         ServerHandler.sendMessageToSingleRoomClient(gameManager.getCurrentPlayer().getName(),"PLACEKITTEN");
     }
