@@ -39,7 +39,7 @@ public class Hand {
         }
     }
 
-    public Card playCard(int index, ServerHeldGameManager gameManager){
+    public Card playCard(int index, ServerHeldGameManager gameManager) throws InterruptedException {
         Card playCard = getCard(index);
         removeCard(index);
         playCard.action(gameManager);

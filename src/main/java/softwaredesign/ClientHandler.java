@@ -10,7 +10,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
      */
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String message){
-        System.out.println(message);
+        System.out.println(message + "\n");
         String[] commands = message.trim().split(" ");
         switch(commands[0]){
             case "START":

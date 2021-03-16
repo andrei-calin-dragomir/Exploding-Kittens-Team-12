@@ -143,7 +143,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 TimeUnit.MILLISECONDS.sleep(100);
             }
             canSend = false;
-            ChannelFuture sentMsg = outgoingCtx.writeAndFlush(message + "\r");
+            ChannelFuture sentMsg = outgoingCtx.writeAndFlush(message + "\r").sync();
             System.out.println("Sent message: " + message);
             System.out.println("Has sent message: " + sentMsg.isDone());
             while(!sentMsg.isDone()) {
@@ -153,10 +153,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             canSend = true;
         }
     }
-    public static void sendMessageToSingleRoomClient(String name, String message){
+    public static void sendMessageToSingleRoomClient(String name, String message) throws InterruptedException {
         if(clientDetails.get(name) == null) return;
         System.out.println("Sending message from singleroom");
-        clientDetails.get(name).writeAndFlush(message + "\r\n");
+        clientDetails.get(name).writeAndFlush(message + "\r").sync();
     }
 
     @Override
@@ -172,3 +172,4 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         reversedClientDetails.remove(ctx);
     }
 }
+
