@@ -1,5 +1,7 @@
 package softwaredesign;
 
+import softwaredesign.cards.Card;
+
 import java.util.ArrayList;
 import java.util.List;
 

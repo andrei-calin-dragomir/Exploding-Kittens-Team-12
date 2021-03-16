@@ -2,6 +2,8 @@ package softwaredesign;
 
 
 import io.netty.channel.*;
+import softwaredesign.cards.DefuseCard;
+import softwaredesign.cards.ExplodingKittenCard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,7 +73,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "PLACE":
                 System.out.println(Arrays.toString(message));
-                onlineGame.gameManager.mainDeck.insertCard(new exploding_kitten(),Integer.parseInt(message[1]));
+                onlineGame.gameManager.mainDeck.insertCard(new ExplodingKittenCard(),Integer.parseInt(message[1]));
                 ServerHandler.sendMessageToRoomClients(null, "UPDATEDECKS " + onlineGame.gameManager.mainDeck.getDeckSize()
                         + " " + onlineGame.gameManager.discardDeck.getTopCard().getName());
                 break;
@@ -83,8 +85,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "PLAY":
                 if(reversedClientDetails.get(ctx).equals(onlineGame.getCurrentPlayer())){
-                    if(onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new defuse()) && !onlineGame.drawnExplodingKitten) break;
-                    if(!onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new defuse()) && onlineGame.drawnExplodingKitten) break;
+                    if(onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && !onlineGame.drawnExplodingKitten) break;
+                    if(!onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && onlineGame.drawnExplodingKitten) break;
                     ctx.writeAndFlush("PLAYCONFIRMED");
                     onlineGame.handleAction("play " + message[1]);
                 }

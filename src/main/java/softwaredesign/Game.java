@@ -1,5 +1,9 @@
 package softwaredesign;
 
+import softwaredesign.cards.Card;
+import softwaredesign.cards.DefuseCard;
+import softwaredesign.cards.ExplodingKittenCard;
+
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -33,8 +37,8 @@ public class Game {
         System.out.println("You drew an exploding kitten! You have to defuse it!");
         drawnExplodingKitten = true;
         boolean justExploded = false;
-        while(gameManager.getCurrentPlayerHand().contains(new exploding_kitten())) {
-            if (!gameManager.getCurrentPlayerHand().contains(new defuse())) {
+        while(gameManager.getCurrentPlayerHand().contains(new ExplodingKittenCard())) {
+            if (!gameManager.getCurrentPlayerHand().contains(new DefuseCard())) {
                 System.out.println("You have no defuse cards!");
                 System.out.println(gameManager.getCurrentPlayer().getName() + " exploded!");
                 gameManager.killPlayer(gameManager.getCurrentPlayer());
@@ -56,13 +60,13 @@ public class Game {
 
             switch(index){
                 case 4:
-                    mainDeck.insertCard(new exploding_kitten(),rand.nextInt(mainDeck.getDeckSize()));
+                    mainDeck.insertCard(new ExplodingKittenCard(),rand.nextInt(mainDeck.getDeckSize()));
                     break;
                 case 3:
-                    mainDeck.insertCard(new exploding_kitten(),mainDeck.getDeckSize());
+                    mainDeck.insertCard(new ExplodingKittenCard(),mainDeck.getDeckSize());
                     break;
                 default:
-                    mainDeck.insertCard(new exploding_kitten(),index - 1);
+                    mainDeck.insertCard(new ExplodingKittenCard(),index - 1);
                     break;
             }
         }
@@ -74,7 +78,7 @@ public class Game {
             Card cardDrawn = mainDeck.draw();
             gameManager.getCurrentPlayerHand().addToHand(cardDrawn);
 
-            if (cardDrawn.equals(new exploding_kitten()))
+            if (cardDrawn.equals(new ExplodingKittenCard()))
                 handleExplodingKitten();
             else
                 System.out.println("You drew a: " + cardDrawn.getName() + " card.");
@@ -89,7 +93,7 @@ public class Game {
 
     public void handlePlayAction(int index){
         if(drawnExplodingKitten &&
-                !(gameManager.getCurrentPlayerHand().getCard(index - 1).equals(new defuse())))
+                !(gameManager.getCurrentPlayerHand().getCard(index - 1).equals(new DefuseCard())))
             System.out.println("You can only play a defuse card if you have an exploding kitten!");
 
 //        else
@@ -131,12 +135,12 @@ public class Game {
         Card cardDrawn = mainDeck.draw();
         gameManager.getCurrentPlayerHand().addToHand(cardDrawn);
         System.out.println("The Computer drew a card");
-        if(cardDrawn.equals(new exploding_kitten())){
+        if(cardDrawn.equals(new ExplodingKittenCard())){
             System.out.println("The Computer drew an exploding kitten!");
-            if(gameManager.getCurrentPlayerHand().contains(new defuse())){
-                int defuseCardIndex = gameManager.getCurrentPlayerHand().currentHand.indexOf(new defuse()) + 1;
+            if(gameManager.getCurrentPlayerHand().contains(new DefuseCard())){
+                int defuseCardIndex = gameManager.getCurrentPlayerHand().currentHand.indexOf(new DefuseCard()) + 1;
                 handlePlayAction(defuseCardIndex);
-                mainDeck.insertCard(new exploding_kitten(),rand.nextInt(mainDeck.getDeckSize()));
+                mainDeck.insertCard(new ExplodingKittenCard(),rand.nextInt(mainDeck.getDeckSize()));
                 System.out.println("The Computer defused the kitten");
             }
             else{

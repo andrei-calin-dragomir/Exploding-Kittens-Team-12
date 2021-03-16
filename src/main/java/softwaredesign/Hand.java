@@ -1,5 +1,7 @@
 package softwaredesign;
 
+import softwaredesign.cards.Card;
+
 import java.util.ArrayList;
 
 public class Hand {

@@ -3,6 +3,7 @@ package softwaredesign;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import softwaredesign.cards.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,19 +13,17 @@ import java.util.*;
 
 public class Deck {
     public static HashMap<String, Card> cardMap = new HashMap<>(){{
-        put("exploding_kitten", new exploding_kitten());
-        put("defuse", new defuse());
-        put("attack", new attack());
-        put("nope", new nope());
-        put("favor", new favor());
-        put("see_future", new see_future());
-        put("shuffle", new shuffle());
-        put("skip", new skip());
-        put("catermelon", new catermelon());
-        put("taco_cat", new taco_cat());
-        put("potato_cat", new potato_cat());
-        put("rainbow_cat", new rainbow_cat());
-        put("beard_cat", new beard_cat());
+        put("exploding_kitten", new ExplodingKittenCard());
+        put("defuse", new DefuseCard());
+        put("attack", new AttackCard());
+        put("nope", new NopeCard());
+        put("favor", new FavorCard());
+        put("see_future", new SeeTheFutureCard());
+        put("shuffle", new ShuffleCard());
+        put("skip", new SkipCard());
+        put("catermelon", new CatCardMomma());
+        put("taco_cat", new CatCardShy());
+        put("potato_cat", new CatCardZombie());
     }};
     public ArrayList<Card> cardDeck = new ArrayList<>();
 
@@ -41,8 +40,8 @@ public class Deck {
     }
 
     public Card getDefuse(){
-        cardDeck.remove(new defuse());
-        return new defuse();
+        cardDeck.remove(new DefuseCard());
+        return new DefuseCard();
     }
 
     public Card draw(){

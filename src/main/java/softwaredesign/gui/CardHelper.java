@@ -1,10 +1,8 @@
 package softwaredesign.gui;
 
 
-import softwaredesign.*;
+import softwaredesign.cards.Card;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 public class CardHelper {
