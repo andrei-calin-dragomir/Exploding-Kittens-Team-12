@@ -7,7 +7,7 @@ import softwaredesign.cards.ExplodingKittenCard;
 import java.util.*;
 
 public class Room {
-    public HashMap<ChannelHandlerContext, Client> roomPlayerList = new HashMap<>();
+    public HashMap<String, Client> roomPlayerList = new HashMap<>();
     private int[] gameRules; // 0: Max players, 1: NumberOfComputers
     private ServerHeldGame onlineGame = new ServerHeldGame(this);
     private Client currentHost;
@@ -19,7 +19,10 @@ public class Room {
         roomName = name;
         addPlayer(host);
         host.setCurrentRoom(this);
-        for(int i = 0; i < computerAmount; ++i) roomPlayerList.put(host.getCtx(), new Computer(this, i));
+        for(int i = 0; i < computerAmount; ++i) {
+            Computer newComputer = new Computer(this, i);
+            roomPlayerList.put(newComputer.getClientName(), newComputer);
+        }
     }
 
     public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
@@ -89,7 +92,7 @@ public class Room {
     private Boolean isAlive(ChannelHandlerContext ctx){ return onlineGame.gameManager.isAlive(getClientName(ctx)); }
     public int getMaxPlayers(){ return gameRules[0]; }
     private boolean hasFreeSpots(){ return roomPlayerList.size() < getMaxPlayers(); }
-    public HashMap<ChannelHandlerContext, Client> getRoomPlayerList() { return roomPlayerList; }
+    public HashMap<String, Client> getRoomPlayerList() { return roomPlayerList; }
 
     public String getHostName(){ return currentHost.getClientName(); }
     public String getRoomName() { return roomName; }
@@ -110,14 +113,14 @@ public class Room {
 //            else roomPlayerList.add(i,"Computer_" + (i-Integer.parseInt(arg[1]) + 1));
 //        }
 //    }
-    private String getClientName(ChannelHandlerContext ctx){ return roomPlayerList.get(ctx).getClientName(); }
-
-    private ChannelHandlerContext getClientCTX(String clientName){
-        for(HashMap.Entry<ChannelHandlerContext, Client> entry : roomPlayerList.entrySet())
-            if(entry.getValue().getClientName().equals(clientName))
-                return entry.getKey();
+    private String getClientName(ChannelHandlerContext ctx){
+        for(Client client : roomPlayerList.values())
+            if(client.getCtx() != null && client.getCtx().equals(ctx))
+                return client.getClientName();
         return null;
     }
+
+    private ChannelHandlerContext getClientCTX(String clientName){ return roomPlayerList.get(clientName).getCtx(); }
 
     private Client getClientByName(String name){
         for(Client cli : roomPlayerList.values()) if(name == cli.getClientName()) return cli;
@@ -126,7 +129,7 @@ public class Room {
 
     public boolean addPlayer(Client client){
         if(hasFreeSpots()) {
-            roomPlayerList.put(client.getCtx(), client);
+            roomPlayerList.put(client.getClientName(), client);
             return true;
         }
         return false;
