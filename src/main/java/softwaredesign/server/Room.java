@@ -138,7 +138,7 @@ public class Room {
     // Is there a case when a player has to be removed but he is not in roomsPlayersList? This is not checked
     public void removePlayer(String player){
         System.out.println(roomPlayerList.toString());
-        roomPlayerList.remove(getClientCTX(player));
+        roomPlayerList.remove(player);
         System.out.println(roomPlayerList.toString());
     }
 

@@ -31,6 +31,7 @@ public class ServerHeldGameManager{
         for(Card card : player.getHand().getHand()) allCards.add(card.getName());
         return String.join(" ", allCards);
     }
+
     public Player getCurrentPlayer(){
         return turns.head.item;
     }
