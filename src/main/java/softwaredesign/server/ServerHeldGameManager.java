@@ -51,10 +51,7 @@ public class ServerHeldGameManager{
 
     public void killPlayer(Player target){
         alivePlayers.remove(target);
-        turns.head.previous.next = turns.head.next;
-        turns.head.next.previous = turns.head.previous;
-        turns.head = turns.head.previous; //Since the draw function ends turn regardless if the person exploded or not
-        //this must be set to previous in order to not skip a person
+        getTurns().deleteHeadNode();
     }
 
     public DoublyLinkedList getTurns(){

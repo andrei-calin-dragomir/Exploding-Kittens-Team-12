@@ -13,7 +13,7 @@ public class Room {
     private Client currentHost;
     private String roomName;
 
-    public Room(Client host, String name, int maxPlayers, int computerAmount, HashMap<ChannelHandlerContext,Client> clientStuff){
+    public Room(Client host, String name, int maxPlayers, int computerAmount){
         gameRules = new int[]{maxPlayers, computerAmount};
         currentHost = host;
         roomName = name;
@@ -24,12 +24,15 @@ public class Room {
 
     public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
         String[] message = msg.split("\\s+");
-        if(!isAlive(ctx)){
+        if(onlineGame.gameManager != null &&  !isAlive(ctx)){
             ctx.writeAndFlush("NOTALLOWED DEAD");
             return;
         }
         switch(message[0].toUpperCase(Locale.ROOT)){
             case "START":
+                System.out.println(roomPlayerList.toString());
+                System.out.println(getHostName());
+                System.out.println(getClientName(ctx));
                 if(getHostName().equals(getClientName(ctx))){
                     if(!hasFreeSpots()) {
                         sendMessageToRoomClients(null,"START");
@@ -126,7 +129,7 @@ public class Room {
             roomPlayerList.put(client.getCtx(), client);
             return true;
         }
-        else return false;
+        return false;
     }
 
     // Is there a case when a player has to be removed but he is not in roomsPlayersList? This is not checked

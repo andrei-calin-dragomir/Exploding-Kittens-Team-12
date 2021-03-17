@@ -51,6 +51,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "NOTALLOWED":
                 if(commands[1].equals("DEAD")) System.out.println("You can't do that because you have already exploded.");
+                break;
             case "CONNECTEDTOSERVER":
                 System.out.println("Connection Successful.");
                 switch(commands[1]){

@@ -62,7 +62,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "CREATE":
                 String[] gameDetails = message[1].split(",");
-                roomList.put(gameDetails[0], new Room(clientDetails.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2]), clientDetails));
+                roomList.put(gameDetails[0], new Room(clientDetails.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2])));
                 ctx.writeAndFlush("ROOMCREATED");
                 break;
             default:

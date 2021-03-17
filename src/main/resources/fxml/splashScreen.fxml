@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1">
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="softwaredesign.gui.SplashScreenController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="110.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="334.0" minWidth="10.0" prefWidth="334.0" />
@@ -23,14 +23,14 @@
    <children>
       <ImageView fitHeight="146.0" fitWidth="216.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER">
          <image>
-            <Image url="../../../../resources/images/logo.png" />
+            <Image url="@../../../../resources/images/logo.png" />
          </image>
       </ImageView>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Button fx:id="playOnlineButton" maxWidth="100.0" mnemonicParsing="false" prefWidth="100.0" text="Play Online" />
-            <Button fx:id="playOfflineButton" layoutX="127.0" layoutY="83.0" maxWidth="100.0" mnemonicParsing="false" prefWidth="100.0" text="Play Offline" />
-            <Button fx:id="exitButton" layoutX="127.0" layoutY="106.0" maxWidth="100.0" mnemonicParsing="false" prefWidth="100.0" text="Exit" />
+            <Button fx:id="playOnlineButton" userData="online" onAction="#executeAction" maxWidth="100.0" mnemonicParsing="false" prefWidth="100.0" text="Play Online" />
+            <Button fx:id="playOfflineButton" userData="offline" onAction="#executeAction" layoutX="127.0" layoutY="83.0" maxWidth="100.0" mnemonicParsing="false" prefWidth="100.0" text="Play Offline" />
+            <Button fx:id="exitButton" userData="exit" onAction="#executeAction" layoutX="127.0" layoutY="106.0" maxWidth="100.0" mnemonicParsing="false" prefWidth="100.0" text="Exit" />
          </children>
          <GridPane.margin>
             <Insets />
