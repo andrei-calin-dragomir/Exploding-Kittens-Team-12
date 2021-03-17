@@ -1,20 +1,17 @@
-package softwaredesign;
+package softwaredesign.server;
 
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.commons.collections4.BidiMap;
-import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import softwaredesign.cards.DefuseCard;
 import softwaredesign.cards.ExplodingKittenCard;
 
 import java.util.*;
 
 public class Room {
-    public static HashMap<ChannelHandlerContext,Client> clientDetails;
-    public static ArrayList<Client> roomPlayerList = new ArrayList<>();
-    private static int[] gameRules; // 0: Max players, 1: NumberOfComputers
-    private static ServerHeldGame onlineGame = new ServerHeldGame();
-    private static Client currentHost;
-    private static String roomName;
+    public HashMap<ChannelHandlerContext, Client> roomPlayerList = new HashMap<>();
+    private int[] gameRules; // 0: Max players, 1: NumberOfComputers
+    private ServerHeldGame onlineGame = new ServerHeldGame(this);
+    private Client currentHost;
+    private String roomName;
 
     public Room(Client host, String name, int maxPlayers, int computerAmount, HashMap<ChannelHandlerContext,Client> clientStuff){
         gameRules = new int[]{maxPlayers, computerAmount};
@@ -22,8 +19,7 @@ public class Room {
         roomName = name;
         addPlayer(host);
         host.setCurrentRoom(this);
-        clientDetails = clientStuff;
-        for(int i = 0; i < computerAmount; ++i) roomPlayerList.add(new Computer(this, i));
+        for(int i = 0; i < computerAmount; ++i) roomPlayerList.put(host.getCtx(), new Computer(this, i));
     }
 
     public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
@@ -42,7 +38,7 @@ public class Room {
             case "PLACE":
                 System.out.println(Arrays.toString(message));
                 onlineGame.gameManager.mainDeck.insertCard(new ExplodingKittenCard(),Integer.parseInt(message[1]));
-                ServerHandler.sendMessageToRoomClients(null, "UPDATEDECKS " + onlineGame.gameManager.mainDeck.getDeckSize()
+                sendMessageToRoomClients(null, "UPDATEDECKS " + onlineGame.gameManager.mainDeck.getDeckSize()
                         + " " + onlineGame.gameManager.discardDeck.getTopCard().getName());
                 break;
             case "PLAY":
@@ -83,15 +79,17 @@ public class Room {
         }
     }
 
-    private int getMaxPlayers(){ return gameRules[0]; }
+    public int getMaxPlayers(){ return gameRules[0]; }
     private boolean hasFreeSpots(){ return roomPlayerList.size() < getMaxPlayers(); }
-    private String getHostName(){ return currentHost.getClientName(); }
-    public static String getRoomName() { return roomName; }
+    public HashMap<ChannelHandlerContext, Client> getRoomPlayerList() { return roomPlayerList; }
 
-    public String playerListAsString(){
-        String tempString = "";
-        for(Client client : roomPlayerList) tempString = tempString + client.getClientName() + "@@";
-        return tempString;
+    public String getHostName(){ return currentHost.getClientName(); }
+    public String getRoomName() { return roomName; }
+
+    public String playerListAsString(String delim){
+        ArrayList<String> allPlayers = new ArrayList<>();
+        for(Client client : roomPlayerList.values()) allPlayers.add(client.getClientName());
+        return String.join(delim, allPlayers); // @@ is the delimiter which the client side will use
     }
 
 //    private void createPlayerList(String [] arg){
@@ -104,44 +102,44 @@ public class Room {
 //            else roomPlayerList.add(i,"Computer_" + (i-Integer.parseInt(arg[1]) + 1));
 //        }
 //    }
-    private String getClientName(ChannelHandlerContext ctx){ return clientDetails.get(ctx).getClientName(); }
+    private String getClientName(ChannelHandlerContext ctx){ return roomPlayerList.get(ctx).getClientName(); }
 
-    private static ChannelHandlerContext getClientCTX(String clientName){
-        for(HashMap.Entry<ChannelHandlerContext, Client> entry : clientDetails.entrySet())
+    private ChannelHandlerContext getClientCTX(String clientName){
+        for(HashMap.Entry<ChannelHandlerContext, Client> entry : roomPlayerList.entrySet())
             if(entry.getValue().getClientName().equals(clientName))
                 return entry.getKey();
         return null;
     }
 
     private Client getClientByName(String name){
-        System.out.println(roomPlayerList.toString());
-        for(Client cli : roomPlayerList) if(name == cli.getClientName()) return cli;
+        for(Client cli : roomPlayerList.values()) if(name == cli.getClientName()) return cli;
         return null;
     }
 
     public boolean addPlayer(Client client){
         if(hasFreeSpots()) {
-            Boolean a = roomPlayerList.add(client);
-            System.out.println(roomPlayerList.toString());
-            return a;
+            roomPlayerList.put(client.getCtx(), client);
+            return true;
         }
         else return false;
     }
 
     // Is there a case when a player has to be removed but he is not in roomsPlayersList? This is not checked
     public void removePlayer(String player){
-        roomPlayerList.remove(getClientByName(player));
+        System.out.println(roomPlayerList.toString());
+        roomPlayerList.remove(getClientCTX(player));
+        System.out.println(roomPlayerList.toString());
     }
 
-    public static void sendMessageToRoomClients(ChannelHandlerContext ctx, String message){
-        for(Client cli : roomPlayerList){
+    public void sendMessageToRoomClients(ChannelHandlerContext ctx, String message){
+        for(Client cli : roomPlayerList.values()){
             ChannelHandlerContext outgoingCtx = cli.getCtx();
             if(outgoingCtx == null || outgoingCtx == ctx) continue;
             outgoingCtx.writeAndFlush(message);
         }
     }
 
-    public static void sendMessageToSingleRoomClient(String name, String message){
+    public void sendMessageToSingleRoomClient(String name, String message){
         if(getClientCTX(name) != null) getClientCTX(name).writeAndFlush(message);
     }
 }

@@ -1,9 +1,9 @@
 package softwaredesign.cards;
 
-import softwaredesign.ServerHeldGameManager;
+import softwaredesign.server.ServerHeldGame;
 
 public class ExplodingKittenCard extends Card {
-    public void action(ServerHeldGameManager gameManager) {
+    public void action(ServerHeldGame heldGame) {
         System.out.println(className);
     }
 

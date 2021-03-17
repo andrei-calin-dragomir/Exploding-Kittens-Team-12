@@ -46,7 +46,7 @@ public class MainGuiController implements Initializable {
     }
 
     public void pickCard(){
-        addCardToHand(new Image("file:src/main/resources/images/normal/NopeCard1.png"));
+        addCardToHand(new Image("resources/images/normal/NopeCard1.png"));
     }
 
     private void addCardToHand(Image img){

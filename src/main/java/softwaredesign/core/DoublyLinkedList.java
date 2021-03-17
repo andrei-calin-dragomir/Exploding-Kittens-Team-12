@@ -1,17 +1,17 @@
-package softwaredesign;
+package softwaredesign.core;
 
-class DoublyLinkedList {
-    class Node {
-        Player item;
-        Node previous;
-        Node next;
+public class DoublyLinkedList {
+    public class Node {
+        public Player item;
+        public Node previous;
+        public Node next;
 
         public Node(Player item) {
             this.item = item;
         }
     }
 
-    Node head, tail = null;
+    public Node head, tail = null;
 
     public void addNode(Player item) {
         Node newNode = new Node(item);
@@ -28,9 +28,7 @@ class DoublyLinkedList {
         }
     }
 
-
-    public void deleteHeadNode()
-    {
+    public void deleteHeadNode(){
         Node temp = head.next;
         while(temp != head){
             if(temp.previous == head )

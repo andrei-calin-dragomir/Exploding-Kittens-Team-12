@@ -1,4 +1,7 @@
-package softwaredesign;
+package softwaredesign.server;
+
+import softwaredesign.cards.Card;
+import softwaredesign.core.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,28 +13,23 @@ public class ServerHeldGameManager{
     public Deck mainDeck;
     public DiscardDeck discardDeck;
 
-    public void addPlayers() throws IOException, InterruptedException{
+    public void addPlayers(Room currentRoom) throws IOException, InterruptedException{
         mainDeck = new Deck();
         discardDeck = new DiscardDeck();
-        for(int i = 0; i < ServerHandler.serverPlayerList.size(); i++){
-            alivePlayers.add(new Player());
-            getAlivePlayers().get(i).setName(ServerHandler.serverPlayerList.get(i));
-            getAlivePlayers().get(i).initHand(mainDeck);
-            ServerHandler.sendMessageToSingleRoomClient(getAlivePlayers().get(i).getName(),
-                    "UPDATEHAND " + createHandAsString(getAlivePlayers().get(i)));
-            getTurns().addNode(getAlivePlayers().get(i));
+        for(Client client : currentRoom.getRoomPlayerList().values()){
+            Player newPlayer = new Player();
+            alivePlayers.add(newPlayer);
+            newPlayer.setName(client.getClientName());
+            newPlayer.initHand(mainDeck);
+            currentRoom.sendMessageToSingleRoomClient(newPlayer.getName(), "UPDATEHAND " + createHandAsString(newPlayer));
+            getTurns().addNode(newPlayer);
         }
     }
 
     public String createHandAsString(Player player) {
-        System.out.println(player.getHand().getHandSize());
-        String constructorHand = new String("");
-        for(int i = 0;i < player.getHand().getHandSize() - 1;i++){
-            constructorHand += (player.getHand().getCard(i).className + " ");
-        }
-        constructorHand += (player.getHand().getCard(player.getHand().getHandSize()-1).className);
-        System.out.println(constructorHand);
-        return constructorHand;
+        ArrayList<String> allCards = new ArrayList<>();
+        for(Card card : player.getHand().getHand()) allCards.add(card.getName());
+        return String.join(" ", allCards);
     }
     public Player getCurrentPlayer(){
         return turns.head.item;

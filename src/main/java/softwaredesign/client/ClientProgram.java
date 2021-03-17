@@ -1,4 +1,4 @@
-package softwaredesign;
+package softwaredesign.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;

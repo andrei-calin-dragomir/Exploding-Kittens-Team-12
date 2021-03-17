@@ -1,8 +1,7 @@
-package softwaredesign;
+package softwaredesign.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import org.javatuples.Pair;
 
 public class ClientHandler extends SimpleChannelInboundHandler<String>{
     /*
@@ -77,7 +76,9 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println("You joined the game.\nPlayers in the room: " + tempString);
                 break;
             case "LEFT":
-                System.out.println(commands[1] + " left the game.\n Players in the room:" + commands[2]);
+                String[] playersInRoom2 = commands[2].split("@@");
+                for(String player : playersInRoom2) tempString = tempString + player + " ";
+                System.out.println(commands[1] + " left the game.\nPlayers in the room: " + tempString);
                 break;
             case "UPDATEDECKS":
                 ClientProgram.deckSize = commands[1];
@@ -109,6 +110,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
             default:
                 System.out.println("Unknown server command, wtf?");
+                System.out.println(message);
                 break;
         }
     }

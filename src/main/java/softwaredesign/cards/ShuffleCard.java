@@ -1,9 +1,7 @@
 package softwaredesign.cards;
 
-import softwaredesign.ServerHeldGameManager;
+import softwaredesign.server.ServerHeldGame;
 
 public class ShuffleCard extends Card {
-    public void action(ServerHeldGameManager gameManager) {
-        gameManager.mainDeck.reshuffle();
-    }
+    public void action(ServerHeldGame heldGame) { heldGame.gameManager.mainDeck.reshuffle(); }
 }

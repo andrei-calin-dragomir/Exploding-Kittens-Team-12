@@ -1,4 +1,4 @@
-package softwaredesign;
+package softwaredesign.server;
 
 
 import io.netty.channel.*;
@@ -49,13 +49,15 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 if(!roomObj.addPlayer(clientDetails.get(ctx))) ctx.writeAndFlush("ROOMFULL");
                 else {
                     clientDetails.get(ctx).setCurrentRoom(roomObj);
-                    ctx.writeAndFlush("JOINSUCCESS " + roomObj.playerListAsString());
+                    ctx.writeAndFlush("JOINSUCCESS " + roomObj.playerListAsString("@@"));
                     roomObj.sendMessageToRoomClients(ctx, "JOINED " + getClientName(ctx));
                 }
                 break;
             case "LEAVE":
-                String clientName = getClientName(ctx);
-                roomList.get(clientName).removePlayer(clientName);
+                Room playerRoom = getRoom(ctx);
+                String playerName = getClientName(ctx);
+                playerRoom.removePlayer(playerName);
+                playerRoom.sendMessageToRoomClients(ctx,"LEFT " + playerName + " " + playerRoom.playerListAsString("@@"));
                 ctx.writeAndFlush("LEAVEREGISTERED");
                 break;
             case "CREATE":
@@ -69,22 +71,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         }
     }
 
-    private String playerListAsString(){
-        ArrayList<String> tempList = serverPlayerList;
-        tempList.removeAll(Collections.singleton("free"));
-        return String.join("@@", tempList);
-    }
-
-    private void createPlayerList(String [] arg){
-        int playerSpots = Integer.parseInt(arg[0]) - Integer.parseInt(arg[1]);
-        for(int i = 0; i < Integer.parseInt(arg[0]); i++){
-            if(playerSpots != 0) {
-                serverPlayerList.add(i,"free");
-                playerSpots--;
-            }
-            else serverPlayerList.add(i,"Computer_" + (i-Integer.parseInt(arg[1]) + 1));
-        }
-    }
     private String getClientName(ChannelHandlerContext ctx){ return clientDetails.get(ctx).getClientName(); }
     private Room getRoom(ChannelHandlerContext ctx){ return clientDetails.get(ctx).getCurrentRoom(); }
 
@@ -105,36 +91,16 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         if(serverPlayerList.remove(playerName)) serverPlayerList.add("free");
     }
 
-    private boolean searchInPlayerList(String playerName){
-        System.out.println(serverPlayerList + "");
-        for(int i = 0; i < serverPlayerList.size(); i++){
-            System.out.println(serverPlayerList.get(i));
-            if(serverPlayerList.get(i).equals(playerName)) return true;
-        }
-        return false;
-    }
-
-    public static void sendMessageToRoomClients(ChannelHandlerContext ctx, String message){
-        for(int i = 0; i < serverPlayerList.size(); i++){
-            ChannelHandlerContext outgoingCtx = getClientCTX(serverPlayerList.get(i));
-            if(outgoingCtx == null || outgoingCtx == ctx) continue;
-            outgoingCtx.writeAndFlush(message);
-        }
-    }
-
-    public static void sendMessageToSingleRoomClient(String name, String message){
-        if(getClientCTX(name) != null) getClientCTX(name).writeAndFlush(message);
-    }
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException {
         System.out.println(cause);
         System.out.println("Closing connection for client - " + getClientName(ctx));
-        ctx.close();
-        if(serverPlayerList.contains(getClientName(ctx))){
-            getRoom(ctx).sendMessageToRoomClients(ctx,"LEFT " + getClientName(ctx) + " " + serverPlayerList);
-            getRoom(ctx).removePlayer(getClientName(ctx));
+        Room playerRoom = getRoom(ctx);
+        if(playerRoom != null){
+            playerRoom.removePlayer(getClientName(ctx));
+            playerRoom.sendMessageToRoomClients(ctx,"LEFT " + getClientName(ctx) + " " + playerRoom.playerListAsString("@@"));
         }
+        ctx.close();
         clientDetails.remove(ctx);
     }
 }

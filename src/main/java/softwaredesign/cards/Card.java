@@ -1,8 +1,6 @@
 package softwaredesign.cards;
 
-import softwaredesign.ServerHeldGameManager;
-
-import java.util.ArrayList;
+import softwaredesign.server.ServerHeldGame;
 
 public abstract class Card {
     public String className = this.getClass().getSimpleName();
@@ -12,7 +10,7 @@ public abstract class Card {
     public int getAmount(){
         return deckAmount;
     }
-    public abstract void action(ServerHeldGameManager gameManager) throws InterruptedException;
+    public abstract void action(ServerHeldGame gameManager) throws InterruptedException;
 
     @Override
     public boolean equals(Object object){ return object != null && object.getClass() == this.getClass(); }

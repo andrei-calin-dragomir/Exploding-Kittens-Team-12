@@ -1,4 +1,4 @@
-package softwaredesign;
+package softwaredesign.core;
 
 import softwaredesign.cards.Card;
 

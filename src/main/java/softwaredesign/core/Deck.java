@@ -1,4 +1,4 @@
-package softwaredesign;
+package softwaredesign.core;
 
 
 import com.google.gson.Gson;
@@ -73,7 +73,7 @@ public class Deck {
     }
 
     public void deckConstruct() throws IOException {
-        String fileContent = Files.readString(Paths.get("src/main/java/softwaredesign/decks/default.json"), StandardCharsets.US_ASCII);
+        String fileContent = Files.readString(Paths.get("resources/decks/default.json"), StandardCharsets.US_ASCII);
         ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
 
         for (LinkedTreeMap<Object, Object> cardTree : cardAmounts) {

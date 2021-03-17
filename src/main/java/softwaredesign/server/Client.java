@@ -1,4 +1,4 @@
-package softwaredesign;
+package softwaredesign.server;
 
 import io.netty.channel.ChannelHandlerContext;
 

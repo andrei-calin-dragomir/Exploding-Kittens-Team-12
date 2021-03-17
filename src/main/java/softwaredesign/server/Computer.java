@@ -1,4 +1,4 @@
-package softwaredesign;
+package softwaredesign.server;
 
 public class Computer extends Client{
     public Computer(Room roomAI, int computerID) {
