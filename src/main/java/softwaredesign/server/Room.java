@@ -27,8 +27,9 @@ public class Room {
 
     public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
         String[] message = msg.split("\\s+");
-        if(onlineGame.gameManager != null &&  !isAlive(ctx)){
-            ctx.writeAndFlush("NOTALLOWED DEAD");
+        if(onlineGame.gameManager != null && !isAlive(ctx) && !message[0].toUpperCase(Locale.ROOT).equals("CHAT")){
+            if(onlineGame.gameManager.alivePlayers.size() != 0) ctx.writeAndFlush("NOTALLOWED DEAD");
+            else ctx.writeAndFlush("ENDED");
             return;
         }
         switch(message[0].toUpperCase(Locale.ROOT)){
@@ -90,9 +91,7 @@ public class Room {
     public int getMaxPlayers(){ return gameRules[0]; }
     private boolean hasFreeSpots(){ return roomPlayerList.size() < getMaxPlayers(); }
     public HashMap<String, Client> getRoomPlayerList() { return roomPlayerList; }
-
     public String getHostName(){ return currentHost.getClientName(); }
-    public String getRoomName() { return roomName; }
 
     public String playerListAsString(String delim){
         ArrayList<String> allPlayers = new ArrayList<>();
@@ -100,16 +99,6 @@ public class Room {
         return String.join(delim, allPlayers); // @@ is the delimiter which the client side will use
     }
 
-//    private void createPlayerList(String [] arg){
-//        int playerSpots = Integer.parseInt(arg[0]) - Integer.parseInt(arg[1]);
-//        for(int i = 0; i < Integer.parseInt(arg[0]); i++){
-//            if(playerSpots != 0) {
-//                roomPlayerList.add(i,"free");
-//                playerSpots--;
-//            }
-//            else roomPlayerList.add(i,"Computer_" + (i-Integer.parseInt(arg[1]) + 1));
-//        }
-//    }
     public String getClientName(ChannelHandlerContext ctx){
         for(Client client : roomPlayerList.values())
             if(client.getCtx() != null && client.getCtx().equals(ctx))
@@ -119,11 +108,6 @@ public class Room {
 
     public ChannelHandlerContext getClientCTX(String clientName){ return roomPlayerList.get(clientName).getCtx(); }
 
-    private Client getClientByName(String name){
-        for(Client cli : roomPlayerList.values()) if(name == cli.getClientName()) return cli;
-        return null;
-    }
-
     public boolean addPlayer(Client client){
         if(hasFreeSpots()) {
             roomPlayerList.put(client.getClientName(), client);
@@ -132,7 +116,6 @@ public class Room {
         return false;
     }
 
-    // Is there a case when a player has to be removed but he is not in roomsPlayersList? This is not checked
     public void removePlayer(String player){ roomPlayerList.remove(player); }
 
     public void sendMessageToRoomClients(ChannelHandlerContext ctx, String message){

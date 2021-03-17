@@ -16,7 +16,6 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class ClientProgram {
-
     static String username;
     static ChannelFuture correspondenceChannel;
     public static ArrayList<String> ownHand = new ArrayList<>();
@@ -77,7 +76,6 @@ public class ClientProgram {
              */
             while (scanner.hasNext()) {
                 String input = scanner.nextLine();
-                System.out.println(input);
                 String[] inputArray = input.split(" ");
                 switch(inputArray[0].toLowerCase(Locale.ROOT)) {
                     case "start":

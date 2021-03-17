@@ -39,6 +39,9 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println("The future of this game is in your hands!\n" +
                         "Place the exploding kitten between the top and bottom cards of the deck. Answer: place index");
                 break;
+            case "ENDED":
+                System.out.println("The game has ended, you can still chat or you can leave with \"leave\"");
+                break;
             case "PLAYCONFIRMED":
                 System.out.println("You played the " + ClientProgram.requestedCard + " card!");
                 ClientProgram.ownHand.remove(ClientProgram.requestedCard);
@@ -80,6 +83,11 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "JOINED":
                 System.out.println(commands[1] + " joined the game.");
+                break;
+            case "WINNER":
+                String theWinner = commands[1];
+                if(theWinner == ClientProgram.username) System.out.println("Congratulations, you have won the game!");
+                else System.out.println("The winner of the game is: " + theWinner);
                 break;
             case "JOINSUCCESS":
                 String[] playersInRoom = commands[1].split("@@");
