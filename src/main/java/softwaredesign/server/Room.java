@@ -53,18 +53,18 @@ public class Room {
                 }else ctx.writeAndFlush("NOTALLOWED BADPLACE");
                 break;
             case "PLAY":
-                if(getClientName(ctx).equals(onlineGame.getCurrentPlayer())){
+                if(getClientName(ctx).equals(onlineGame.getCurrentPlayerName())){
                     int index = Integer.parseInt(message[1]);
                     if(index < 0 || onlineGame.gameManager.getCurrentPlayer().getHand().getHandSize() - 1 < index){
-                        ctx.writeAndFlush("That card is invalid");
+                        ctx.writeAndFlush("NOTALLOWED INVALIDPLAY");
                         break;
                     }
                     if(onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && !onlineGame.drawnExplodingKitten){
-                        ctx.writeAndFlush("You can only play a defuse card when you draw an Exploding Kitten!");
+                        ctx.writeAndFlush("NOTALLOWED NOTEXPLODING");
                         break;
                     }
                     if(!onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && onlineGame.drawnExplodingKitten){
-                        ctx.writeAndFlush("You have to play a defuse card when you draw an Exploding Kitten!");
+                        ctx.writeAndFlush("NOTALLOWED MUSTDEFUSE");
                         break;
                     }
                     ctx.writeAndFlush("PLAYCONFIRMED");
@@ -72,12 +72,8 @@ public class Room {
                 }
                 break;
             case "DRAW":
-                if(getClientName(ctx).equals(onlineGame.getCurrentPlayer())){
-                    onlineGame.handleAction("draw");
-                }
-                else{
-                    System.out.println("Not current turn");
-                }
+                if(getClientName(ctx).equals(onlineGame.getCurrentPlayerName())) onlineGame.handleAction("draw");
+                else ctx.writeAndFlush("NOTALLOWED NOTYOURTURN");
                 break;
             case "CHAT":
                 String buildMsg = "";
@@ -114,14 +110,14 @@ public class Room {
 //            else roomPlayerList.add(i,"Computer_" + (i-Integer.parseInt(arg[1]) + 1));
 //        }
 //    }
-    private String getClientName(ChannelHandlerContext ctx){
+    public String getClientName(ChannelHandlerContext ctx){
         for(Client client : roomPlayerList.values())
             if(client.getCtx() != null && client.getCtx().equals(ctx))
                 return client.getClientName();
         return null;
     }
 
-    private ChannelHandlerContext getClientCTX(String clientName){ return roomPlayerList.get(clientName).getCtx(); }
+    public ChannelHandlerContext getClientCTX(String clientName){ return roomPlayerList.get(clientName).getCtx(); }
 
     private Client getClientByName(String name){
         for(Client cli : roomPlayerList.values()) if(name == cli.getClientName()) return cli;
@@ -137,11 +133,7 @@ public class Room {
     }
 
     // Is there a case when a player has to be removed but he is not in roomsPlayersList? This is not checked
-    public void removePlayer(String player){
-        System.out.println(roomPlayerList.toString());
-        roomPlayerList.remove(player);
-        System.out.println(roomPlayerList.toString());
-    }
+    public void removePlayer(String player){ roomPlayerList.remove(player); }
 
     public void sendMessageToRoomClients(ChannelHandlerContext ctx, String message){
         for(Client cli : roomPlayerList.values()){

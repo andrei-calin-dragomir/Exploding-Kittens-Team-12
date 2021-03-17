@@ -2,7 +2,6 @@ package softwaredesign.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import softwaredesign.server.Client;
 
 import java.util.ArrayList;
 
@@ -56,6 +55,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
             case "NOTALLOWED":
                 if(commands[1].equals("DEAD")) System.out.println("You can't do that because you have already exploded.");
                 else if(commands[1].equals("BADPLACE")) System.out.println("Invalid card placement, try placing again.");
+                else if(commands[1].equals("NOTEXPLODING")) System.out.println("You can only play a defuse card when you draw an Exploding Kitten!");
+                else if(commands[1].equals("MUSTDEFUSE")) System.out.println("You have to play a defuse card when you draw an Exploding Kitten!");
+                else if(commands[1].equals("INVALIDPLAY")) System.out.println("Trying to play invalid card.");
+                else if(commands[1].equals("NOTYOURTURN")) System.out.println("It is not your turn.");
                 break;
             case "CONNECTEDTOSERVER":
                 System.out.println("Connection Successful.");
