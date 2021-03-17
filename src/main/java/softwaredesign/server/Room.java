@@ -46,7 +46,7 @@ public class Room {
                 else ctx.writeAndFlush("CANTSTART " + getHostName());
                 break;
             case "PLACE":
-                if(Integer.parseInt(message[1]) > 0 && Integer.parseInt(message[1]) < onlineGame.gameManager.mainDeck.getDeckSize()){
+                if(Integer.parseInt(message[1]) >= 0 && Integer.parseInt(message[1]) < onlineGame.gameManager.mainDeck.getDeckSize()){
                     onlineGame.gameManager.mainDeck.insertCard(new ExplodingKittenCard(),Integer.parseInt(message[1]));
                     sendMessageToRoomClients(null, "UPDATEDECKS " + onlineGame.gameManager.mainDeck.getDeckSize()
                             + " " + onlineGame.gameManager.discardDeck.getTopCard().getName());

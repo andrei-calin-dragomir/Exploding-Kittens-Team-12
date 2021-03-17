@@ -116,6 +116,25 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 for(int i = 1; i < commands.length; ++i) tempString = tempString + commands[i] + " ";
                 System.out.println(tempString);
                 break;
+            case "PLAYER":
+                switch(commands[2]){
+                    case "exploded":
+                        System.out.println(commands[1] + " has just exploded!");
+                        break;
+                    case "drew":
+                        System.out.println(commands[1] + " has drawn a card.");
+                        break;
+                    case "drewexp":
+                        System.out.println(commands[1] + " has drawn an exploding kitten!");
+                        break;
+                    case "defused":
+                        System.out.println(commands[1] + " has defused the kitten.");
+                        break;
+                    case "played":
+                        System.out.println(commands[1] + " played the " + commands[3] + " card.");
+                        break;
+                }
+                break;
             default:
                 System.out.println("Unknown server command, wtf?");
                 System.out.println(message);
