@@ -92,22 +92,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 ClientProgram.deckSize = commands[1];
                 if(commands[2] != null) ClientProgram.discardDeckTop = commands[2];
                 break;
-            case "COMPUTER":
-                switch(commands[2]){
-                    case "exploded":
-                        System.out.println(commands[1] + " has just exploded!");
-                        break;
-                    case "drew":
-                        System.out.println(commands[1] + " has drawn a card.");
-                        break;
-                    case "drewexp":
-                        System.out.println(commands[1] + " has drawn an exploding kitten!");
-                        break;
-                    case "defused":
-                        System.out.println(commands[1] + " has defused the kitten.");
-                        break;
-                }
-                break;
             case "UPDATEHAND":
                 for(int i = 1; i < commands.length;i++) ClientProgram.ownHand.add(commands[i]);
                 System.out.println(ClientProgram.ownHand);
