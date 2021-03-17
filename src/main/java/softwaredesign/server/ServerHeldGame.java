@@ -65,7 +65,10 @@ public class ServerHeldGame {
     }
 
     public void handlePlayAction(int index) throws InterruptedException {
-        if(gameManager.getCurrentPlayer().getHand().getCard(index).equals(new DefuseCard())) drawnExplodingKitten = false;
+        if(gameManager.getCurrentPlayer().getHand().getCard(index).equals(new DefuseCard())){
+            gameManager.discardDeck.discardCard(new ExplodingKittenCard());
+            drawnExplodingKitten = false;
+        }
         gameManager.discardDeck.discardCard(gameManager.getCurrentPlayerHand().playCard(index, this));
         String topCardName = "NOCARD";
         Card topCard = gameManager.discardDeck.getTopCard();
@@ -99,7 +102,6 @@ public class ServerHeldGame {
                 int defuseCardIndex = gameManager.getCurrentPlayerHand().getHand().indexOf(new DefuseCard());
                 handlePlayAction(defuseCardIndex);
                 int nextIndex = rand.nextInt(gameManager.mainDeck.getDeckSize());
-                System.out.println(nextIndex);
                 gameManager.mainDeck.insertCard(new ExplodingKittenCard(),nextIndex);
                 System.out.println(gameManager.mainDeck.getFullDeck().get(0).getName());
                 room.sendMessageToRoomClients(null,"COMPUTER " + gameManager.getCurrentPlayer().getName() + " defused");

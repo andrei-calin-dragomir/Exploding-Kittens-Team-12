@@ -7,7 +7,7 @@ import softwaredesign.cards.ExplodingKittenCard;
 import java.util.*;
 
 public class Room {
-    public HashMap<String, Client> roomPlayerList = new HashMap<>();
+    public LinkedHashMap<String, Client> roomPlayerList = new LinkedHashMap<>();
     private int[] gameRules; // 0: Max players, 1: NumberOfComputers
     private ServerHeldGame onlineGame = new ServerHeldGame(this);
     private Client currentHost;
@@ -46,10 +46,11 @@ public class Room {
                 else ctx.writeAndFlush("CANTSTART " + getHostName());
                 break;
             case "PLACE":
-                System.out.println(Arrays.toString(message));
-                onlineGame.gameManager.mainDeck.insertCard(new ExplodingKittenCard(),Integer.parseInt(message[1]));
-                sendMessageToRoomClients(null, "UPDATEDECKS " + onlineGame.gameManager.mainDeck.getDeckSize()
-                        + " " + onlineGame.gameManager.discardDeck.getTopCard().getName());
+                if(Integer.parseInt(message[1]) > 0 && Integer.parseInt(message[1]) < onlineGame.gameManager.mainDeck.getDeckSize()){
+                    onlineGame.gameManager.mainDeck.insertCard(new ExplodingKittenCard(),Integer.parseInt(message[1]));
+                    sendMessageToRoomClients(null, "UPDATEDECKS " + onlineGame.gameManager.mainDeck.getDeckSize()
+                            + " " + onlineGame.gameManager.discardDeck.getTopCard().getName());
+                }else ctx.writeAndFlush("NOTALLOWED BADPLACE");
                 break;
             case "PLAY":
                 if(getClientName(ctx).equals(onlineGame.getCurrentPlayer())){

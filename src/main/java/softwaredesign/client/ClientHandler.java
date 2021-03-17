@@ -2,6 +2,9 @@ package softwaredesign.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import softwaredesign.server.Client;
+
+import java.util.ArrayList;
 
 public class ClientHandler extends SimpleChannelInboundHandler<String>{
     /*
@@ -28,16 +31,17 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println("You drew an exploding kitten, you must defuse it immediately!");
                 break;
             case "DIED":
-                System.out.println("You died due to a horrible furball explosion! May God rest your soul...");
-                System.exit(0);
+                System.out.println("You died due to a horrible furball explosion! May God rest your soul...\n" +
+                        "You are now spectating the game.");
+                ClientProgram.ownHand = new ArrayList<>();
                 break;
             case "PLACEKITTEN":
+                ClientProgram.ownHand.remove("ExplodingKittenCard");
                 System.out.println("The future of this game is in your hands!\n" +
                         "Place the exploding kitten between the top and bottom cards of the deck. Answer: place index");
                 break;
             case "PLAYCONFIRMED":
                 System.out.println("You played the " + ClientProgram.requestedCard + " card!");
-                if(ClientProgram.ownHand.contains("exploding_kitten")) ClientProgram.ownHand.remove("exploding_kitten");
                 ClientProgram.ownHand.remove(ClientProgram.requestedCard);
                 break;
             case "CANTSTART":
@@ -51,6 +55,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "NOTALLOWED":
                 if(commands[1].equals("DEAD")) System.out.println("You can't do that because you have already exploded.");
+                else if(commands[1].equals("BADPLACE")) System.out.println("Invalid card placement, try placing again.");
                 break;
             case "CONNECTEDTOSERVER":
                 System.out.println("Connection Successful.");

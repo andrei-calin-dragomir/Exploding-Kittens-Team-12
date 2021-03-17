@@ -101,6 +101,7 @@ public class ClientProgram {
                         System.exit(0);
                         break;
                     case "play":
+                        if(inputArray.length != 2) break;
                         requestedCard = inputArray[1];
                         sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(inputArray[1]));
                         break;
@@ -108,11 +109,14 @@ public class ClientProgram {
                         sendRequestToServer("DRAW");
                         break;
                     case "place":
+                        if(inputArray.length != 2) break;
                         sendRequestToServer("PLACE " + inputArray[1]);
                         break;
                     case "chat":
                         sendRequestToServer(input);
                         break;
+                    case "hand":
+                        System.out.println(ownHand);
                     default:
                         System.out.println("Unknown command, try again");
                         break;
