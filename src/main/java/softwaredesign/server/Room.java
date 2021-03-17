@@ -24,6 +24,10 @@ public class Room {
 
     public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
         String[] message = msg.split("\\s+");
+        if(!isAlive(ctx)){
+            ctx.writeAndFlush("NOTALLOWED DEAD");
+            return;
+        }
         switch(message[0].toUpperCase(Locale.ROOT)){
             case "START":
                 if(getHostName().equals(getClientName(ctx))){
@@ -79,6 +83,7 @@ public class Room {
         }
     }
 
+    private Boolean isAlive(ChannelHandlerContext ctx){ return onlineGame.gameManager.isAlive(getClientName(ctx)); }
     public int getMaxPlayers(){ return gameRules[0]; }
     private boolean hasFreeSpots(){ return roomPlayerList.size() < getMaxPlayers(); }
     public HashMap<ChannelHandlerContext, Client> getRoomPlayerList() { return roomPlayerList; }

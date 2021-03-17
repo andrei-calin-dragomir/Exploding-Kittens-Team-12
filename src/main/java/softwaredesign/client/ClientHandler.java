@@ -49,6 +49,8 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
             case "NOSTART":
                 System.out.println("Not enough players, " + commands[1] + " more needed to start the game!");
                 break;
+            case "NOTALLOWED":
+                if(commands[1].equals("DEAD")) System.out.println("You can't do that because you have already exploded.");
             case "CONNECTEDTOSERVER":
                 System.out.println("Connection Successful.");
                 switch(commands[1]){

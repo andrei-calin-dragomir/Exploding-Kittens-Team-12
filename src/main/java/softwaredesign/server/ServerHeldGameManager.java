@@ -42,6 +42,12 @@ public class ServerHeldGameManager{
     public List<Player> getAlivePlayers(){
         return this.alivePlayers;
     }
+    public Boolean isAlive(String playerName){
+        for(Player player : alivePlayers)
+            if(player.getName().equals(playerName))
+                return true;
+        return false;
+    }
 
     public void killPlayer(Player target){
         alivePlayers.remove(target);
