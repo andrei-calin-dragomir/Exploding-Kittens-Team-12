@@ -2,30 +2,22 @@ package softwaredesign;
 
 
 import io.netty.channel.*;
-import softwaredesign.cards.DefuseCard;
-import softwaredesign.cards.ExplodingKittenCard;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+
 
 /**
  * Handles a server-side channel.
  */
 public class ServerHandler extends SimpleChannelInboundHandler<String>{
-//    String: Username Channel: connection
-    public static Hashtable<String,ChannelHandlerContext> clientDetails = new Hashtable<>();
-    private static Hashtable<ChannelHandlerContext,String> reversedClientDetails = new Hashtable<>();
-
-    public static ArrayList<String> roomPlayerList = new ArrayList<>();
-    private static String[] gameDetails = {"0","0"}; // 0: RoomSize, 1: NumberOfComputers
-    private static ServerHeldGame onlineGame = new ServerHeldGame();
-    private static boolean canSend = true;
+    public static HashMap<ChannelHandlerContext,Client> clientDetails = new HashMap<>();
+    private static HashMap<String,Room> roomList = new HashMap<>();
+    public static ArrayList<String> serverPlayerList = new ArrayList<>();
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
         System.out.println("Client joined - " + ctx);
+        clientDetails.put(ctx, new Client(ctx));
     }
 
     /*
@@ -41,135 +33,109 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
     }
     public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
         String[] message = msg.split("\\s+");
-        switch(message[0]){
-            case "START":
-                if(!roomPlayerList.contains("free")) {
-                    sendMessageToRoomClients(null,"START");
-                    onlineGame.start(Integer.parseInt(gameDetails[0]), Integer.parseInt(gameDetails[1]));
-                }else{
-                    sendMessageToSingleRoomClient(null,"NOSTART");
-                }
-                break;
+        switch(message[0].toUpperCase(Locale.ROOT)){
             case "USERNAME":
-                clientDetails.put(message[1],ctx);
-                reversedClientDetails.put(ctx,message[1]);
-                ctx.write("CONNECTEDTOSERVER ");
-                if(Arrays.equals(gameDetails, new String[]{"0", "0"})) ctx.writeAndFlush("NOROOM");
-                else ctx.writeAndFlush("ROOMAVAILABLE");
+                clientDetails.get(ctx).setClientName(message[1]);
+                System.out.println(clientDetails.get(ctx).getClientName());
+                String str = "";
+                for(String key : roomList.keySet()) str = str + key + ",";
+                System.out.println(str);
+                if(roomList.isEmpty()) ctx.writeAndFlush("CONNECTEDTOSERVER NOROOM");
+                else ctx.writeAndFlush("CONNECTEDTOSERVER ROOMAVAILABLE " + str);
                 break;
             case "JOIN":
-                if(!searchInPlayerList("free")) ctx.writeAndFlush("ROOMFULL");
-                else{
-                    ctx.write("JOINSUCCESS ");
-                    updatePlayerList(reversedClientDetails.get(ctx));
-                    for(int i =0; i < roomPlayerList.size() - 1; i++) ctx.write(roomPlayerList.get(i) + ",");
-                    ctx.writeAndFlush(roomPlayerList.get(roomPlayerList.size() - 1));
-                    sendMessageToRoomClients(ctx,"JOINED " + reversedClientDetails.get(ctx));
+                Room roomObj = roomList.get(message[1]);
+                if(roomObj == null) ctx.writeAndFlush("ROOMNOTFOUND");
+                if(!roomObj.addPlayer(clientDetails.get(ctx))) ctx.writeAndFlush("ROOMFULL");
+                else {
+                    clientDetails.get(ctx).setCurrentRoom(roomObj);
+                    ctx.writeAndFlush("JOINSUCCESS " + roomObj.playerListAsString());
+                    roomObj.sendMessageToRoomClients(ctx, "JOINED " + getClientName(ctx));
                 }
                 break;
             case "LEAVE":
-                updatePlayerList(reversedClientDetails.get(ctx));
-                sendMessageToRoomClients(ctx,"LEFT " + reversedClientDetails.get(ctx) + " " + roomPlayerList);
-                break;
-            case "PLACE":
-                System.out.println(Arrays.toString(message));
-                onlineGame.gameManager.mainDeck.insertCard(new ExplodingKittenCard(),Integer.parseInt(message[1]));
-                ServerHandler.sendMessageToRoomClients(null, "UPDATEDECKS " + onlineGame.gameManager.mainDeck.getDeckSize()
-                        + " " + onlineGame.gameManager.discardDeck.getTopCard().getName());
+                String clientName = getClientName(ctx);
+                roomList.get(clientName).removePlayer(clientName);
+                ctx.writeAndFlush("LEAVEREGISTERED");
                 break;
             case "CREATE":
-                gameDetails = message[1].split(",");
-                createPlayerList(gameDetails);
-                updatePlayerList(reversedClientDetails.get(ctx));
+                String[] gameDetails = message[1].split(",");
+                roomList.put(gameDetails[0], new Room(clientDetails.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2]), clientDetails));
                 ctx.writeAndFlush("ROOMCREATED");
                 break;
-            case "PLAY":
-                if(reversedClientDetails.get(ctx).equals(onlineGame.getCurrentPlayer())){
-                    if(onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && !onlineGame.drawnExplodingKitten) break;
-                    if(!onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && onlineGame.drawnExplodingKitten) break;
-                    ctx.writeAndFlush("PLAYCONFIRMED");
-                    onlineGame.handleAction("play " + message[1]);
-                }
-                break;
-            case "DRAW":
-                if(reversedClientDetails.get(ctx).equals(onlineGame.getCurrentPlayer())){
-                    onlineGame.handleAction("draw");
-                }
-                else{
-                    System.out.println("Not current turn");
-                }
+            default:
+                getRoom(ctx).channelRespond(ctx, msg);
                 break;
         }
     }
+
+    private String playerListAsString(){
+        ArrayList<String> tempList = serverPlayerList;
+        tempList.removeAll(Collections.singleton("free"));
+        return String.join("@@", tempList);
+    }
+
     private void createPlayerList(String [] arg){
         int playerSpots = Integer.parseInt(arg[0]) - Integer.parseInt(arg[1]);
         for(int i = 0; i < Integer.parseInt(arg[0]); i++){
             if(playerSpots != 0) {
-                roomPlayerList.add(i,"free");
+                serverPlayerList.add(i,"free");
                 playerSpots--;
             }
-            else roomPlayerList.add(i,"Computer_" + (i-Integer.parseInt(arg[1]) + 1));
+            else serverPlayerList.add(i,"Computer_" + (i-Integer.parseInt(arg[1]) + 1));
         }
     }
-    private void updatePlayerList(String playerName){
-        for(int i = 0; i < roomPlayerList.size(); i++){
-            if(roomPlayerList.get(i).equals(playerName)){
-                roomPlayerList.set(i,"free");
-                return;
-            }
-        }
-        for(int i = 0; i < roomPlayerList.size(); i++){
-            if(roomPlayerList.get(i).equals("free")){
-                roomPlayerList.set(i,playerName);
-                return;
-            }
-        }
+    private String getClientName(ChannelHandlerContext ctx){ return clientDetails.get(ctx).getClientName(); }
+    private Room getRoom(ChannelHandlerContext ctx){ return clientDetails.get(ctx).getCurrentRoom(); }
+
+    private static ChannelHandlerContext getClientCTX(String clientName){
+        for(HashMap.Entry<ChannelHandlerContext, Client> entry : clientDetails.entrySet())
+            if(entry.getValue().getClientName().equals(clientName))
+                return entry.getKey();
+        return null;
     }
+
+    public boolean addPlayer(String playerName){
+        if(serverPlayerList.remove("free")) return serverPlayerList.add(playerName);
+        else return false;
+    }
+
+    // Is there a case when a player has to be removed but he is not in roomsPlayersList? This is not checked
+    public void removePlayer(String playerName){
+        if(serverPlayerList.remove(playerName)) serverPlayerList.add("free");
+    }
+
     private boolean searchInPlayerList(String playerName){
-        System.out.println(roomPlayerList + "");
-        for(int i = 0; i < roomPlayerList.size(); i++){
-            System.out.println(roomPlayerList.get(i));
-            if(roomPlayerList.get(i).equals(playerName)) return true;
+        System.out.println(serverPlayerList + "");
+        for(int i = 0; i < serverPlayerList.size(); i++){
+            System.out.println(serverPlayerList.get(i));
+            if(serverPlayerList.get(i).equals(playerName)) return true;
         }
         return false;
     }
-    public static void sendMessageToRoomClients(ChannelHandlerContext ctx, String message) throws InterruptedException {
-        for(int i = 0; i < roomPlayerList.size(); i++){
-            ChannelHandlerContext outgoingCtx = clientDetails.get(roomPlayerList.get(i));
-            System.out.println("Sending message: " + message);
+
+    public static void sendMessageToRoomClients(ChannelHandlerContext ctx, String message){
+        for(int i = 0; i < serverPlayerList.size(); i++){
+            ChannelHandlerContext outgoingCtx = getClientCTX(serverPlayerList.get(i));
             if(outgoingCtx == null || outgoingCtx == ctx) continue;
-            while(!canSend) {
-                System.out.println("Waiting to send");
-                TimeUnit.MILLISECONDS.sleep(100);
-            }
-            canSend = false;
-            ChannelFuture sentMsg = outgoingCtx.writeAndFlush(message + "\r").sync();
-            System.out.println("Sent message: " + message);
-            System.out.println("Has sent message: " + sentMsg.isDone());
-            while(!sentMsg.isDone()) {
-                System.out.println("Waiting for response");
-                TimeUnit.MILLISECONDS.sleep(100);
-            }
-            canSend = true;
+            outgoingCtx.writeAndFlush(message);
         }
     }
-    public static void sendMessageToSingleRoomClient(String name, String message) throws InterruptedException {
-        if(clientDetails.get(name) == null) return;
-        System.out.println("Sending message from singleroom");
-        clientDetails.get(name).writeAndFlush(message + "\r").sync();
+
+    public static void sendMessageToSingleRoomClient(String name, String message){
+        if(getClientCTX(name) != null) getClientCTX(name).writeAndFlush(message);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException {
         System.out.println(cause);
-        System.out.println("Closing connection for client - " + ctx);
+        System.out.println("Closing connection for client - " + getClientName(ctx));
         ctx.close();
-        if(roomPlayerList.contains(reversedClientDetails.get(ctx))){
-            sendMessageToRoomClients(ctx,"LEFT " + reversedClientDetails.get(ctx) + " " + roomPlayerList);
-            updatePlayerList(reversedClientDetails.get(ctx));
+        if(serverPlayerList.contains(getClientName(ctx))){
+            getRoom(ctx).sendMessageToRoomClients(ctx,"LEFT " + getClientName(ctx) + " " + serverPlayerList);
+            getRoom(ctx).removePlayer(getClientName(ctx));
         }
-        clientDetails.remove(reversedClientDetails.get(ctx));
-        reversedClientDetails.remove(ctx);
+        clientDetails.remove(ctx);
     }
 }
 

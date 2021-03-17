@@ -1,54 +1,46 @@
 [
   {
     "deckAmount": 4,
-    "className": "exploding_kitten"
+    "className": "ExplodingKittenCard"
   },
   {
     "deckAmount": 6,
-    "className": "defuse"
+    "className": "DefuseCard"
   },
   {
     "deckAmount": 4,
-    "className": "attack"
+    "className": "AttackCard"
   },
   {
     "deckAmount": 5,
-    "className": "nope"
+    "className": "NopeCard"
   },
   {
     "deckAmount": 4,
-    "className": "favor"
+    "className": "FavorCard"
   },
   {
     "deckAmount": 5,
-    "className": "see_future"
+    "className": "SeeTheFutureCard"
   },
   {
     "deckAmount": 4,
-    "className": "shuffle"
+    "className": "ShuffleCard"
   },
   {
     "deckAmount": 4,
-    "className": "skip"
+    "className": "SkipCard"
   },
   {
     "deckAmount": 4,
-    "className": "catermelon"
+    "className": "CatCardMomma"
   },
   {
     "deckAmount": 4,
-    "className": "taco_cat"
+    "className": "CatCardShy"
   },
   {
     "deckAmount": 4,
-    "className": "potato_cat"
-  },
-  {
-    "deckAmount": 4,
-    "className": "rainbow_cat"
-  },
-  {
-    "deckAmount": 4,
-    "className": "beard_cat"
+    "className": "CatCardZombie"
   }
 ]

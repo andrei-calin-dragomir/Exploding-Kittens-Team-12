@@ -13,17 +13,17 @@ import java.util.*;
 
 public class Deck {
     public static HashMap<String, Card> cardMap = new HashMap<>(){{
-        put("exploding_kitten", new ExplodingKittenCard());
-        put("defuse", new DefuseCard());
-        put("attack", new AttackCard());
-        put("nope", new NopeCard());
-        put("favor", new FavorCard());
-        put("see_future", new SeeTheFutureCard());
-        put("shuffle", new ShuffleCard());
-        put("skip", new SkipCard());
-        put("catermelon", new CatCardMomma());
-        put("taco_cat", new CatCardShy());
-        put("potato_cat", new CatCardZombie());
+        put("ExplodingKittenCard", new ExplodingKittenCard());
+        put("DefuseCard", new DefuseCard());
+        put("AttackCard", new AttackCard());
+        put("NopeCard", new NopeCard());
+        put("FavorCard", new FavorCard());
+        put("SeeTheFutureCard", new SeeTheFutureCard());
+        put("ShuffleCard", new ShuffleCard());
+        put("SkipCard", new SkipCard());
+        put("CatCardMomma", new CatCardMomma());
+        put("CatCardShy", new CatCardShy());
+        put("CatCardZombie", new CatCardZombie());
     }};
     public ArrayList<Card> cardDeck = new ArrayList<>();
 
@@ -62,7 +62,8 @@ public class Deck {
         ArrayList<Card> tempHand = new ArrayList<>();
         while(true){
             Card cardDrawn = draw();
-            if(cardDrawn.getName().equals("exploding_kitten")) insertCard(cardDrawn, getDeckSize() - 1);
+            System.out.println(cardDrawn);
+            if(cardDrawn.getName().equals("ExplodingKittenCard")) insertCard(cardDrawn, getDeckSize() - 1);
             else tempHand.add(cardDrawn);
             if(tempHand.size() == 7) {
                 reshuffle();

@@ -3,7 +3,6 @@ package softwaredesign;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ServerHeldGameManager{
     public List<Player> alivePlayers = new ArrayList<>();
@@ -14,9 +13,9 @@ public class ServerHeldGameManager{
     public void addPlayers() throws IOException, InterruptedException{
         mainDeck = new Deck();
         discardDeck = new DiscardDeck();
-        for(int i = 0; i < ServerHandler.roomPlayerList.size(); i++){
+        for(int i = 0; i < ServerHandler.serverPlayerList.size(); i++){
             alivePlayers.add(new Player());
-            getAlivePlayers().get(i).setName(ServerHandler.roomPlayerList.get(i));
+            getAlivePlayers().get(i).setName(ServerHandler.serverPlayerList.get(i));
             getAlivePlayers().get(i).initHand(mainDeck);
             ServerHandler.sendMessageToSingleRoomClient(getAlivePlayers().get(i).getName(),
                     "UPDATEHAND " + createHandAsString(getAlivePlayers().get(i)));

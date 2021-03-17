@@ -5,13 +5,14 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-import org.javatuples.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class ClientProgram {
@@ -56,11 +57,13 @@ public class ClientProgram {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipe = ch.pipeline();
+
+                            pipe.addLast("framer", new LengthFieldBasedFrameDecoder(Short.MAX_VALUE,0,2,0,2));
+                            pipe.addLast("framer-prepender", new LengthFieldPrepender(2, false));
                             pipe.addLast(new StringDecoder());
                             pipe.addLast(new StringEncoder());
                             // This is our custom client handler which will have logic for chat.
                             pipe.addLast(new ClientHandler());
-
                         }
                     });
 
@@ -73,8 +76,10 @@ public class ClientProgram {
              * Iterate & take chat message inputs from user & then send to server.
              */
             while (scanner.hasNext()) {
-                String[] input = scanner.nextLine().split(" ");
-                switch(input[0]) {
+                String input = scanner.nextLine();
+                System.out.println(input);
+                String[] inputArray = input.split(" ");
+                switch(inputArray[0].toLowerCase(Locale.ROOT)) {
                     case "start":
                         sendRequestToServer("START");
                         break;
@@ -82,7 +87,7 @@ public class ClientProgram {
                         sendRequestToServer("LEAVE");
                         break;
                     case "join":
-                        sendRequestToServer("JOIN");
+                        sendRequestToServer("JOIN " + inputArray[1]);
                         break;
                     case "create":
                         sendRequestToServer("CREATE " + createGame());
@@ -96,19 +101,21 @@ public class ClientProgram {
                         System.exit(0);
                         break;
                     case "play":
-                        requestedCard = input[1];
-                        sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(input[1]));
+                        requestedCard = inputArray[1];
+                        sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(inputArray[1]));
                         break;
                     case "draw":
                         sendRequestToServer("DRAW");
                         break;
                     case "place":
-                        sendRequestToServer("PLACE " + input[1]);
+                        sendRequestToServer("PLACE " + inputArray[1]);
+                        break;
+                    case "chat":
+                        sendRequestToServer(input);
                         break;
                     default:
-                        System.out.println("Unexpected command, try again.");
+                        System.out.println("Unknown command, try again");
                         break;
-
                 }
             }
             // Wait until the connection is closed.
@@ -131,7 +138,6 @@ public class ClientProgram {
     private static void sendRequestToServer(String message) throws Exception{
         Channel channel = correspondenceChannel.sync().channel();
         channel.writeAndFlush(message);
-        channel.flush();
     }
 
     private static void playOffline() throws IOException, InterruptedException {
@@ -141,24 +147,28 @@ public class ClientProgram {
 
     private static String createGame(){
         Scanner scanner = new Scanner(System.in);
-        int parameters[] = {0,-1};
+        int parameter1 = 0;
+        int parameter2 = -1;
+        String roomName = "";
+        System.out.println("Give a room name: ");
+        roomName = scanner.nextLine();
         System.out.println("How many players do you want in your game? Answer options: 2-5");
-        while(parameters[0] == 0) {
+        while(parameter1 == 0) {
             if (scanner.hasNext()) {
                 int roomSize = scanner.nextInt();
                 if (roomSize < 2 | roomSize > 5) System.out.println("Cannot handle this number of players.");
-                else parameters[0] = roomSize;
+                else parameter1 = roomSize;
             }
         }
-        System.out.println("How many computers do you want in your game? Minimum: 0 Maximum: " + (parameters[0] - 1));
-        while(parameters[1] == -1){
+        System.out.println("How many computers do you want in your game? Minimum: 0 Maximum: " + (parameter1 - 1));
+        while(parameter2 == -1){
             if(scanner.hasNext()){
                 int numberOfComputers = scanner.nextInt();
-                if( numberOfComputers < 0 | numberOfComputers > (parameters[0] - 1))
+                if( numberOfComputers < 0 | numberOfComputers > (parameter1 - 1))
                     System.out.println("Invalid number of computers");
-                else parameters[1] = numberOfComputers;
+                else parameter2 = numberOfComputers;
             }
         }
-        return parameters[0] + "," + parameters[1];
+        return roomName + "," + parameter1 + "," + parameter2;
     }
 }
