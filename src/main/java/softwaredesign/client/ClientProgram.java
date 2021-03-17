@@ -158,7 +158,7 @@ public class ClientProgram {
         while(parameter1 == 0) {
             if (scanner.hasNext()) {
                 int roomSize = scanner.nextInt();
-                if (roomSize < 2 | roomSize > 5) System.out.println("Cannot handle this number of players.");
+                if (roomSize < 2 || roomSize > 5) System.out.println("Cannot handle this number of players.");
                 else parameter1 = roomSize;
             }
         }
@@ -166,7 +166,7 @@ public class ClientProgram {
         while(parameter2 == -1){
             if(scanner.hasNext()){
                 int numberOfComputers = scanner.nextInt();
-                if( numberOfComputers < 0 | numberOfComputers > (parameter1 - 1))
+                if( numberOfComputers < 0 || numberOfComputers > (parameter1 - 1))
                     System.out.println("Invalid number of computers");
                 else parameter2 = numberOfComputers;
             }

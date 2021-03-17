@@ -12,7 +12,6 @@ import java.util.*;
 
 public class ServerHeldGame {
     public ServerHeldGameManager gameManager;
-    private Scanner scanner = new Scanner(System.in);
     private Room room;
     private Random rand = new Random();
     public boolean drawnExplodingKitten;
@@ -116,7 +115,7 @@ public class ServerHeldGame {
     private void handleComputerPlayAction() throws InterruptedException{
         boolean shouldPlay = true;
         Hand currentHand = gameManager.getCurrentPlayer().getHand();
-        while(shouldPlay && !(Collections.frequency(currentHand.getHand(), new DefuseCard()) == currentHand.getHandSize())){
+        while(shouldPlay && Collections.frequency(currentHand.getHand(), new DefuseCard()) != currentHand.getHandSize()){
             int pickCardToPlay = rand.nextInt(currentHand.getHandSize());
             boolean foundGoodCard = false;
             while(!foundGoodCard){
