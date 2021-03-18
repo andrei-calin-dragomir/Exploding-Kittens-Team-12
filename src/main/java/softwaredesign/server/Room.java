@@ -1,17 +1,18 @@
 package softwaredesign.server;
 
 import io.netty.channel.ChannelHandlerContext;
-import softwaredesign.cards.DefuseCard;
-import softwaredesign.cards.ExplodingKittenCard;
+import softwaredesign.cards.*;
 
 import java.util.*;
 
 public class Room {
     public LinkedHashMap<String, Client> roomPlayerList = new LinkedHashMap<>();
-    private int[] gameRules; // 0: Max players, 1: NumberOfComputers
-    private ServerHeldGame onlineGame = new ServerHeldGame(this);
+    private final int[] gameRules; // 0: Max players, 1: NumberOfComputers
+    private final ServerHeldGame onlineGame = new ServerHeldGame(this);
     private Client currentHost;
-    private String roomName;
+    private final String roomName;
+    public String getRoomName(){ return this.roomName; }
+
 
     public Room(Client host, String name, int maxPlayers, int computerAmount){
         gameRules = new int[]{maxPlayers, computerAmount};
@@ -68,10 +69,19 @@ public class Room {
                         ctx.writeAndFlush("NOTALLOWED MUSTDEFUSE");
                         break;
                     }
+//TODO                    if(onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new FavorCard())){
+//                        ctx.writeAndFlush("PLAYCONFIRMED");
+//                        break;
+//                    }
                     ctx.writeAndFlush("PLAYCONFIRMED");
                     onlineGame.handleAction("play " + message[1]);
                 }
                 break;
+//TODO            case "TARGETED":
+//                if(getRoomPlayerList().containsKey(message[1])){
+//                    onlineGame.handleAction("play " + onlineGame.gameManager.getCurrentPlayerHand().getHand().indexOf(new FavorCard()));
+//                    sendMessageToSingleRoomClient(message[1],"GIVECARD " + getClientName(ctx));
+//                }else ctx.writeAndFlush("NOTALLOWED WRONGNAME");
             case "DRAW":
                 if(getClientName(ctx).equals(onlineGame.getCurrentPlayerName())) onlineGame.handleAction("draw");
                 else ctx.writeAndFlush("NOTALLOWED NOTYOURTURN");

@@ -98,8 +98,9 @@ public class ClientProgram {
                         group.shutdownGracefully();
                         System.exit(0);
                         break;
+//TODO                    case "target":
+//                        sendRequestToServer("TARGETED " + inputArray[1]);
                     case "play":
-                        if(inputArray.length != 2) break;
                         requestedCard = inputArray[1];
                         sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(inputArray[1]));
                         break;

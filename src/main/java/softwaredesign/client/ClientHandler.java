@@ -43,9 +43,14 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println("The game has ended, you can still chat or you can leave with \"leave\"");
                 break;
             case "PLAYCONFIRMED":
+//TODO                if(ClientProgram.requestedCard.equals("FavorCard")){
+//                    System.out.println("Chose your target... 'target playername'");
+//                }
                 System.out.println("You played the " + ClientProgram.requestedCard + " card!");
                 ClientProgram.ownHand.remove(ClientProgram.requestedCard);
                 break;
+//TODO            case "GIVECARD":
+//                System.out.println("You must give a card to ");
             case "CANTSTART":
                 System.out.println("You are not allowed to start the game, " + commands[1] + " is the game master.");
                 break;
@@ -62,6 +67,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 else if(commands[1].equals("MUSTDEFUSE")) System.out.println("You have to play a defuse card when you draw an Exploding Kitten!");
                 else if(commands[1].equals("INVALIDPLAY")) System.out.println("Trying to play invalid card.");
                 else if(commands[1].equals("NOTYOURTURN")) System.out.println("It is not your turn.");
+//TODO                else if(commands[1].equals("WRONGNAME")) System.out.println("The player name you entered is wrong, try again.");
                 break;
             case "CONNECTEDTOSERVER":
                 System.out.println("Connection Successful.");
@@ -106,6 +112,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
             case "UPDATEHAND":
                 for(int i = 1; i < commands.length;i++) ClientProgram.ownHand.add(commands[i]);
                 System.out.println(ClientProgram.ownHand);
+                break;
+            case "SEEFUTURE":
+                for(int i = 1; i < commands.length; ++i) tempString = tempString + commands[i] + " ";
+                System.out.println("The top cards are: " + tempString);
                 break;
             case "CHAT":
                 for(int i = 1; i < commands.length; ++i) tempString = tempString + commands[i] + " ";

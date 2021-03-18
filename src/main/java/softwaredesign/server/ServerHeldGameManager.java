@@ -59,6 +59,15 @@ public class ServerHeldGameManager{
         return turns;
     }
 
+    public String getTopThreeCards() {
+        if(mainDeck.getDeckSize() <= 3){
+            ArrayList<String> allPlayers = new ArrayList<>();
+            for(Card card : mainDeck.getFullDeck()) allPlayers.add(card.getName());
+            return String.join(" ", allPlayers);
+        }else return mainDeck.getFullDeck().get(0).getName() + " " +
+                    mainDeck.getFullDeck().get(1).getName() + " " +
+                    mainDeck.getFullDeck().get(2).getName();
+    }
 
     public void setNextTurn(Player target){
         //TODO
