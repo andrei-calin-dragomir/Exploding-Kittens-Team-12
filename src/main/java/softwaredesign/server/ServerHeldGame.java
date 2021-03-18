@@ -36,6 +36,7 @@ public class ServerHeldGame {
             room.sendMessageToRoomClients(null,"TURN " + gameManager.getCurrentPlayer().getName());
         }
     }
+
     public void handleAction(String action) throws InterruptedException {
         String[] parsedAction = action.split(" ");
         System.out.println("Drawing card: " + action);
@@ -56,10 +57,7 @@ public class ServerHeldGame {
             room.sendMessageToSingleRoomClient(getCurrentPlayerName(),"UPDATEHAND " + cardDrawn.getName());
             room.sendMessageToRoomClients(room.getRoomPlayerList().get(gameManager.getCurrentPlayer().getName()).getCtx(),
                     "PLAYER " + gameManager.getCurrentPlayer().getName() + " drew");
-            String topCardName = "NOCARD";
-            Card topCard = gameManager.discardDeck.getTopCard();
-            if(topCard != null) topCardName = topCard.getName();
-            room.sendMessageToRoomClients(null, "UPDATEDECKS " + gameManager.mainDeck.getDeckSize() + " " + topCardName);
+            room.sendGameStateUpdates("UPDATEPLAYERHANDS");
             if (cardDrawn.equals(new ExplodingKittenCard())) handleExplodingKitten();
             else nextTurn();
         }
@@ -74,8 +72,7 @@ public class ServerHeldGame {
         room.sendMessageToRoomClients(room.getRoomPlayerList().get(gameManager.getCurrentPlayer().getName()).getCtx(),
                 "PLAYER " + gameManager.getCurrentPlayer().getName() + " played " +
                         gameManager.discardDeck.getTopCard().getName());
-        room.sendMessageToRoomClients(null, "UPDATEDECKS " + gameManager.mainDeck.getDeckSize() + " " +
-                gameManager.discardDeck.getTopCard().getName());
+        room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
 
     public void handleExplodingKitten() throws InterruptedException {
@@ -149,7 +146,7 @@ public class ServerHeldGame {
     public void start() throws IOException, InterruptedException {
         gameManager = new ServerHeldGameManager();
         gameManager.addPlayers(room);
-        room.sendMessageToRoomClients(null, "UPDATEDECKS " + gameManager.mainDeck.getDeckSize() + " " + "NOCARD");
+        room.sendGameStateUpdates("CREATEPLAYERHANDS");
         setNextTurn(); //Initial player
     }
 

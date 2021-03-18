@@ -11,20 +11,22 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 public class ClientProgram {
     static String username;
     static ChannelFuture correspondenceChannel;
     public static ArrayList<String> ownHand = new ArrayList<>();
+    public static LinkedHashMap<String,Integer> playerNamesAndHandSizes = new LinkedHashMap<>();
     public static String requestedCard = "";
     public static String deckSize;
     public static String discardDeckTop;
+    public static String serverMessage;
+
     public static void main(String[] args) throws Exception {
         ClientProgram.startClient();
     }
+
     private static void startClient() throws Exception {
 
         Scanner scanner = new Scanner(System.in);
