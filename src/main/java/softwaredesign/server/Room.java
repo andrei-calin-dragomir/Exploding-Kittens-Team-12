@@ -2,6 +2,7 @@ package softwaredesign.server;
 
 import io.netty.channel.ChannelHandlerContext;
 import softwaredesign.cards.*;
+import softwaredesign.core.Player;
 
 import java.util.*;
 
@@ -50,8 +51,7 @@ public class Room {
             case "PLACE":
                 if(Integer.parseInt(message[1]) >= 0 && Integer.parseInt(message[1]) < onlineGame.gameManager.mainDeck.getDeckSize()){
                     onlineGame.gameManager.mainDeck.insertCard(new ExplodingKittenCard(),Integer.parseInt(message[1]));
-                    sendMessageToRoomClients(null, "UPDATEDECKS " + onlineGame.gameManager.mainDeck.getDeckSize()
-                            + " " + onlineGame.gameManager.discardDeck.getTopCard().getName());
+                    sendGameStateUpdates("UPDATEPLAYERHANDS");
                 }else ctx.writeAndFlush("NOTALLOWED BADPLACE");
                 break;
             case "PLAY":
@@ -107,6 +107,18 @@ public class Room {
         ArrayList<String> allPlayers = new ArrayList<>();
         for(Client client : roomPlayerList.values()) allPlayers.add(client.getClientName());
         return String.join(delim, allPlayers); // @@ is the delimiter which the client side will use
+    }
+
+    public void sendGameStateUpdates(String typeOfUpdate){
+        String topCardName = "NOCARD";
+        Card topCard = onlineGame.gameManager.discardDeck.getTopCard();
+        if(topCard != null) topCardName = topCard.getName();
+        sendMessageToRoomClients(null, "UPDATEDECKS " + onlineGame.gameManager.mainDeck.getDeckSize() + " " + topCardName);
+        StringBuilder playerHandSizes = new StringBuilder();
+        for(Player player: onlineGame.gameManager.alivePlayers) {
+            playerHandSizes.append(player.getName()).append(" ").append(player.getHand().getHandSize()).append(" ");
+        }
+        sendMessageToRoomClients(null,typeOfUpdate + " " + playerHandSizes.toString());
     }
 
     public String getClientName(ChannelHandlerContext ctx){
