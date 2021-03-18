@@ -31,6 +31,7 @@ public class ServerHeldGameManager{
         for(Card card : player.getHand().getHand()) allCards.add(card.getName());
         return String.join(" ", allCards);
     }
+
     public Player getCurrentPlayer(){
         return turns.head.item;
     }
@@ -51,16 +52,22 @@ public class ServerHeldGameManager{
 
     public void killPlayer(Player target){
         alivePlayers.remove(target);
-        turns.head.previous.next = turns.head.next;
-        turns.head.next.previous = turns.head.previous;
-        turns.head = turns.head.previous; //Since the draw function ends turn regardless if the person exploded or not
-        //this must be set to previous in order to not skip a person
+        getTurns().deleteHeadNode();
     }
 
     public DoublyLinkedList getTurns(){
         return turns;
     }
 
+    public String getTopThreeCards() {
+        if(mainDeck.getDeckSize() <= 3){
+            ArrayList<String> allPlayers = new ArrayList<>();
+            for(Card card : mainDeck.getFullDeck()) allPlayers.add(card.getName());
+            return String.join(" ", allPlayers);
+        }else return mainDeck.getFullDeck().get(0).getName() + " " +
+                    mainDeck.getFullDeck().get(1).getName() + " " +
+                    mainDeck.getFullDeck().get(2).getName();
+    }
 
     public void setNextTurn(Player target){
         //TODO

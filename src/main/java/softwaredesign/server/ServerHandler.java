@@ -54,15 +54,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 }
                 break;
             case "LEAVE":
-                Room playerRoom = getRoom(ctx);
-                String playerName = getClientName(ctx);
-                playerRoom.removePlayer(playerName);
-                playerRoom.sendMessageToRoomClients(ctx,"LEFT " + playerName + " " + playerRoom.playerListAsString("@@"));
+                cleanRoomOfEntity(ctx);
                 ctx.writeAndFlush("LEAVEREGISTERED");
                 break;
             case "CREATE":
                 String[] gameDetails = message[1].split(",");
-                roomList.put(gameDetails[0], new Room(clientDetails.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2]), clientDetails));
+                roomList.put(gameDetails[0], new Room(clientDetails.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2])));
                 ctx.writeAndFlush("ROOMCREATED");
                 break;
             default:
@@ -73,6 +70,13 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
 
     private String getClientName(ChannelHandlerContext ctx){ return clientDetails.get(ctx).getClientName(); }
     private Room getRoom(ChannelHandlerContext ctx){ return clientDetails.get(ctx).getCurrentRoom(); }
+
+    private void cleanRoomOfEntity(ChannelHandlerContext ctx) {
+        Room playerRoom = getRoom(ctx);
+        String playerName = getClientName(ctx);
+        playerRoom.removePlayer(playerName);
+        playerRoom.sendMessageToRoomClients(ctx,"LEFT " + playerName + " " + playerRoom.playerListAsString("@@"));
+    }
 
     private static ChannelHandlerContext getClientCTX(String clientName){
         for(HashMap.Entry<ChannelHandlerContext, Client> entry : clientDetails.entrySet())
@@ -95,11 +99,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException {
         System.out.println(cause);
         System.out.println("Closing connection for client - " + getClientName(ctx));
-        Room playerRoom = getRoom(ctx);
-        if(playerRoom != null){
-            playerRoom.removePlayer(getClientName(ctx));
-            playerRoom.sendMessageToRoomClients(ctx,"LEFT " + getClientName(ctx) + " " + playerRoom.playerListAsString("@@"));
-        }
+        cleanRoomOfEntity(ctx); //TODO this one must also clear the turns because if a player leaves, his turn still comes in the game
         ctx.close();
         clientDetails.remove(ctx);
     }

@@ -16,7 +16,6 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class ClientProgram {
-
     static String username;
     static ChannelFuture correspondenceChannel;
     public static ArrayList<String> ownHand = new ArrayList<>();
@@ -77,7 +76,6 @@ public class ClientProgram {
              */
             while (scanner.hasNext()) {
                 String input = scanner.nextLine();
-                System.out.println(input);
                 String[] inputArray = input.split(" ");
                 switch(inputArray[0].toLowerCase(Locale.ROOT)) {
                     case "start":
@@ -100,6 +98,8 @@ public class ClientProgram {
                         group.shutdownGracefully();
                         System.exit(0);
                         break;
+//TODO                    case "target":
+//                        sendRequestToServer("TARGETED " + inputArray[1]);
                     case "play":
                         requestedCard = inputArray[1];
                         sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(inputArray[1]));
@@ -108,11 +108,14 @@ public class ClientProgram {
                         sendRequestToServer("DRAW");
                         break;
                     case "place":
+                        if(inputArray.length != 2) break;
                         sendRequestToServer("PLACE " + inputArray[1]);
                         break;
                     case "chat":
                         sendRequestToServer(input);
                         break;
+                    case "hand":
+                        System.out.println(ownHand);
                     default:
                         System.out.println("Unknown command, try again");
                         break;
@@ -156,7 +159,7 @@ public class ClientProgram {
         while(parameter1 == 0) {
             if (scanner.hasNext()) {
                 int roomSize = scanner.nextInt();
-                if (roomSize < 2 | roomSize > 5) System.out.println("Cannot handle this number of players.");
+                if (roomSize < 2 || roomSize > 5) System.out.println("Cannot handle this number of players.");
                 else parameter1 = roomSize;
             }
         }
@@ -164,7 +167,7 @@ public class ClientProgram {
         while(parameter2 == -1){
             if(scanner.hasNext()){
                 int numberOfComputers = scanner.nextInt();
-                if( numberOfComputers < 0 | numberOfComputers > (parameter1 - 1))
+                if( numberOfComputers < 0 || numberOfComputers > (parameter1 - 1))
                     System.out.println("Invalid number of computers");
                 else parameter2 = numberOfComputers;
             }

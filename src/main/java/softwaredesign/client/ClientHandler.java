@@ -3,6 +3,8 @@ package softwaredesign.client;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+import java.util.ArrayList;
+
 public class ClientHandler extends SimpleChannelInboundHandler<String>{
     /*
      * Handle message received from server.
@@ -29,18 +31,27 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println("You drew an exploding kitten, you must defuse it immediately!");
                 break;
             case "DIED":
-                System.out.println("You died due to a horrible furball explosion! May God rest your soul...");
-                System.exit(0);
+                System.out.println("You died due to a horrible furball explosion! May God rest your soul...\n" +
+                        "You are now spectating the game.");
+                ClientProgram.ownHand = new ArrayList<>();
                 break;
             case "PLACEKITTEN":
+                ClientProgram.ownHand.remove("ExplodingKittenCard");
                 System.out.println("The future of this game is in your hands!\n" +
                         "Place the exploding kitten between the top and bottom cards of the deck. Answer: place index");
                 break;
+            case "ENDED":
+                System.out.println("The game has ended, you can still chat or you can leave with \"leave\"");
+                break;
             case "PLAYCONFIRMED":
+//TODO                if(ClientProgram.requestedCard.equals("FavorCard")){
+//                    System.out.println("Chose your target... 'target playername'");
+//                }
                 System.out.println("You played the " + ClientProgram.requestedCard + " card!");
-                if(ClientProgram.ownHand.contains("exploding_kitten")) ClientProgram.ownHand.remove("exploding_kitten");
                 ClientProgram.ownHand.remove(ClientProgram.requestedCard);
                 break;
+//TODO            case "GIVECARD":
+//                System.out.println("You must give a card to ");
             case "CANTSTART":
                 System.out.println("You are not allowed to start the game, " + commands[1] + " is the game master.");
                 break;
@@ -52,6 +63,13 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "NOTALLOWED":
                 if(commands[1].equals("DEAD")) System.out.println("You can't do that because you have already exploded.");
+                else if(commands[1].equals("BADPLACE")) System.out.println("Invalid card placement, try placing again.");
+                else if(commands[1].equals("NOTEXPLODING")) System.out.println("You can only play a defuse card when you draw an Exploding Kitten!");
+                else if(commands[1].equals("MUSTDEFUSE")) System.out.println("You have to play a defuse card when you draw an Exploding Kitten!");
+                else if(commands[1].equals("INVALIDPLAY")) System.out.println("Trying to play invalid card.");
+                else if(commands[1].equals("NOTYOURTURN")) System.out.println("It is not your turn.");
+//TODO                else if(commands[1].equals("WRONGNAME")) System.out.println("The player name you entered is wrong, try again.");
+                break;
             case "CONNECTEDTOSERVER":
                 System.out.println("Connection Successful.");
                 switch(commands[1]){
@@ -73,6 +91,11 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
             case "JOINED":
                 System.out.println(commands[1] + " joined the game.");
                 break;
+            case "WINNER":
+                String theWinner = commands[1];
+                if(theWinner == ClientProgram.username) System.out.println("Congratulations, you have won the game!");
+                else System.out.println("The winner of the game is: " + theWinner);
+                break;
             case "JOINSUCCESS":
                 String[] playersInRoom = commands[1].split("@@");
                 for(String player : playersInRoom) tempString = tempString + player + " ";
@@ -87,7 +110,19 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 ClientProgram.deckSize = commands[1];
                 if(commands[2] != null) ClientProgram.discardDeckTop = commands[2];
                 break;
-            case "COMPUTER":
+            case "UPDATEHAND":
+                for(int i = 1; i < commands.length;i++) ClientProgram.ownHand.add(commands[i]);
+                System.out.println(ClientProgram.ownHand);
+                break;
+            case "SEEFUTURE":
+                for(int i = 1; i < commands.length; ++i) tempString = tempString + commands[i] + " ";
+                System.out.println("The top cards are: " + tempString);
+                break;
+            case "CHAT":
+                for(int i = 1; i < commands.length; ++i) tempString = tempString + commands[i] + " ";
+                System.out.println(tempString);
+                break;
+            case "PLAYER":
                 switch(commands[2]){
                     case "exploded":
                         System.out.println(commands[1] + " has just exploded!");
@@ -101,15 +136,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                     case "defused":
                         System.out.println(commands[1] + " has defused the kitten.");
                         break;
+                    case "played":
+                        System.out.println(commands[1] + " played the " + commands[3] + " card.");
+                        break;
                 }
-                break;
-            case "UPDATEHAND":
-                for(int i = 1; i < commands.length;i++) ClientProgram.ownHand.add(commands[i]);
-                System.out.println(ClientProgram.ownHand);
-                break;
-            case "CHAT":
-                for(int i = 1; i < commands.length; ++i) tempString = tempString + commands[i] + " ";
-                System.out.println(tempString);
                 break;
             default:
                 System.out.println("Unknown server command, wtf?");
