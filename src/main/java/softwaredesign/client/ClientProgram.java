@@ -44,7 +44,7 @@ public class ClientProgram {
         }
     }
 
-    private static void goOnline() throws Exception{
+    public static void goOnline() throws Exception{
         final String HOST = "127.0.0.1";
         final int PORT = 8007;
         Scanner scanner = new Scanner(System.in);
@@ -149,7 +149,7 @@ public class ClientProgram {
         Scanner scanner = new Scanner(System.in);
         int parameter1 = 0;
         int parameter2 = -1;
-        String roomName = "";
+        String roomName;
         System.out.println("Give a room name: ");
         roomName = scanner.nextLine();
         System.out.println("How many players do you want in your game? Answer options: 2-5");

@@ -7,6 +7,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
     /*
      * Handle message received from server.
      */
+
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String message){
         String tempString = "";     // Used for reconstructing messages with multiple whitespaces, saves a declaration for multiple "cases"
