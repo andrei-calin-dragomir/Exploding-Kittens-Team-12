@@ -14,6 +14,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
     public void channelRead0(ChannelHandlerContext ctx, String message){
         String tempString = "";     // Used for reconstructing messages with multiple whitespaces, saves a declaration for multiple "cases"
         String[] commands = message.trim().split(" ");
+        System.out.println(message);
         switch(commands[0]){
             case "START":
                 System.out.println("The game started!");
@@ -98,17 +99,16 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "JOINSUCCESS":
                 String[] playersInRoom = commands[1].split("@@");
-                for(String player : playersInRoom) tempString = tempString + player + " ";
+                for(String player : playersInRoom) {
+                    tempString = tempString + player + " ";
+                }
                 System.out.println("You joined the game.\nPlayers in the room: " + tempString);
                 break;
             case "LEFT":
                 String[] playersInRoom2 = commands[2].split("@@");
-                for(String player : playersInRoom2) tempString = tempString + player + " ";
-                System.out.println(commands[1] + " left the game.\nPlayers in the room: " + tempString);
-                break;
-            case "UPDATEDECKS":
-                ClientProgram.deckSize = commands[1];
-                if(commands[2] != null) ClientProgram.discardDeckTop = commands[2];
+                ClientProgram.playerNamesAndHandSizes.remove(commands[1]);
+                System.out.println(commands[1] + " left the game.\n" +
+                        "Players in the room: " + ClientProgram.playerNamesAndHandSizes.keySet().toString());
                 break;
             case "UPDATEHAND":
                 for(int i = 1; i < commands.length;i++) ClientProgram.ownHand.add(commands[i]);
@@ -126,6 +126,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 switch(commands[2]){
                     case "exploded":
                         System.out.println(commands[1] + " has just exploded!");
+                        ClientProgram.playerNamesAndHandSizes.remove(commands[1]);
                         break;
                     case "drew":
                         System.out.println(commands[1] + " has drawn a card.");
@@ -140,6 +141,23 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                         System.out.println(commands[1] + " played the " + commands[3] + " card.");
                         break;
                 }
+                break;
+            case "UPDATEPLAYERHANDS":
+                for(int i = 1; i < commands.length; i+=2) {
+                    if (ClientProgram.playerNamesAndHandSizes.containsKey(commands[i])) {
+                        ClientProgram.playerNamesAndHandSizes.replace(commands[i], Integer.parseInt(commands[i + 1]));
+                    }
+                }
+                System.out.println(ClientProgram.playerNamesAndHandSizes.toString());
+                break;
+            case "CREATEPLAYERHANDS":
+                for(int i = 1; i < commands.length; i+=2) {
+                    ClientProgram.playerNamesAndHandSizes.put(commands[i], Integer.parseInt(commands[i + 1]));
+                }
+                break;
+            case "UPDATEDECKS":
+                ClientProgram.deckSize = commands[1];
+                if(commands[2] != null) ClientProgram.discardDeckTop = commands[2];
                 break;
             default:
                 System.out.println("Unknown server command, wtf?");
