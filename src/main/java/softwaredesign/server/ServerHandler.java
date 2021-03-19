@@ -76,6 +76,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         String playerName = getClientName(ctx);
         playerRoom.removePlayer(playerName);
         playerRoom.sendMessageToRoomClients(playerName,"LEFT " + playerName + " " + playerRoom.playerListAsString("@@"));
+        if(playerRoom.checkIfRoomEmpty()) roomList.remove(playerRoom.getRoomName());
     }
 
     private static ChannelHandlerContext getClientCTX(String clientName){

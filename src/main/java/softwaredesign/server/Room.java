@@ -1,6 +1,7 @@
 package softwaredesign.server;
 
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.commons.collections4.functors.AnyPredicate;
 import softwaredesign.cards.*;
 import softwaredesign.core.Player;
 
@@ -141,17 +142,20 @@ public class Room {
 
     public void sendMessageToRoomClients(String excludedPlayer, String message){
         for(String cli : roomPlayerList.keySet()){
-            System.out.println("Yu are here1");
             ChannelHandlerContext outgoingCtx = roomPlayerList.get(cli).getCtx();
-            System.out.println("Yu are here2");
-            if(cli == excludedPlayer || outgoingCtx == null) continue;
-            System.out.println("Yu are here3");
+            if(cli.equals(excludedPlayer) || outgoingCtx == null) continue;
             outgoingCtx.writeAndFlush(message);
-            System.out.println("Yu are here4");
         }
     }
 
     public void sendMessageToSingleRoomClient(String name, String message){
         if(getClientCTX(name) != null) getClientCTX(name).writeAndFlush(message);
+    }
+
+    public Boolean checkIfRoomEmpty(){
+        for(String name: getRoomPlayerList().keySet()) if(!name.split("_")[0].equals("Computer")){
+            return false;
+        }
+        return true;
     }
 }
