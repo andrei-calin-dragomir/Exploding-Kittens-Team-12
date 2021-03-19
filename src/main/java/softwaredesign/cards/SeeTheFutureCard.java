@@ -1,6 +1,7 @@
 package softwaredesign.cards;
 
 import softwaredesign.core.Deck;
+import softwaredesign.core.Hand;
 import softwaredesign.server.ServerHeldGame;
 
 import java.util.ArrayList;

@@ -14,7 +14,6 @@ public class Room {
     private final String roomName;
     public String getRoomName(){ return this.roomName; }
 
-
     public Room(Client host, String name, int maxPlayers, int computerAmount){
         gameRules = new int[]{maxPlayers, computerAmount};
         currentHost = host;
@@ -57,15 +56,15 @@ public class Room {
             case "PLAY":
                 if(getClientName(ctx).equals(onlineGame.getCurrentPlayerName())){
                     int index = Integer.parseInt(message[1]);
-                    if(index < 0 || onlineGame.gameManager.getCurrentPlayer().getHand().getHandSize() - 1 < index){
+                    if(index < 0 || onlineGame.gameManager.getCurrentPlayerHand().getHandSize() - 1 < index){
                         ctx.writeAndFlush("NOTALLOWED INVALIDPLAY");
                         break;
                     }
-                    if(onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && !onlineGame.drawnExplodingKitten){
+                    if(onlineGame.gameManager.getCurrentPlayerHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && !onlineGame.drawnExplodingKitten){
                         ctx.writeAndFlush("NOTALLOWED NOTEXPLODING");
                         break;
                     }
-                    if(!onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && onlineGame.drawnExplodingKitten){
+                    if(!onlineGame.gameManager.getCurrentPlayerHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && onlineGame.drawnExplodingKitten){
                         ctx.writeAndFlush("NOTALLOWED MUSTDEFUSE");
                         break;
                     }
@@ -140,11 +139,15 @@ public class Room {
 
     public void removePlayer(String player){ roomPlayerList.remove(player); }
 
-    public void sendMessageToRoomClients(ChannelHandlerContext ctx, String message){
-        for(Client cli : roomPlayerList.values()){
-            ChannelHandlerContext outgoingCtx = cli.getCtx();
-            if(outgoingCtx == null || outgoingCtx == ctx) continue;
+    public void sendMessageToRoomClients(String excludedPlayer, String message){
+        for(String cli : roomPlayerList.keySet()){
+            System.out.println("Yu are here1");
+            ChannelHandlerContext outgoingCtx = roomPlayerList.get(cli).getCtx();
+            System.out.println("Yu are here2");
+            if(cli == excludedPlayer || outgoingCtx == null) continue;
+            System.out.println("Yu are here3");
             outgoingCtx.writeAndFlush(message);
+            System.out.println("Yu are here4");
         }
     }
 

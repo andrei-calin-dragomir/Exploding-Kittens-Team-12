@@ -1,6 +1,7 @@
 package softwaredesign.server;
 
 import softwaredesign.cards.Card;
+import softwaredesign.cards.ExplodingKittenCard;
 import softwaredesign.core.*;
 
 import java.io.IOException;
@@ -77,4 +78,7 @@ public class ServerHeldGameManager{
         turns.head = turns.head.next;
     }
 
+    public void removeCurrentPlayerCard(Card card) {
+        getCurrentPlayerHand().getHand().remove(card);
+    }
 }
