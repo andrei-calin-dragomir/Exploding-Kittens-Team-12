@@ -43,6 +43,7 @@ public class Hand {
     public Card playCard(int index, ServerHeldGame heldGame) throws InterruptedException {
         Card playCard = getCard(index);
         removeCard(index);
+        heldGame.gameManager.discardDeck.discardCard(playCard);
         playCard.action(heldGame);
         return playCard;
 

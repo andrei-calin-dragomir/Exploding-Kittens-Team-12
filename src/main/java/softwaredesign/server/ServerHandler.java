@@ -50,7 +50,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 else {
                     clientDetails.get(ctx).setCurrentRoom(roomObj);
                     ctx.writeAndFlush("JOINSUCCESS " + roomObj.playerListAsString("@@"));
-                    roomObj.sendMessageToRoomClients(ctx, "JOINED " + getClientName(ctx));
+                    roomObj.sendMessageToRoomClients(getClientName(ctx), "JOINED " + getClientName(ctx));
                 }
                 break;
             case "LEAVE":
@@ -75,7 +75,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         Room playerRoom = getRoom(ctx);
         String playerName = getClientName(ctx);
         playerRoom.removePlayer(playerName);
-        playerRoom.sendMessageToRoomClients(ctx,"LEFT " + playerName + " " + playerRoom.playerListAsString("@@"));
+        playerRoom.sendMessageToRoomClients(playerName,"LEFT " + playerName + " " + playerRoom.playerListAsString("@@"));
+        if(playerRoom.checkIfRoomEmpty()) roomList.remove(playerRoom.getRoomName());
     }
 
     private static ChannelHandlerContext getClientCTX(String clientName){

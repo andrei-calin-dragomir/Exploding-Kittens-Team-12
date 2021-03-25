@@ -17,10 +17,12 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
         System.out.println(message);
         switch(commands[0]){
             case "START":
+                ClientProgram.ownHand = new ArrayList<>();
                 System.out.println("The game started!");
                 break;
             case "LEAVEREGISTERED":
                 System.out.println("You have left the game!");
+                ClientProgram.ownHand = new ArrayList<>();
                 break;
             case "ROOMCREATED":
                 System.out.println("Room has been created. Waiting for players to connect...");
@@ -43,6 +45,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "ENDED":
                 System.out.println("The game has ended, you can still chat or you can leave with \"leave\"");
+                ClientProgram.ownHand = new ArrayList<>();
                 break;
             case "PLAYCONFIRMED":
 //TODO                if(ClientProgram.requestedCard.equals("FavorCard")){
@@ -96,6 +99,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 String theWinner = commands[1];
                 if(theWinner == ClientProgram.username) System.out.println("Congratulations, you have won the game!");
                 else System.out.println("The winner of the game is: " + theWinner);
+                ClientProgram.ownHand = new ArrayList<>();
                 break;
             case "JOINSUCCESS":
                 String[] playersInRoom = commands[1].split("@@");
