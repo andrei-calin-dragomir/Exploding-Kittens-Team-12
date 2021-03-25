@@ -11,6 +11,7 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class ClientProgram {
@@ -79,6 +80,7 @@ public class ClientProgram {
             while (scanner.hasNext()) {
                 String input = scanner.nextLine();
                 String[] inputArray = input.split(" ");
+                System.out.println(input);
                 switch(inputArray[0].toLowerCase(Locale.ROOT)) {
                     case "start":
                         sendRequestToServer("START");
@@ -118,6 +120,7 @@ public class ClientProgram {
                         break;
                     case "hand":
                         System.out.println(ownHand);
+                        break;
                     default:
                         System.out.println("Unknown command, try again");
                         break;
@@ -145,7 +148,7 @@ public class ClientProgram {
         channel.writeAndFlush(message);
     }
 
-    private static void playOffline() throws IOException, InterruptedException {
+    private static void playOffline() throws IOException, InterruptedException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Game offlineGame = new Game();
         offlineGame.start(4,3);
     }

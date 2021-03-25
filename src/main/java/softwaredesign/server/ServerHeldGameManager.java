@@ -1,29 +1,26 @@
 package softwaredesign.server;
 
 import softwaredesign.cards.Card;
-import softwaredesign.cards.ExplodingKittenCard;
 import softwaredesign.core.*;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ServerHeldGameManager{
-    public List<Player> alivePlayers = new ArrayList<>();
-    public DoublyLinkedList turns = new DoublyLinkedList();
+    private List<Player> alivePlayers = new ArrayList<>();
     public Deck mainDeck;
     public DiscardDeck discardDeck;
 
-    public void addPlayers(Room currentRoom) throws IOException, InterruptedException{
+    public void initGame(Room currentRoom) throws IOException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         mainDeck = new Deck();
         discardDeck = new DiscardDeck();
-        for(Client client : currentRoom.getRoomPlayerList().values()){
-            Player newPlayer = new Player();
-            alivePlayers.add(newPlayer);
-            newPlayer.setName(client.getClientName());
-            newPlayer.initHand(mainDeck);
-            currentRoom.sendMessageToSingleRoomClient(newPlayer.getName(), "UPDATEHAND " + createHandAsString(newPlayer));
-            getTurns().addNode(newPlayer);
+        for(Player player : currentRoom.getRoomPlayerList().values()){
+            alivePlayers.add(player);
+            player.initHand(mainDeck);
+            currentRoom.sendMsgToPlayer(player.getName(), "UPDATEHAND " + createHandAsString(player));
         }
     }
 
@@ -34,16 +31,21 @@ public class ServerHeldGameManager{
     }
 
     public Player getCurrentPlayer(){
-        return turns.head.item;
+        return alivePlayers.get(0);
     }
 
     public Hand getCurrentPlayerHand(){
-        return turns.head.item.getHand();
+        return getCurrentPlayer().getHand();
     }
 
     public List<Player> getAlivePlayers(){
         return this.alivePlayers;
     }
+
+    public Integer getPlayersLeft(){
+        return this.alivePlayers.size();
+    }
+
     public Boolean isAlive(String playerName){
         for(Player player : alivePlayers)
             if(player.getName().equals(playerName))
@@ -51,14 +53,7 @@ public class ServerHeldGameManager{
         return false;
     }
 
-    public void killPlayer(Player target){
-        alivePlayers.remove(target);
-        getTurns().deleteHeadNode();
-    }
-
-    public DoublyLinkedList getTurns(){
-        return turns;
-    }
+    public void killPlayer(Player target){ alivePlayers.remove(target); }
 
     public String getTopThreeCards() {
         if(mainDeck.getDeckSize() <= 3){
@@ -70,12 +65,14 @@ public class ServerHeldGameManager{
                     mainDeck.getFullDeck().get(2).getName();
     }
 
-    public void setNextTurn(Player target){
-        //TODO
+    // Not tested but should work
+    public void changeNextTurn(Player target){
+        int rotateAmount = alivePlayers.indexOf(target);
+        Collections.rotate(alivePlayers, rotateAmount);
     }
 
     public void endTurn(){
-        turns.head = turns.head.next;
+        Collections.rotate(alivePlayers, 1);
     }
 
     public void removeCurrentPlayerCard(Card card) {

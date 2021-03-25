@@ -17,7 +17,7 @@ public class GameManager {
     public Deck addPlayers(int sizeOfGame, int numberOfComputers, Deck mainDeck) {
         Deck remainingDeck = mainDeck;
         for(int i = 0; i < sizeOfGame; i++){
-            alivePlayers.add(new Player());
+//            alivePlayers.add(new Player());
             if(i == 0) getAlivePlayers().get(i).setName(ClientProgram.username);
             else if(i < (sizeOfGame - numberOfComputers)) {
                 System.out.println("Insert player " + i + "'s name here:");

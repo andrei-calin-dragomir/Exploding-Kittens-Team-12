@@ -2,6 +2,7 @@ package softwaredesign.server;
 
 
 import io.netty.channel.*;
+import softwaredesign.core.Player;
 
 import java.util.*;
 
@@ -10,14 +11,14 @@ import java.util.*;
  * Handles a server-side channel.
  */
 public class ServerHandler extends SimpleChannelInboundHandler<String>{
-    public static HashMap<ChannelHandlerContext,Client> clientDetails = new HashMap<>();
+    public static HashMap<ChannelHandlerContext, Player> playerMap = new HashMap<>();
     private static HashMap<String,Room> roomList = new HashMap<>();
     public static ArrayList<String> serverPlayerList = new ArrayList<>();
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
         System.out.println("Client joined - " + ctx);
-        clientDetails.put(ctx, new Client(ctx));
+        playerMap.put(ctx, new Player(ctx));
     }
 
     /*
@@ -31,26 +32,24 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         System.out.println("Server received - " + msg);
         channelRespond(ctx,msg);
     }
+
     public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
         String[] message = msg.split("\\s+");
         switch(message[0].toUpperCase(Locale.ROOT)){
             case "USERNAME":
-                clientDetails.get(ctx).setClientName(message[1]);
-                System.out.println(clientDetails.get(ctx).getClientName());
-                String str = "";
-                for(String key : roomList.keySet()) str = str + key + ",";
-                System.out.println(str);
+                playerMap.get(ctx).setPlayerName(message[1]);
+                String str = String.join(",", roomList.keySet());
                 if(roomList.isEmpty()) ctx.writeAndFlush("CONNECTEDTOSERVER NOROOM");
                 else ctx.writeAndFlush("CONNECTEDTOSERVER ROOMAVAILABLE " + str);
                 break;
             case "JOIN":
                 Room roomObj = roomList.get(message[1]);
                 if(roomObj == null) ctx.writeAndFlush("ROOMNOTFOUND");
-                if(!roomObj.addPlayer(clientDetails.get(ctx))) ctx.writeAndFlush("ROOMFULL");
+                if(!roomObj.addPlayer(playerMap.get(ctx))) ctx.writeAndFlush("ROOMFULL");
                 else {
-                    clientDetails.get(ctx).setCurrentRoom(roomObj);
+                    playerMap.get(ctx).setCurrentRoom(roomObj);
                     ctx.writeAndFlush("JOINSUCCESS " + roomObj.playerListAsString("@@"));
-                    roomObj.sendMessageToRoomClients(getClientName(ctx), "JOINED " + getClientName(ctx));
+                    roomObj.sendMsgToRoom(getClientName(ctx), "JOINED " + getClientName(ctx));
                 }
                 break;
             case "LEAVE":
@@ -59,7 +58,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "CREATE":
                 String[] gameDetails = message[1].split(",");
-                roomList.put(gameDetails[0], new Room(clientDetails.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2])));
+                roomList.put(gameDetails[0], new Room(playerMap.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2])));
                 ctx.writeAndFlush("ROOMCREATED");
                 break;
             default:
@@ -68,41 +67,31 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         }
     }
 
-    private String getClientName(ChannelHandlerContext ctx){ return clientDetails.get(ctx).getClientName(); }
-    private Room getRoom(ChannelHandlerContext ctx){ return clientDetails.get(ctx).getCurrentRoom(); }
+    private String getClientName(ChannelHandlerContext ctx){ return playerMap.get(ctx).getPlayerName(); }
+    private Room getRoom(ChannelHandlerContext ctx){ return playerMap.get(ctx).getCurrentRoom(); }
 
     private void cleanRoomOfEntity(ChannelHandlerContext ctx) {
         Room playerRoom = getRoom(ctx);
         String playerName = getClientName(ctx);
         playerRoom.removePlayer(playerName);
-        playerRoom.sendMessageToRoomClients(playerName,"LEFT " + playerName + " " + playerRoom.playerListAsString("@@"));
-        if(playerRoom.checkIfRoomEmpty()) roomList.remove(playerRoom.getRoomName());
+        playerRoom.sendMsgToRoom(playerName,"LEFT " + playerName + " " + playerRoom.playerListAsString("@@"));
+        if(playerRoom.isRoomEmpty()) roomList.remove(playerRoom.getRoomName());
     }
 
-    private static ChannelHandlerContext getClientCTX(String clientName){
-        for(HashMap.Entry<ChannelHandlerContext, Client> entry : clientDetails.entrySet())
-            if(entry.getValue().getClientName().equals(clientName))
-                return entry.getKey();
-        return null;
-    }
-
-    public boolean addPlayer(String playerName){
-        if(serverPlayerList.remove("free")) return serverPlayerList.add(playerName);
-        else return false;
-    }
-
-    // Is there a case when a player has to be removed but he is not in roomsPlayersList? This is not checked
-    public void removePlayer(String playerName){
-        if(serverPlayerList.remove(playerName)) serverPlayerList.add("free");
-    }
+//    private static ChannelHandlerContext getClientCTX(String clientName){
+//        for(HashMap.Entry<ChannelHandlerContext, Client> entry : clientDetails.entrySet())
+//            if(entry.getValue().getClientName().equals(clientName))
+//                return entry.getKey();
+//        return null;
+//    }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException {
         System.out.println(cause);
         System.out.println("Closing connection for client - " + getClientName(ctx));
-        cleanRoomOfEntity(ctx); //TODO this one must also clear the turns because if a player leaves, his turn still comes in the game
+        cleanRoomOfEntity(ctx); //TODO this one must also clear the turns because if a player leaves, his turn still comes in the game // DONE
         ctx.close();
-        clientDetails.remove(ctx);
+        playerMap.remove(ctx);
     }
 }
 

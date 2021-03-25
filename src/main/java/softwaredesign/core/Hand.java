@@ -11,6 +11,7 @@ public class Hand {
     public boolean contains(Card target){
         return currentHand.contains(target);
     }
+
     public Hand(Deck newDeck){
         currentHand.add(newDeck.getDefuse());
         currentHand.addAll(newDeck.getStartCards());

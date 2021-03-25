@@ -13,7 +13,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
     public void channelRead0(ChannelHandlerContext ctx, String message){
         String tempString = "";     // Used for reconstructing messages with multiple whitespaces, saves a declaration for multiple "cases"
         String[] commands = message.trim().split(" ");
-        System.out.println(message);
+//        System.out.println(message);
         switch(commands[0]){
             case "START":
                 ClientProgram.ownHand = new ArrayList<>();
@@ -151,7 +151,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                         ClientProgram.playerNamesAndHandSizes.replace(commands[i], Integer.parseInt(commands[i + 1]));
                     }
                 }
-                System.out.println(ClientProgram.playerNamesAndHandSizes.toString());
+//                System.out.println(ClientProgram.playerNamesAndHandSizes.toString());
                 break;
             case "CREATEPLAYERHANDS":
                 for(int i = 1; i < commands.length; i+=2) {

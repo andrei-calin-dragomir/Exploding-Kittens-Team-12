@@ -7,6 +7,7 @@ import softwaredesign.core.Hand;
 import softwaredesign.core.Player;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 
@@ -19,21 +20,22 @@ public class ServerHeldGame {
     public ServerHeldGame(Room assignedRoom){
         room = assignedRoom;
     }
+
     public String getCurrentPlayerName(){ return gameManager.getCurrentPlayer().getName(); }
     public Room getRoom() { return room; }
 
     public void nextTurn() throws InterruptedException {
         gameManager.endTurn();
-        setNextTurn();
+        handleNextTurn();
     }
 
-    public void setNextTurn() throws InterruptedException {
-        room.sendMessageToRoomClients(null,"TURN " + getCurrentPlayerName());
-        while(getCurrentPlayerName().split("_")[0].equals("Computer")){
+    public void handleNextTurn() throws InterruptedException {
+        room.sendMsgToRoom(null,"TURN " + getCurrentPlayerName());
+        while(gameManager.getCurrentPlayer().isComputer()){
             handleComputerAction();
             if(checkWin()) return;
             gameManager.endTurn();
-            room.sendMessageToRoomClients(null,"TURN " + getCurrentPlayerName());
+            room.sendMsgToRoom(null,"TURN " + getCurrentPlayerName());
         }
     }
 
@@ -54,8 +56,8 @@ public class ServerHeldGame {
         if(!drawnExplodingKitten) {
             Card cardDrawn = gameManager.mainDeck.draw();
             gameManager.getCurrentPlayerHand().addToHand(cardDrawn);
-            room.sendMessageToSingleRoomClient(getCurrentPlayerName(),"UPDATEHAND " + cardDrawn.getName());
-            room.sendMessageToRoomClients(getCurrentPlayerName(),
+            room.sendMsgToPlayer(getCurrentPlayerName(),"UPDATEHAND " + cardDrawn.getName());
+            room.sendMsgToRoom(getCurrentPlayerName(),
                     "PLAYER " + getCurrentPlayerName() + " drew");
             room.sendGameStateUpdates("UPDATEPLAYERHANDS");
             if (cardDrawn.equals(new ExplodingKittenCard())) handleExplodingKitten();
@@ -64,10 +66,13 @@ public class ServerHeldGame {
     }
 
     public void handlePlayAction(int index) throws InterruptedException {
-        if(gameManager.getCurrentPlayerHand().getCard(index).equals(new DefuseCard())) drawnExplodingKitten = false;
-        gameManager.getCurrentPlayerHand().playCard(index, this);
-        room.sendMessageToRoomClients(getCurrentPlayerName(),
-                "PLAYER " + getCurrentPlayerName() + " played " +
+        Hand currHand = gameManager.getCurrentPlayerHand();
+        String currPlayer = getCurrentPlayerName();
+        if(currHand.getCard(index).equals(new DefuseCard())) drawnExplodingKitten = false;
+        System.out.println(currHand.getHand().get(index));
+        currHand.playCard(index, this);
+        room.sendMsgToRoom(currPlayer,
+                "PLAYER " + currPlayer + " played " +
                         gameManager.discardDeck.getTopCard().getName());
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
@@ -76,34 +81,29 @@ public class ServerHeldGame {
         drawnExplodingKitten = true;
         Player currentPlayer = gameManager.getCurrentPlayer();
         if (!currentPlayer.getHand().contains(new DefuseCard())) {
-            room.sendMessageToSingleRoomClient(getCurrentPlayerName(),"DIED");
-            room.sendMessageToRoomClients(getCurrentPlayerName(),"PLAYER " + getCurrentPlayerName() + " EXPLODED");
+            room.sendMsgToPlayer(getCurrentPlayerName(),"DIED");
+            room.sendMsgToRoom(getCurrentPlayerName(),"PLAYER " + getCurrentPlayerName() + " EXPLODED");
             gameManager.killPlayer(currentPlayer);
             if(!checkWin()) nextTurn();
         }else{
-            room.sendMessageToRoomClients(getCurrentPlayerName(),
+            room.sendMsgToRoom(getCurrentPlayerName(),
                     "PLAYER " + getCurrentPlayerName() + " drewexp");
-            room.sendMessageToSingleRoomClient(getCurrentPlayerName(),"EXPLODING");
+            room.sendMsgToPlayer(getCurrentPlayerName(),"EXPLODING");
         }
     }
 
     private Boolean checkWin(){
-        if(gameManager.alivePlayers.size() == 1){
-            room.sendMessageToRoomClients(null, "WINNER " + gameManager.alivePlayers.get(0).getName());
-            gameManager.killPlayer(gameManager.alivePlayers.get(0));
+        if(gameManager.getPlayersLeft() == 1){
+            room.sendMsgToRoom(null, "WINNER " + gameManager.getCurrentPlayer().getName());
+            gameManager.killPlayer(gameManager.getCurrentPlayer());
             return true;
         }
         return false;
     }
 
     public void handleComputerAction() throws InterruptedException {
-        int pickAction = rand.nextInt(2);
-        if(pickAction == 0){
-            handleDrawComputerAction();
-        }else{
-            handleComputerPlayAction();
-            handleDrawComputerAction();
-        }
+        while(rand.nextInt(3) == 0) handleComputerPlayAction();
+        handleDrawComputerAction();
     }
 
     private void handleComputerPlayAction() throws InterruptedException{
@@ -122,29 +122,33 @@ public class ServerHeldGame {
         }
     }
     private void handleDrawComputerAction() throws InterruptedException {
+        Hand compHand = gameManager.getCurrentPlayerHand();
         Card cardDrawn = gameManager.mainDeck.draw();
-        gameManager.getCurrentPlayerHand().addToHand(cardDrawn);
-        room.sendMessageToRoomClients(null, "PLAYER " + getCurrentPlayerName() + " drew");
+        compHand.addToHand(cardDrawn);
+        room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " drew");
         if (cardDrawn.equals(new ExplodingKittenCard())) {
-            room.sendMessageToRoomClients(null, "PLAYER " + getCurrentPlayerName() + " drewexp");
-            if (gameManager.getCurrentPlayerHand().contains(new DefuseCard())) {
-                int defuseCardIndex = gameManager.getCurrentPlayerHand().getHand().indexOf(new DefuseCard());
+            room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " drewexp");
+            if (compHand.contains(new DefuseCard())) {
+                int defuseCardIndex = compHand.getHand().indexOf(new DefuseCard());
                 handlePlayAction(defuseCardIndex);
-                int nextIndex = rand.nextInt(gameManager.mainDeck.getDeckSize());
+                int nextIndex = rand.nextInt(getDeckSize());
                 gameManager.mainDeck.insertCard(new ExplodingKittenCard(), nextIndex);
-                room.sendMessageToRoomClients(null, "PLAYER " + getCurrentPlayerName() + " defused");
+                room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " defused");
             } else {
-                room.sendMessageToRoomClients(null, "PLAYER " + getCurrentPlayerName() + " exploded");
+                room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " exploded");
                 gameManager.killPlayer(gameManager.getCurrentPlayer());
             }
         }
     }
 
-    public void start() throws IOException, InterruptedException {
-        gameManager = new ServerHeldGameManager();
-        gameManager.addPlayers(room);
-        room.sendGameStateUpdates("CREATEPLAYERHANDS");
-        setNextTurn(); //Initial player
+    public Integer getDeckSize(){
+        return gameManager.mainDeck.getDeckSize();
     }
 
+    public void start() throws IOException, InterruptedException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        gameManager = new ServerHeldGameManager();
+        gameManager.initGame(room);
+        room.sendGameStateUpdates("CREATEPLAYERHANDS");
+        handleNextTurn();
+    }
 }

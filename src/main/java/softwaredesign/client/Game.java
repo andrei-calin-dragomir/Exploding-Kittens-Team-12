@@ -7,6 +7,7 @@ import softwaredesign.core.Deck;
 import softwaredesign.core.DiscardDeck;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.Random;
@@ -155,7 +156,7 @@ public class Game {
         System.out.println("It is " + gameManager.getCurrentPlayer().getName() + "'s turn");
     }
 
-    public void start(int sizeOfGame, int numberOfComputers) throws IOException, InterruptedException {
+    public void start(int sizeOfGame, int numberOfComputers) throws IOException, InterruptedException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
         mainDeck = new Deck();
         discardDeck = new DiscardDeck();

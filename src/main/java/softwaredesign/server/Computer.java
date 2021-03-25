@@ -1,11 +1,16 @@
 package softwaredesign.server;
 
-public class Computer extends Client{
+import softwaredesign.core.Player;
+
+public class Computer extends Player {
     public Computer(Room roomAI, int computerID) {
         super(null);
         this.setCurrentRoom(roomAI);
-        this.setClientName("Computer_" + computerID);
+        this.setPlayerName("Computer_" + computerID);
     }
 
-    private String getComputerID(){ return this.getClientName().split("_")[1]; }    // Maybe needed idk
+    @Override
+    public boolean isComputer(){ return true; }
+
+    private String getComputerID(){ return this.getPlayerName().split("_")[1]; }    // Maybe needed idk
 }

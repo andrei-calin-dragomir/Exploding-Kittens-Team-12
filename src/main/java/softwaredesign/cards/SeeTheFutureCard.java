@@ -1,7 +1,6 @@
 package softwaredesign.cards;
 
 import softwaredesign.core.Deck;
-import softwaredesign.core.Hand;
 import softwaredesign.server.ServerHeldGame;
 
 import java.util.ArrayList;
@@ -21,6 +20,6 @@ public class SeeTheFutureCard extends Card {
                 mainDeck.getFullDeck().get(1).getName() + " " +
                 mainDeck.getFullDeck().get(2).getName();
 
-        heldGame.getRoom().sendMessageToSingleRoomClient(playerName,"SEEFUTURE " + messageToSend);
+        heldGame.getRoom().sendMsgToPlayer(playerName,"SEEFUTURE " + messageToSend);
     }
 }
