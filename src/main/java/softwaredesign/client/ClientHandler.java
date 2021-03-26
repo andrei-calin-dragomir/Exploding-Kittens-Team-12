@@ -127,20 +127,20 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "PLAYER":
                 switch(commands[2]){
-                    case "exploded":
+                    case "EXPLODED":
                         System.out.println(commands[1] + " has just exploded!");
                         ClientProgram.playerNamesAndHandSizes.remove(commands[1]);
                         break;
-                    case "drew":
+                    case "DREW":
                         System.out.println(commands[1] + " has drawn a card.");
                         break;
-                    case "drewexp":
+                    case "DREWEXP":
                         System.out.println(commands[1] + " has drawn an exploding kitten!");
                         break;
-                    case "defused":
+                    case "DEFUSED":
                         System.out.println(commands[1] + " has defused the kitten.");
                         break;
-                    case "played":
+                    case "PLAYED":
                         System.out.println(commands[1] + " played the " + commands[3] + " card.");
                         break;
                 }

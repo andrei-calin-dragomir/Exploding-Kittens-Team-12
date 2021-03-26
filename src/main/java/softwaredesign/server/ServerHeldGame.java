@@ -23,7 +23,10 @@ public class ServerHeldGame {
     public void setExplodingBool(boolean exploding) { this.drawnExplodingKitten = exploding; }
     public String getCurrentPlayerName(){ return this.getCurrentPlayer().getName(); }
     public Player getCurrentPlayer(){ return gameManager.getCurrentPlayer(); }
-    public Card drawCard(){ return gameManager.mainDeck.draw(); }
+    public Card drawCard(){
+        System.out.println(gameManager.mainDeck.cardDeck);
+        return gameManager.mainDeck.draw();
+    }
     public Room getRoom() { return room; }
 
     public void nextTurn() throws InterruptedException {
@@ -47,10 +50,12 @@ public class ServerHeldGame {
             Player currPlayer = getCurrentPlayer();
             currPlayer.getHand().addToHand(cardDrawn);
             room.sendMsgToPlayer(currPlayer,"UPDATEHAND " + cardDrawn.getName());
-            room.sendMsgToRoom(currPlayer, "PLAYER " + currPlayer.getName() + " drew");
+            room.sendMsgToRoom(currPlayer, "PLAYER " + currPlayer.getName() + " DREW");
             room.sendGameStateUpdates("UPDATEPLAYERHANDS");
-            if (cardDrawn.equals(new ExplodingKittenCard())) handleExplodingKitten();
-            else nextTurn();
+            if (cardDrawn.equals(new ExplodingKittenCard()))
+                if(!handleExplodingKitten())
+                    return;
+            if(!checkWin()) nextTurn();
         }
     }
 
@@ -58,23 +63,27 @@ public class ServerHeldGame {
         Hand currHand = gameManager.getCurrentPlayerHand();
         Player currPlayer = getCurrentPlayer();
         Card cardPlayed = currHand.playCard(index, this);
-        room.sendMsgToRoom(currPlayer, "PLAYER " + currPlayer.getName() + " played " +  cardPlayed);
+        room.sendMsgToRoom(currPlayer, "PLAYER " + currPlayer.getName() + " PLAYED " +  cardPlayed.getName());
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
 
-    public void handleExplodingKitten() throws InterruptedException {
+    // Returns true if the player exploded
+    public Boolean handleExplodingKitten() throws InterruptedException {
         drawnExplodingKitten = true;
         Player currentPlayer = gameManager.getCurrentPlayer();
         if (!currentPlayer.getHand().contains(new DefuseCard())) {
-            room.sendMsgToPlayer(getCurrentPlayer(), "DIED");
-            room.sendMsgToRoom(getCurrentPlayer(), "PLAYER " + getCurrentPlayerName() + " EXPLODED");
+            System.out.println("Killing player");
+            room.sendMsgToPlayer(currentPlayer, "DIED");
+            room.sendMsgToRoom(currentPlayer, "PLAYER " + getCurrentPlayerName() + " EXPLODED");
             gameManager.killPlayer(currentPlayer);
-            if(!checkWin()) nextTurn();
+            drawnExplodingKitten = false;
+            return true;
         }
         else{
-            room.sendMsgToRoom(getCurrentPlayer(), "PLAYER " + getCurrentPlayerName() + " drewexp");
-            room.sendMsgToPlayer(getCurrentPlayer(), "EXPLODING");
+            room.sendMsgToRoom(currentPlayer, "PLAYER " + getCurrentPlayerName() + " DREWEXP");
+            room.sendMsgToPlayer(currentPlayer, "EXPLODING");
         }
+        return false;
     }
 
     public void placeExploding(int index) throws InterruptedException {
@@ -82,7 +91,7 @@ public class ServerHeldGame {
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
 
-    private Boolean checkWin(){
+    public Boolean checkWin(){
         if(gameManager.getPlayersLeft() == 1){
             room.sendMsgToRoom(null, "WINNER " + gameManager.getCurrentPlayer().getName());
             gameManager.killPlayer(gameManager.getCurrentPlayer());
@@ -115,7 +124,7 @@ public class ServerHeldGame {
         Hand compHand = gameManager.getCurrentPlayerHand();
         Card cardDrawn = gameManager.mainDeck.draw();
         compHand.addToHand(cardDrawn);
-        room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " drew");
+        room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " DREW");
         if (cardDrawn.equals(new ExplodingKittenCard())) {
             room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " drewexp");
             if (compHand.contains(new DefuseCard())) {

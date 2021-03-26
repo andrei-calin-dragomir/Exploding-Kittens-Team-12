@@ -33,7 +33,6 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
             if(!card.equals(new DefuseCard())){
                 System.out.println("Card chosen: " + card.toString());
                 return getHand().indexOf(card);
-
             }
         return null;
     }
@@ -47,7 +46,7 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
         Hand cHand = getHand();
         Integer randCardIndex = getRandCard();
         System.out.println(randCardIndex);
-        if(frequency(cHand.getHand(), new DefuseCard()) != cHand.getHandSize() || randCardIndex == null) return false; // Return if hand is empty or contains only DefuseCard which you cant play
+        if(frequency(cHand.getHand(), new DefuseCard()) == cHand.getHandSize() || randCardIndex == null) return false; // Return if hand is empty or contains only DefuseCard which you cant play
         Card randCard = getHand().getCard(randCardIndex);
         switch(randCard.getName()){
             case("AttackCard"):
@@ -68,19 +67,19 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
 
     private void compDraw(ServerHeldGame game) throws InterruptedException {
         Card cardDrawn = game.drawCard();
+        System.out.println("Card drawn by " + getName() + ": " + cardDrawn.getName());
         getHand().addToHand(cardDrawn);
-        getCurrentRoom().sendMsgToRoom(null, "PLAYER " + getName() + " drew");
+        getCurrentRoom().sendMsgToRoom(null, "PLAYER " + getName() + " DREW");
         handleKitten(game, cardDrawn);
     }
 
     private void handleKitten(ServerHeldGame game, Card cardDrawn) throws InterruptedException {
-        if(cardDrawn.equals(new ExplodingKittenCard())) {
-            game.handleExplodingKitten();   // TODO: Handle next turn and win conditions
-            if (getHand().contains(new DefuseCard())) {
+        if(cardDrawn.equals(new ExplodingKittenCard()))
+            if(!game.handleExplodingKitten()){
+                System.out.println("Placing kitten by " + getName());
                 game.handlePlayAction(getHand().indexOf(new DefuseCard()));
                 game.placeExploding(0);     // TODO: Randomize where the kitten is placed, but keep it at a place where one of the next player in the turn will draw it. So for 4 players randomzie between 3 ints
             }
-        }
     }
 }
 
