@@ -37,8 +37,11 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
         return null;
     }
 
-    private void playAttack(ServerHeldGame game, Integer index) throws InterruptedException { game.handlePlayAction(index); }   // Have to implement who to attack, but attack isnt finished yet
-    private void playFavor(ServerHeldGame game, Integer index) throws InterruptedException { game.handlePlayAction(index); } // Same for attack, will implement logic when favor works.
+    private void playAttack(ServerHeldGame game, Integer index) throws InterruptedException { game.handlePlayAction(index, "1"); }   // Have to implement who to attack, but attack isnt finished yet
+    private void playFavor(ServerHeldGame game, Integer index) throws InterruptedException {
+        System.out.println("Playing favor card");
+        game.handlePlayAction(index, "1");
+    } // Same for attack, will implement logic when favor works.
 
 
     // Returns true if a turn is skipped using the skip card or the attack card
@@ -48,19 +51,20 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
         System.out.println(randCardIndex);
         if(frequency(cHand.getHand(), new DefuseCard()) == cHand.getHandSize() || randCardIndex == null) return false; // Return if hand is empty or contains only DefuseCard which you cant play
         Card randCard = getHand().getCard(randCardIndex);
+        System.out.println("Comparing: " + randCard.getName());
         switch(randCard.getName()){
             case("AttackCard"):
                 playAttack(game, randCardIndex);
-                return false;
+                return true;
             case("FavorCard"):
                 playFavor(game, randCardIndex);
                 return false;
             case("SkipCard"):
                 System.out.println("Skipping");
-                game.handlePlayAction(randCardIndex);
+                game.handlePlayAction(randCardIndex, "");
                 return true;
             default:
-                game.handlePlayAction(randCardIndex);
+                game.handlePlayAction(randCardIndex, "");
                 return false;
         }
     }
@@ -77,7 +81,7 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
         if(cardDrawn.equals(new ExplodingKittenCard()))
             if(!game.handleExplodingKitten()){
                 System.out.println("Placing kitten by " + getName());
-                game.handlePlayAction(getHand().indexOf(new DefuseCard()));
+                game.handlePlayAction(getHand().indexOf(new DefuseCard()), "");
                 game.placeExploding(0);     // TODO: Randomize where the kitten is placed, but keep it at a place where one of the next player in the turn will draw it. So for 4 players randomzie between 3 ints
             }
     }

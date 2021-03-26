@@ -4,6 +4,10 @@
     "className": "ExplodingKittenCard"
   },
   {
+    "deckAmount": 4,
+    "className": "ReverseCard"
+  },
+  {
     "deckAmount": 6,
     "className": "DefuseCard"
   },

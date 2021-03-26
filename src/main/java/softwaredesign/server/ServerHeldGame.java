@@ -5,6 +5,7 @@ import softwaredesign.cards.DefuseCard;
 import softwaredesign.cards.ExplodingKittenCard;
 import softwaredesign.core.Hand;
 import softwaredesign.core.Player;
+import softwaredesign.core.State;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +19,7 @@ public class ServerHeldGame {
     public void setExplodingBool(boolean exploding) { this.drawnExplodingKitten = exploding; }
     public String getCurrentPlayerName(){ return this.getCurrentPlayer().getName(); }
     public Player getCurrentPlayer(){ return gameManager.getCurrentPlayer(); }
+    public Player getPlayer(int index){ return gameManager.getAlivePlayers().get(index); }
     public Card drawCard(){ return gameManager.mainDeck.draw(); }
     public Room getRoom() { return room; }
 
@@ -51,10 +53,10 @@ public class ServerHeldGame {
         }
     }
 
-    public void handlePlayAction(int index) throws InterruptedException {
+    public void handlePlayAction(int index, String target) throws InterruptedException {
         Hand currHand = gameManager.getCurrentPlayerHand();
         Player currPlayer = getCurrentPlayer();
-        Card cardPlayed = currHand.playCard(index, this);
+        Card cardPlayed = currHand.playCard(index, target, this);
         room.sendMsgToRoom(currPlayer, "PLAYER " + currPlayer.getName() + " PLAYED " +  cardPlayed.getName());
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
@@ -64,7 +66,7 @@ public class ServerHeldGame {
         drawnExplodingKitten = true;
         Player currentPlayer = gameManager.getCurrentPlayer();
         if (!currentPlayer.getHand().contains(new DefuseCard())) {
-            System.out.println("Killing player");
+            currentPlayer.setPlayerState(State.SPECTATING);
             room.sendMsgToPlayer(currentPlayer, "DIED");
             room.sendMsgToRoom(currentPlayer, "PLAYER " + getCurrentPlayerName() + " EXPLODED");
             gameManager.killPlayer(currentPlayer);
@@ -72,6 +74,7 @@ public class ServerHeldGame {
             return true;
         }
         else{
+            currentPlayer.setPlayerState(State.EXPLODING);
             room.sendMsgToRoom(currentPlayer, "PLAYER " + getCurrentPlayerName() + " DREWEXP");
             room.sendMsgToPlayer(currentPlayer, "EXPLODING");
         }

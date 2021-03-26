@@ -24,7 +24,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 ClientProgram.ownHand = new ArrayList<>();
                 break;
             case "ROOMCREATED":
-                if(commands[1].equals("SOLO"))
+                if(commands.length > 1 && commands[1].equals("SOLO"))
                     System.out.println("Game has been created! Type start to start");
                 else
                     System.out.println("Room has been created. Waiting for players to connect...");

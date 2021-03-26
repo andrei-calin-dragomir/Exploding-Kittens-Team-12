@@ -10,7 +10,7 @@ public abstract class Card {
     public int getAmount(){
         return deckAmount;
     }
-    public abstract void action(ServerHeldGame gameManager) throws InterruptedException;
+    public abstract void action(ServerHeldGame gameManager, String target) throws InterruptedException;
 
     @Override
     public boolean equals(Object object){ return object != null && object.getClass() == this.getClass(); }

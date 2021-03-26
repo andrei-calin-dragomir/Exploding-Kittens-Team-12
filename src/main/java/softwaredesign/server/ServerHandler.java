@@ -3,6 +3,7 @@ package softwaredesign.server;
 
 import io.netty.channel.*;
 import softwaredesign.core.Player;
+import softwaredesign.core.State;
 
 import java.util.*;
 
@@ -39,7 +40,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             case "USERNAME":
                 playerMap.get(ctx).setPlayerName(message[1]);
                 String str = String.join(",", roomList.keySet());
-                if(message[2].equals("SOLO")) ctx.writeAndFlush("CONNECTEDTOSERVER SOLO");
+                if(message.length > 2 && message[2].equals("SOLO")) ctx.writeAndFlush("CONNECTEDTOSERVER SOLO");
                 else if(roomList.isEmpty()) ctx.writeAndFlush("CONNECTEDTOSERVER NOROOM");
                 else ctx.writeAndFlush("CONNECTEDTOSERVER ROOMAVAILABLE " + str);
                 break;
@@ -48,7 +49,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 if(roomObj == null) ctx.writeAndFlush("ROOMNOTFOUND");
                 if(!roomObj.addPlayer(playerMap.get(ctx))) ctx.writeAndFlush("ROOMFULL");
                 else {
-                    playerMap.get(ctx).setCurrentRoom(roomObj);
+                    Player p = playerMap.get(ctx);
+                    p.setCurrentRoom(roomObj);
+                    p.setPlayerState(State.INROOM);
                     ctx.writeAndFlush("JOINSUCCESS " + roomObj.playerListAsString());
                     roomObj.sendMsgToRoom(playerMap.get(ctx), "JOINED " + getClientName(ctx));
                 }
@@ -61,10 +64,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 String[] gameDetails = message[1].split(",");
                 roomList.put(gameDetails[0], new Room(playerMap.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2])));
                 System.out.println("ASD" + playerMap.get(ctx).getName());
-                try {
-                    if (message[2].equals("SOLO"))
-                        ctx.writeAndFlush("ROOMCREATED SOLO");
-                }catch(Exception notSolo){ ctx.writeAndFlush("ROOMCREATED"); }
+                if (message.length > 2 && message[2].equals("SOLO")) ctx.writeAndFlush("ROOMCREATED SOLO");
+                else ctx.writeAndFlush("ROOMCREATED");
                 break;
             default:
                 getRoom(ctx).channelRespond(ctx, msg);

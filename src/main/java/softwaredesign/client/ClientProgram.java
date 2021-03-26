@@ -114,8 +114,10 @@ public class ClientProgram {
 //TODO                    case "target":
 //                        sendRequestToServer("TARGETED " + inputArray[1]);
                     case "play":
+                        String target = "";
                         requestedCard = inputArray[1];
-                        sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(inputArray[1]));
+                        if(inputArray.length > 2) target = inputArray[2];
+                        sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(inputArray[1]) + " " + target);
                         break;
                     case "draw":
                         sendRequestToServer("DRAW");
@@ -143,8 +145,12 @@ public class ClientProgram {
             while (scanner.hasNext()) {
                 String[] input = scanner.nextLine().split(" ");
                 switch (input[0]) {
-                    case "offline": startGame(true);
-                    case "online" : startGame(false);
+                    case "offline":
+                        startGame(true);
+                        break;
+                    case "online" :
+                        startGame(false);
+                        break;
                     default       : System.out.println("Unexpected command, try again.");
                 }
             }

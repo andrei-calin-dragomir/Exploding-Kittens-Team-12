@@ -16,6 +16,7 @@ import java.util.*;
 public class Deck implements Iterable<Card>{
     public static HashMap<String, Class<? extends Card>> cardMap = new HashMap<>(){{
         put("ExplodingKittenCard", ExplodingKittenCard.class);
+        put("ReverseCard", ReverseCard.class);
         put("DefuseCard", DefuseCard.class);
         put("AttackCard", AttackCard.class);
         put("NopeCard",NopeCard.class);
@@ -30,6 +31,7 @@ public class Deck implements Iterable<Card>{
     public List<Card> cardDeck = new ArrayList<>();
 
     public Iterator<Card> iterator() { return this.cardDeck.iterator(); }
+
     public Deck() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         deckConstruct();
     }
