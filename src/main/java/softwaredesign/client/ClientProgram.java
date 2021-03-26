@@ -9,9 +9,8 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import softwaredesign.server.ServerProgram;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class ClientProgram {
@@ -44,15 +43,15 @@ public class ClientProgram {
         while (scanner.hasNext()) {
             String[] input = scanner.nextLine().split(" ");
             switch (input[0]) {
-                case "offline": playOffline();
-                case "online" : goOnline();
+                case "offline": startGame(true);break;
+                case "online" : startGame(false);break;
                 default       : System.out.println("Unexpected command, " +
                         " again.");
             }
         }
     }
 
-    private static void goOnline() throws Exception{
+    private static void startGame(boolean offline) throws Exception{
         final String HOST = "127.0.0.1";
         final int PORT = 8007;
         Scanner scanner = new Scanner(System.in);
@@ -76,10 +75,17 @@ public class ClientProgram {
                     });
 
             // Start the client.
-            System.out.println("Attempting connection to " + HOST + " on port " + PORT + "...");
+            if(!offline) {
+                System.out.println("Attempting connection to " + HOST + " on port " + PORT + "...");
+            }
             correspondenceChannel = bootstrap.connect(HOST, PORT).sync();
-            sendRequestToServer("USERNAME " + username);
 
+            if(offline) {
+                sendRequestToServer("USERNAME " + username + " SOLO");
+                sendRequestToServer("CREATE " + createGame(offline) + " SOLO");
+            }
+            else
+                sendRequestToServer("USERNAME " + username);
             /*
              * Iterate & take chat message inputs from user & then send to server.
              */
@@ -98,11 +104,7 @@ public class ClientProgram {
                         sendRequestToServer("JOIN " + inputArray[1]);
                         break;
                     case "create":
-                        sendRequestToServer("CREATE " + createGame());
-                        break;
-                    case "offline":
-                        group.shutdownGracefully();
-                        playOffline();
+                        sendRequestToServer("CREATE " + createGame(offline));
                         break;
                     case "quit":
                         sendRequestToServer("LEAVE");
@@ -141,8 +143,8 @@ public class ClientProgram {
             while (scanner.hasNext()) {
                 String[] input = scanner.nextLine().split(" ");
                 switch (input[0]) {
-                    case "offline": playOffline();
-                    case "online" : goOnline();
+                    case "offline": startGame(true);
+                    case "online" : startGame(false);
                     default       : System.out.println("Unexpected command, try again.");
                 }
             }
@@ -156,35 +158,54 @@ public class ClientProgram {
         channel.writeAndFlush(message);
     }
 
-    private static void playOffline() throws IOException, InterruptedException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Game offlineGame = new Game();
-        offlineGame.start(4,3);
-    }
+//    private static void playOffline() throws Exception {
+//        new ServerProgram();
+//        startGame(true);
+////        Game offlineGame = new Game();
+////        //offlineGame.start(4,3);
+//    }
 
-    private static String createGame(){
+    private static String createGame(boolean offline) {
         Scanner scanner = new Scanner(System.in);
         int parameter1 = 0;
         int parameter2 = -1;
         String roomName = "";
-        System.out.println("Give a room name: ");
-        roomName = scanner.nextLine();
-        System.out.println("How many players do you want in your game? Answer options: 2-5");
-        while(parameter1 == 0) {
-            if (scanner.hasNext()) {
-                int roomSize = scanner.nextInt();
-                if (roomSize < 2 || roomSize > 5) System.out.println("Cannot handle this number of players.");
-                else parameter1 = roomSize;
+        if (!offline) {
+            System.out.println("Give a room name: ");
+            roomName = scanner.nextLine();
+            System.out.println("How many players do you want in your game? Answer options: 2-5");
+            while (parameter1 == 0) {
+                if (scanner.hasNext()) {
+                    int roomSize = scanner.nextInt();
+                    if (roomSize < 2 || roomSize > 5) System.out.println("Cannot handle this number of players.");
+                    else parameter1 = roomSize;
+                }
+            }
+            System.out.println("How many computers do you want in your game? Minimum: 0 Maximum: " + (parameter1 - 1));
+            while (parameter2 == -1) {
+                if (scanner.hasNext()) {
+                    int numberOfComputers = scanner.nextInt();
+                    if (numberOfComputers < 0 || numberOfComputers > (parameter1 - 1))
+                        System.out.println("Invalid number of computers");
+                    else parameter2 = numberOfComputers;
+                }
+            }
+            return roomName + "," + parameter1 + "," + parameter2;
+
+        }
+        else {
+            roomName = "SOLO_GAME";
+            System.out.println("How many computers do you want in your game? Minimum: 0 Maximum: " + 3);
+            while (parameter2 == -1) {
+                if (scanner.hasNext()) {
+                    int numberOfComputers = scanner.nextInt();
+                    if (numberOfComputers < 0 || numberOfComputers > 4)
+                        System.out.println("Invalid number of computers");
+                    else parameter2 = numberOfComputers;
+                }
             }
         }
-        System.out.println("How many computers do you want in your game? Minimum: 0 Maximum: " + (parameter1 - 1));
-        while(parameter2 == -1){
-            if(scanner.hasNext()){
-                int numberOfComputers = scanner.nextInt();
-                if( numberOfComputers < 0 || numberOfComputers > (parameter1 - 1))
-                    System.out.println("Invalid number of computers");
-                else parameter2 = numberOfComputers;
-            }
-        }
-        return roomName + "," + parameter1 + "," + parameter2;
+        return roomName + "," + 1 + "," + parameter2;
+
     }
 }

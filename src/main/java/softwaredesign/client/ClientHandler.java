@@ -24,7 +24,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 ClientProgram.ownHand = new ArrayList<>();
                 break;
             case "ROOMCREATED":
-                System.out.println("Room has been created. Waiting for players to connect...");
+                if(commands[1].equals("SOLO"))
+                    System.out.println("Game has been created! Type start to start");
+                else
+                    System.out.println("Room has been created. Waiting for players to connect...");
                 break;
             case "ROOMFULL":
                 System.out.println("The room is full, play offline or quit? Answer option: offline/quit");
@@ -74,16 +77,20 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
 //TODO                else if(commands[1].equals("WRONGNAME")) System.out.println("The player name you entered is wrong, try again.");
                 break;
             case "CONNECTEDTOSERVER":
-                System.out.println("Connection Successful.");
                 switch(commands[1]){
                     case "NOROOM":
+                        System.out.println("Connection Successful.");
                         System.out.println("No room has been created, create one now or play offline?" +
                                 "Answer options: create,offline");
                         break;
                     case "ROOMAVAILABLE":
+                        System.out.println("Connection Successful.");
                         String[] allRooms = commands[2].split(",");
                         for(String room : allRooms) tempString = tempString + room + " ";
                         System.out.println(allRooms.length + " room have been found, join one or create a custom room?\nAvailable rooms: " + tempString); // fix grammer
+                        break;
+                    case "SOLO":
+                        System.out.println("TESTING");
                         break;
                 }
                 break;
