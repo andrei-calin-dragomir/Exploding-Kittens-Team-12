@@ -11,6 +11,7 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class ClientProgram {
@@ -25,6 +26,12 @@ public class ClientProgram {
 
     public static void main(String[] args) throws Exception {
         ClientProgram.startClient();
+    }
+
+    private static Boolean isInteger(String intString){
+        try { Integer.parseInt(intString); }
+        catch(NumberFormatException e){ return false; }
+        return true;
     }
 
     private static void startClient() throws Exception {
@@ -79,6 +86,7 @@ public class ClientProgram {
             while (scanner.hasNext()) {
                 String input = scanner.nextLine();
                 String[] inputArray = input.split(" ");
+                System.out.println(input);
                 switch(inputArray[0].toLowerCase(Locale.ROOT)) {
                     case "start":
                         sendRequestToServer("START");
@@ -97,6 +105,7 @@ public class ClientProgram {
                         playOffline();
                         break;
                     case "quit":
+                        sendRequestToServer("LEAVE");
                         group.shutdownGracefully();
                         System.exit(0);
                         break;
@@ -110,14 +119,16 @@ public class ClientProgram {
                         sendRequestToServer("DRAW");
                         break;
                     case "place":
-                        if(inputArray.length != 2) break;
-                        sendRequestToServer("PLACE " + inputArray[1]);
+                        if(inputArray.length != 2) System.out.println("Please specify the location you want to place the card");
+                        if(!isInteger(inputArray[1])) System.out.println("Invalid location, try again");
+                        else sendRequestToServer("PLACE " + inputArray[1]);
                         break;
                     case "chat":
                         sendRequestToServer(input);
                         break;
                     case "hand":
                         System.out.println(ownHand);
+                        break;
                     default:
                         System.out.println("Unknown command, try again");
                         break;
@@ -145,7 +156,7 @@ public class ClientProgram {
         channel.writeAndFlush(message);
     }
 
-    private static void playOffline() throws IOException, InterruptedException {
+    private static void playOffline() throws IOException, InterruptedException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Game offlineGame = new Game();
         offlineGame.start(4,3);
     }

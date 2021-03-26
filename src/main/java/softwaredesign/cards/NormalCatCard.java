@@ -8,7 +8,7 @@ public class NormalCatCard extends Card {
         Hand hand = heldGame.gameManager.getCurrentPlayerHand();
         if(heldGame.gameManager.discardDeck.top().equals(this.className)){
             hand.addToHand(new FavorCard());    //Since multiple inheritance isnt allowed in Java, this is a solution
-            int index = hand.getHand().size() -1;
+            int index = hand.getHandSize() -1;
             hand.playCard(index, heldGame);
             hand.removeCard(index);             //If some other class removes the card from the hand, this can be removed
         }

@@ -3,35 +3,38 @@ package softwaredesign.core;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import org.jetbrains.annotations.NotNull;
 import softwaredesign.cards.*;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class Deck {
-    public static HashMap<String, Card> cardMap = new HashMap<>(){{
-        put("ExplodingKittenCard", new ExplodingKittenCard());
-        put("DefuseCard", new DefuseCard());
-        put("AttackCard", new AttackCard());
-        put("NopeCard", new NopeCard());
-        put("FavorCard", new FavorCard());
-        put("SeeTheFutureCard", new SeeTheFutureCard());
-        put("ShuffleCard", new ShuffleCard());
-        put("SkipCard", new SkipCard());
-        put("CatCardMomma", new CatCardMomma());
-        put("CatCardShy", new CatCardShy());
-        put("CatCardZombie", new CatCardZombie());
+public class Deck implements Iterable<Card>{
+    public static HashMap<String, Class<? extends Card>> cardMap = new HashMap<>(){{
+        put("ExplodingKittenCard", ExplodingKittenCard.class);
+        put("DefuseCard", DefuseCard.class);
+        put("AttackCard", AttackCard.class);
+        put("NopeCard",NopeCard.class);
+        put("FavorCard", FavorCard.class);
+        put("SeeTheFutureCard", SeeTheFutureCard.class);
+        put("ShuffleCard", ShuffleCard.class);
+        put("SkipCard", SkipCard.class);
+        put("CatCardMomma", CatCardMomma.class);
+        put("CatCardShy", CatCardShy.class);
+        put("CatCardZombie",  CatCardZombie.class);
     }};
-    public ArrayList<Card> cardDeck = new ArrayList<>();
+    public List<Card> cardDeck = new ArrayList<>();
 
-    public Deck() throws IOException {
+    public Iterator<Card> iterator() { return this.cardDeck.iterator(); }
+    public Deck() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         deckConstruct();
     }
 
-    public ArrayList<Card> getFullDeck(){
+    public List<Card> getFullDeck(){
         return cardDeck;
     }
 
@@ -72,13 +75,14 @@ public class Deck {
         }
     }
 
-    public void deckConstruct() throws IOException {
+    public void deckConstruct() throws IOException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         String fileContent = Files.readString(Paths.get("resources/decks/default.json"), StandardCharsets.US_ASCII);
         ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
 
         for (LinkedTreeMap<Object, Object> cardTree : cardAmounts) {
             for (double j = 0; j < Double.parseDouble(cardTree.get("deckAmount").toString()); j++) {
-                cardDeck.add(cardMap.get(cardTree.get("className").toString()));
+                Card newCard = cardMap.get(cardTree.get("className").toString()).getDeclaredConstructor().newInstance();        // Reflection wasn't allowed, so the easiest way to get a class for a string is with a HashMap
+                cardDeck.add(newCard);
             }
         }
         reshuffle();
