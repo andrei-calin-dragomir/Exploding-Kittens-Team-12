@@ -10,15 +10,12 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
-import java.net.InetSocketAddress;
-
-public final class ServerProgram {
+public final class ServerProgram extends Thread {
 
     // Port where chat server will listen for connections.
-    static final int PORT = 9009;
-    static final String ADDRESS = "77.251.240.28";
+    static final int PORT = 8007;
 
-    public static void main(String[] args) throws Exception {
+    public void run(){
 
         /*
          * Configure the server.
@@ -31,7 +28,6 @@ public final class ServerProgram {
 
         try {
             ServerBootstrap b = new ServerBootstrap();
-//            b.localAddress(new InetSocketAddress(ADDRESS, PORT));
             b.group(bossGroup, workerGroup) // Set boss & worker groups
                     .channel(NioServerSocketChannel.class)// Use NIO to accept new connections.
                     .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,5000)
@@ -54,12 +50,19 @@ public final class ServerProgram {
                     });
 
             // Start the server.
-            InetSocketAddress a = new InetSocketAddress("0.0.0.0", 8007);
-            System.out.println(a);
-            ChannelFuture f = b.bind(a).sync();
+            ChannelFuture f = null;
+            try {
+                f = b.bind(PORT).sync();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             System.out.println("Exploding Kittens Server started. Ready to accept players.");
             // Wait until the server socket is closed.
-            f.channel().closeFuture().sync();
+            try {
+                f.channel().closeFuture().sync();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } finally {
             // Shut down all event loops to terminate all threads.
             bossGroup.shutdownGracefully();
