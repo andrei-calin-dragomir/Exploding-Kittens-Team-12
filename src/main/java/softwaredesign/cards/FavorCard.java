@@ -11,6 +11,5 @@ public class FavorCard extends Card {
 //        int indexOfTarget = heldGame.gameManager.getAlivePlayers().indexOf(target);
 //        heldGame.gameManager.getCurrentPlayerHand().addToHand(receivedCard);
 //        heldGame.gameManager.getAlivePlayers().get(indexOfTarget).getHand().removeCard(receivedCard);
-
     }
 }
