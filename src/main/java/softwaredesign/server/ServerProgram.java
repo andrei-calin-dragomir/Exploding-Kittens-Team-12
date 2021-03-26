@@ -10,12 +10,12 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
-public final class ServerProgram {
+public final class ServerProgram extends Thread {
 
     // Port where chat server will listen for connections.
     static final int PORT = 8007;
 
-    public static void main(String[] args) throws Exception {
+    public void run(){
 
         /*
          * Configure the server.
@@ -50,10 +50,19 @@ public final class ServerProgram {
                     });
 
             // Start the server.
-            ChannelFuture f = b.bind(PORT).sync();
+            ChannelFuture f = null;
+            try {
+                f = b.bind(PORT).sync();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             System.out.println("Exploding Kittens Server started. Ready to accept players.");
             // Wait until the server socket is closed.
-            f.channel().closeFuture().sync();
+            try {
+                f.channel().closeFuture().sync();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } finally {
             // Shut down all event loops to terminate all threads.
             bossGroup.shutdownGracefully();

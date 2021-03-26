@@ -43,7 +43,11 @@ public class ClientProgram {
         while (scanner.hasNext()) {
             String[] input = scanner.nextLine().split(" ");
             switch (input[0]) {
-                case "offline": startGame(true);break;
+                case "offline":
+                    ServerProgram server = new ServerProgram();
+                    server.start();
+                    startGame(true);
+                    break;
                 case "online" : startGame(false);break;
                 default       : System.out.println("Unexpected command, " +
                         " again.");
