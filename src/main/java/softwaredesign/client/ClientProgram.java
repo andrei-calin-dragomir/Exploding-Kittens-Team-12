@@ -28,6 +28,12 @@ public class ClientProgram {
         ClientProgram.startClient();
     }
 
+    private static Boolean isInteger(String intString){
+        try { Integer.parseInt(intString); }
+        catch(NumberFormatException e){ return false; }
+        return true;
+    }
+
     private static void startClient() throws Exception {
 
         Scanner scanner = new Scanner(System.in);
@@ -99,6 +105,7 @@ public class ClientProgram {
                         playOffline();
                         break;
                     case "quit":
+                        sendRequestToServer("LEAVE");
                         group.shutdownGracefully();
                         System.exit(0);
                         break;
@@ -112,8 +119,9 @@ public class ClientProgram {
                         sendRequestToServer("DRAW");
                         break;
                     case "place":
-                        if(inputArray.length != 2) break;
-                        sendRequestToServer("PLACE " + inputArray[1]);
+                        if(inputArray.length != 2) System.out.println("Please specify the location you want to place the card");
+                        if(!isInteger(inputArray[1])) System.out.println("Invalid location, try again");
+                        else sendRequestToServer("PLACE " + inputArray[1]);
                         break;
                     case "chat":
                         sendRequestToServer(input);

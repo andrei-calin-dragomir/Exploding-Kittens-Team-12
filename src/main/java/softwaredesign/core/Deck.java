@@ -3,6 +3,7 @@ package softwaredesign.core;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import org.jetbrains.annotations.NotNull;
 import softwaredesign.cards.*;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class Deck {
+public class Deck implements Iterable<Card>{
     public static HashMap<String, Class<? extends Card>> cardMap = new HashMap<>(){{
         put("ExplodingKittenCard", ExplodingKittenCard.class);
         put("DefuseCard", DefuseCard.class);
@@ -26,13 +27,14 @@ public class Deck {
         put("CatCardShy", CatCardShy.class);
         put("CatCardZombie",  CatCardZombie.class);
     }};
-    public ArrayList<Card> cardDeck = new ArrayList<>();
+    public List<Card> cardDeck = new ArrayList<>();
 
+    public Iterator<Card> iterator() { return this.cardDeck.iterator(); }
     public Deck() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         deckConstruct();
     }
 
-    public ArrayList<Card> getFullDeck(){
+    public List<Card> getFullDeck(){
         return cardDeck;
     }
 

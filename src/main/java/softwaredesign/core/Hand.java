@@ -1,16 +1,22 @@
 package softwaredesign.core;
 
+import org.jetbrains.annotations.NotNull;
 import softwaredesign.cards.Card;
 import softwaredesign.server.ServerHeldGame;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class Hand {
+public class Hand implements Iterable<Card>{
     ArrayList<Card> currentHand = new ArrayList<>();
 
     public boolean contains(Card target){
         return currentHand.contains(target);
     }
+    public boolean isEmpty(){ return currentHand.isEmpty(); }
+    public Integer indexOf(Card target) { return currentHand.indexOf(target); }
+    public Iterator<Card> iterator() { return currentHand.iterator(); }
+
 
     public Hand(Deck newDeck){
         currentHand.add(newDeck.getDefuse());
@@ -47,14 +53,16 @@ public class Hand {
         heldGame.gameManager.discardDeck.discardCard(playCard);
         playCard.action(heldGame);
         return playCard;
-
     }
+
+    // Needs changing or removal
     public void printHand(){
-        if(this.getHand().isEmpty()) System.out.println("Your hand is empty");
+        if(isEmpty()) System.out.println("Your hand is empty");
         else{
             System.out.println("Your hand consists off:");
             this.getHand().forEach(x -> System.out.printf("%s - ", x.getName()));
             System.out.print("\b\b\n");
         }
     }
+
 }

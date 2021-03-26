@@ -24,7 +24,6 @@ public class GameManager {
                 getAlivePlayers().get(i).setName(scanner.nextLine());
             }else {
                 getAlivePlayers().get(i).setName("Computer " + i);
-                getAlivePlayers().get(i).markAsComputer();
                 System.out.println("Added " + getAlivePlayers().get(i).getName());
             }
             getAlivePlayers().get(i).initHand(remainingDeck);

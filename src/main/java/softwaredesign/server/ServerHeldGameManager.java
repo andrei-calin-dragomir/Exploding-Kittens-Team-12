@@ -20,13 +20,13 @@ public class ServerHeldGameManager{
         for(Player player : currentRoom.getRoomPlayerList().values()){
             alivePlayers.add(player);
             player.initHand(mainDeck);
-            currentRoom.sendMsgToPlayer(player.getName(), "UPDATEHAND " + createHandAsString(player));
+            currentRoom.sendMsgToPlayer(player, "UPDATEHAND " + createHandAsString(player));
         }
     }
 
     public String createHandAsString(Player player) {
         ArrayList<String> allCards = new ArrayList<>();
-        for(Card card : player.getHand().getHand()) allCards.add(card.getName());
+        for(Card card : player.getHand()) allCards.add(card.getName());
         return String.join(" ", allCards);
     }
 
@@ -55,15 +55,15 @@ public class ServerHeldGameManager{
 
     public void killPlayer(Player target){ alivePlayers.remove(target); }
 
-    public String getTopThreeCards() {
-        if(mainDeck.getDeckSize() <= 3){
-            ArrayList<String> allPlayers = new ArrayList<>();
-            for(Card card : mainDeck.getFullDeck()) allPlayers.add(card.getName());
-            return String.join(" ", allPlayers);
-        }else return mainDeck.getFullDeck().get(0).getName() + " " +
-                    mainDeck.getFullDeck().get(1).getName() + " " +
-                    mainDeck.getFullDeck().get(2).getName();
-    }
+//    public String getTopThreeCards() {
+//        if(mainDeck.getDeckSize() <= 3){
+//            ArrayList<String> allPlayers = new ArrayList<>();
+//            for(Card card : mainDeck) allPlayers.add(card.getName());
+//            return String.join(" ", allPlayers);
+//        }else return mainDeck.getFullDeck().get(0).getName() + " " +
+//                    mainDeck.getFullDeck().get(1).getName() + " " +
+//                    mainDeck.getFullDeck().get(2).getName();
+//    }
 
     // Not tested but should work
     public void changeNextTurn(Player target){
@@ -76,6 +76,7 @@ public class ServerHeldGameManager{
     }
 
     public void removeCurrentPlayerCard(Card card) {
-        getCurrentPlayerHand().getHand().remove(card);
+
+        getCurrentPlayerHand().removeCard(card);
     }
 }

@@ -22,7 +22,7 @@ public class Room {
         host.setCurrentRoom(this);
         for(int i = 0; i < computerAmount; ++i) {
             Computer newComputer = new Computer(this, i);
-            roomPlayerList.put(newComputer.getPlayerName(), newComputer);
+            roomPlayerList.put(newComputer.getName(), newComputer);
         }
     }
 
@@ -48,10 +48,8 @@ public class Room {
                 else ctx.writeAndFlush("CANTSTART " + getHostName());
                 break;
             case "PLACE":
-                if(Integer.parseInt(message[1]) >= 0 && Integer.parseInt(message[1]) < onlineGame.getDeckSize()){
-                    onlineGame.gameManager.mainDeck.insertCard(new ExplodingKittenCard(),Integer.parseInt(message[1]));
-                    sendGameStateUpdates("UPDATEPLAYERHANDS");
-                }else ctx.writeAndFlush("NOTALLOWED BADPLACE");
+                onlineGame.placeExploding(Integer.parseInt(message[1]));
+                onlineGame.nextTurn();
                 break;
             case "PLAY":
                 if(getClientName(ctx).equals(onlineGame.getCurrentPlayerName())){
@@ -71,7 +69,7 @@ public class Room {
 //                    }
                     else {
                         ctx.writeAndFlush("PLAYCONFIRMED");
-                        onlineGame.handleAction("play " + message[1]);
+                        onlineGame.handlePlayAction(index);
                     }
                 }
                 break;
@@ -81,7 +79,7 @@ public class Room {
 //                    sendMessageToSingleRoomClient(message[1],"GIVECARD " + getClientName(ctx));
 //                }else ctx.writeAndFlush("NOTALLOWED WRONGNAME");
             case "DRAW":
-                if(getClientName(ctx).equals(onlineGame.getCurrentPlayerName())) onlineGame.handleAction("draw");
+                if(getClientName(ctx).equals(onlineGame.getCurrentPlayerName())) onlineGame.handleDrawAction();
                 else ctx.writeAndFlush("NOTALLOWED NOTYOURTURN");
                 break;
             case "CHAT":
@@ -96,33 +94,34 @@ public class Room {
     }
 
     private Boolean isAlive(ChannelHandlerContext ctx){ return onlineGame.gameManager.isAlive(getClientName(ctx)); }
-    public int getMaxPlayers(){ return gameRules[0]; }
-    private boolean hasFreeSpots(){ return roomPlayerList.size() < getMaxPlayers(); }
+    private Boolean hasFreeSpots(){ return roomPlayerList.size() < getMaxPlayers(); }
+    public Integer getMaxPlayers(){ return gameRules[0]; }
+    public String getHostName(){ return currentHost.getName(); }
     public HashMap<String, Player> getRoomPlayerList() { return roomPlayerList; }
-    public String getHostName(){ return currentHost.getPlayerName(); }
 
-    public String playerListAsString(String delim){
+    public String playerListAsString(){
         ArrayList<String> allPlayers = new ArrayList<>();
-        for(Player player : roomPlayerList.values()) allPlayers.add(player.getPlayerName());
-        return String.join(delim, allPlayers); // @@ is the delimiter which the client side will use
+        for(Player player : roomPlayerList.values()) allPlayers.add(player.getName());
+        return String.join("@@", allPlayers); // @@ is the delimiter which the client side will use
     }
 
     public void sendGameStateUpdates(String typeOfUpdate){
         String topCardName = "NOCARD";
+        String playerHandSizes = "";
         Card topCard = onlineGame.gameManager.discardDeck.getTopCard();
         if(topCard != null) topCardName = topCard.getName();
+
+        for(Player player: onlineGame.gameManager.getAlivePlayers())
+            playerHandSizes += player.getName() + " " + player.getHand().getHandSize() + " ";
+
         sendMsgToRoom(null, "UPDATEDECKS " + onlineGame.getDeckSize() + " " + topCardName);
-        StringBuilder playerHandSizes = new StringBuilder();
-        for(Player player: onlineGame.gameManager.getAlivePlayers()) {
-            playerHandSizes.append(player.getName()).append(" ").append(player.getHand().getHandSize()).append(" ");
-        }
-        sendMsgToRoom(null,typeOfUpdate + " " + playerHandSizes.toString());
+        sendMsgToRoom(null,typeOfUpdate + " " + playerHandSizes);
     }
 
     public String getClientName(ChannelHandlerContext ctx){
         for(Player player : roomPlayerList.values())
             if(player.getCtx() != null && player.getCtx().equals(ctx))
-                return player.getPlayerName();
+                return player.getName();
         return null;
     }
 
@@ -130,7 +129,7 @@ public class Room {
 
     public boolean addPlayer(Player player){
         if(hasFreeSpots()) {
-            roomPlayerList.put(player.getPlayerName(), player);
+            roomPlayerList.put(player.getName(), player);
             return true;
         }
         return false;
@@ -139,22 +138,22 @@ public class Room {
     public void removePlayer(String player){ roomPlayerList.remove(player); }
 
     // Send a message to everyone in the room except "excludedPlayer", if excludedPlayer is null it will send the message to everyone
-    public void sendMsgToRoom(String excludedPlayer, String message){
-        for(String cli : roomPlayerList.keySet()){
-            ChannelHandlerContext outgoingCtx = roomPlayerList.get(cli).getCtx();
-            if(cli.equals(excludedPlayer) || outgoingCtx == null) continue;
+    public void sendMsgToRoom(Player excludedPlayer, String message){
+        for(Player currPlayer : roomPlayerList.values()){
+            ChannelHandlerContext outgoingCtx = currPlayer.getCtx();
+            if(currPlayer.equals(excludedPlayer) || outgoingCtx == null) continue;
             outgoingCtx.writeAndFlush(message);
         }
     }
 
-    public void sendMsgToPlayer(String name, String message){
-        if(getClientCTX(name) != null) getClientCTX(name).writeAndFlush(message);
+    public void sendMsgToPlayer(Player p, String message){
+        if(p.getCtx() != null) p.getCtx().writeAndFlush(message);
     }
 
     public Boolean isRoomEmpty(){
-        for(String name: getRoomPlayerList().keySet()) if(!name.split("_")[0].equals("Computer")){
-            return false;
-        }
+        for(String name: roomPlayerList.keySet())
+            if(!roomPlayerList.get(name).isComputer())
+                return false;
         return true;
     }
 }

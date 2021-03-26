@@ -48,8 +48,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 if(!roomObj.addPlayer(playerMap.get(ctx))) ctx.writeAndFlush("ROOMFULL");
                 else {
                     playerMap.get(ctx).setCurrentRoom(roomObj);
-                    ctx.writeAndFlush("JOINSUCCESS " + roomObj.playerListAsString("@@"));
-                    roomObj.sendMsgToRoom(getClientName(ctx), "JOINED " + getClientName(ctx));
+                    ctx.writeAndFlush("JOINSUCCESS " + roomObj.playerListAsString());
+                    roomObj.sendMsgToRoom(playerMap.get(ctx), "JOINED " + getClientName(ctx));
                 }
                 break;
             case "LEAVE":
@@ -67,14 +67,14 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         }
     }
 
-    private String getClientName(ChannelHandlerContext ctx){ return playerMap.get(ctx).getPlayerName(); }
+    private String getClientName(ChannelHandlerContext ctx){ return playerMap.get(ctx).getName(); }
     private Room getRoom(ChannelHandlerContext ctx){ return playerMap.get(ctx).getCurrentRoom(); }
 
     private void cleanRoomOfEntity(ChannelHandlerContext ctx) {
         Room playerRoom = getRoom(ctx);
-        String playerName = getClientName(ctx);
-        playerRoom.removePlayer(playerName);
-        playerRoom.sendMsgToRoom(playerName,"LEFT " + playerName + " " + playerRoom.playerListAsString("@@"));
+        Player player = playerMap.get(ctx);
+        playerRoom.removePlayer(player.getName());
+        playerRoom.sendMsgToRoom(player,"LEFT " + player.getName() + " " + playerRoom.playerListAsString());
         if(playerRoom.isRoomEmpty()) roomList.remove(playerRoom.getRoomName());
     }
 

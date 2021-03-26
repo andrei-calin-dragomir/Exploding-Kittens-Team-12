@@ -1,6 +1,7 @@
 package softwaredesign.cards;
 
 import softwaredesign.core.Deck;
+import softwaredesign.core.Player;
 import softwaredesign.server.ServerHeldGame;
 
 import java.util.ArrayList;
@@ -9,17 +10,14 @@ public class SeeTheFutureCard extends Card {
     public void action(ServerHeldGame heldGame) {
         heldGame.gameManager.removeCurrentPlayerCard(new SeeTheFutureCard());
         Deck mainDeck = heldGame.gameManager.mainDeck;
-        String playerName = heldGame.gameManager.getCurrentPlayer().getName();
-        String messageToSend;
+        Player currPlayer = heldGame.gameManager.getCurrentPlayer();
+        String messageToSend = "";
 
-        if (mainDeck.getDeckSize() <= 3) {
-            ArrayList<String> allPlayers = new ArrayList<>();
-            for (Card card : mainDeck.getFullDeck()) allPlayers.add(card.getName());
-            messageToSend = String.join(" ", allPlayers);
-        } else messageToSend = mainDeck.getFullDeck().get(0).getName() + " " +
-                mainDeck.getFullDeck().get(1).getName() + " " +
-                mainDeck.getFullDeck().get(2).getName();
-
-        heldGame.getRoom().sendMsgToPlayer(playerName,"SEEFUTURE " + messageToSend);
+        for(Card card : mainDeck){
+            messageToSend += card.getName() + " ";
+            if(messageToSend.split(" ").length == 3) break;
+        }
+        System.out.println(messageToSend);
+        heldGame.getRoom().sendMsgToPlayer(currPlayer,"SEEFUTURE " + messageToSend);
     }
 }
