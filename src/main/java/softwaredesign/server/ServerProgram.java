@@ -71,7 +71,8 @@ public final class ServerProgram extends Thread {
         }
     }
 
-//    public static void main(String[] args) throws Exception {
-//        run();
-//    }
+    public static void main(String[] args) throws Exception {
+        ServerProgram server = new ServerProgram();
+        server.run();
+    }
 }

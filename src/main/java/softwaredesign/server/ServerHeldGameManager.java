@@ -15,7 +15,7 @@ public class ServerHeldGameManager{
     public DiscardDeck discardDeck;
 
     public void initGame(Room currentRoom) throws IOException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        mainDeck = new Deck();
+        mainDeck = new Deck(currentRoom.getMaxPlayers());
         discardDeck = new DiscardDeck();
         for(Player player : currentRoom.getRoomPlayerList().values()){
             alivePlayers.add(player);

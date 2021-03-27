@@ -32,8 +32,8 @@ public class Deck implements Iterable<Card>{
 
     public Iterator<Card> iterator() { return this.cardDeck.iterator(); }
 
-    public Deck() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        deckConstruct();
+    public Deck(int players) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        deckConstruct(players);
     }
 
     public List<Card> getFullDeck(){
@@ -77,7 +77,7 @@ public class Deck implements Iterable<Card>{
         }
     }
 
-    public void deckConstruct() throws IOException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public void deckConstruct(int players) throws IOException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         String fileContent = Files.readString(Paths.get("resources/decks/default.json"), StandardCharsets.US_ASCII);
         ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
 
@@ -87,7 +87,11 @@ public class Deck implements Iterable<Card>{
                 cardDeck.add(newCard);
             }
         }
+        if(!cardDeck.contains(new ExplodingKittenCard())){
+            for(int i = 0; i < players - 1; i++){
+                cardDeck.add(new ExplodingKittenCard());
+            }
+        }
         reshuffle();
-//        cardDeck.forEach(x -> System.out.println(x.action()));
     }
 }

@@ -34,7 +34,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                     playerMap.get(ctx).setPlayerName(message[1]);
                     if(message.length < 3){
                         String str = String.join(",", roomList.keySet());
-                        if(roomList.isEmpty()) ctx.writeAndFlush("NOROOM");
+                        if(roomList.isEmpty()) ctx.writeAndFlush("ROOM NOROOM");
                         else ctx.writeAndFlush("AVAILABLE " + str);
                     }
                 }

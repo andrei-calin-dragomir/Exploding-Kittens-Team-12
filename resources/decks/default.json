@@ -1,10 +1,6 @@
 [
   {
     "deckAmount": 4,
-    "className": "ExplodingKittenCard"
-  },
-  {
-    "deckAmount": 4,
     "className": "ReverseCard"
   },
   {

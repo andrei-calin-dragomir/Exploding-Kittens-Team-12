@@ -30,9 +30,7 @@ public class ClientProgram {
     public static void startClient() throws Exception {
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter your username: ");
-        if (scanner.hasNext()) username = scanner.nextLine();
-        System.out.println("Welcome to Exploding Kittens, " + username + "!");
+        System.out.println("Welcome to Exploding Kittens!");
         System.out.println("Would you like to play offline or online? Answer options: offline/online");
         while (scanner.hasNext()) {
             String[] input = scanner.nextLine().split(" ");
@@ -79,11 +77,11 @@ public class ClientProgram {
             correspondenceChannel = bootstrap.connect(HOST, PORT).sync();
 
             if(offline) {
-                sendRequestToServer("USERNAME " + username + " SOLO");
+                sendRequestToServer("USERNAME You SOLO");
                 sendRequestToServer("CREATE " + createGame(offline) + " SOLO");
             }
             else
-                sendRequestToServer("USERNAME " + username);
+                System.out.println("Please input your username. Answer: username name");
             /*
              * Iterate & take chat message inputs from user & then send to server.
              */
@@ -92,6 +90,10 @@ public class ClientProgram {
                 String[] inputArray = input.split(" ");
                 System.out.println(input);
                 switch(inputArray[0].toLowerCase(Locale.ROOT)) {
+                    case "username":
+                        username = inputArray[1];
+                        sendRequestToServer("USERNAME " + username);
+                        break;
                     case "start":
                         sendRequestToServer("START");
                         break;
@@ -214,13 +216,6 @@ public class ClientProgram {
         Channel channel = correspondenceChannel.sync().channel();
         channel.writeAndFlush(message);
     }
-
-//    private static void playOffline() throws Exception {
-//        new ServerProgram();
-//        startGame(true);
-////        Game offlineGame = new Game();
-////        //offlineGame.start(4,3);
-//    }
 
     private static String createGame(boolean offline) {
         Scanner scanner = new Scanner(System.in);
