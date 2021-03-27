@@ -24,8 +24,7 @@ public class ClientProgram {
     public static String requestedCard = "";
     public static String deckSize;
     public static String discardDeckTop;
-    public static String serverMessage;
-    public static Boolean newMessage;
+    public static LinkedList<String> serverMessage = new LinkedList<String>();
 
 
 
@@ -140,8 +139,6 @@ public class ClientProgram {
                     break;
                 case "hand":
                     System.out.println(ownHand);
-                    break;
-                case "exit":
                     break;
                 default:
                     System.err.println("Unknown command, try again");

@@ -18,8 +18,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
         String tempString = "";     // Used for reconstructing messages with multiple whitespaces, saves a declaration for multiple "cases"
         String[] commands = message.trim().split(" ");
         System.out.println("Message received from server: " + message);
-        ClientProgram.serverMessage = message;
-        ClientProgram.newMessage = true;
+        ClientProgram.serverMessage.add(message);
         switch(commands[0]){
             case "START":
                 ClientProgram.ownHand = new ArrayList<>();

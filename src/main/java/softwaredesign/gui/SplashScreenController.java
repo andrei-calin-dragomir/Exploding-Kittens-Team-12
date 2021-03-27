@@ -36,7 +36,7 @@ public class SplashScreenController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            ClientProgram.startClient();
+//            ClientProgram.startClient();
         } catch (Exception e) {
             e.printStackTrace();
         }

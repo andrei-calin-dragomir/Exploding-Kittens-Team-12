@@ -36,14 +36,15 @@ public class DebugBoxController implements Initializable {
     AnimationTimer gameLoop = new AnimationTimer() {
         @Override
         public void start(){
-            addText("Connected!");
+            addText("Game loop started!!");
+            super.start();
         }
 
         @Override
         public void handle(long now) {
-            if(ClientProgram.newMessage){
-                addText(ClientProgram.serverMessage);
-                ClientProgram.newMessage = false;
+            if(!ClientProgram.serverMessage.isEmpty()){
+                addText(ClientProgram.serverMessage.removeFirst());
+                System.out.println("GOT NEW MESSAGE");
             }
         }
     };
@@ -51,10 +52,6 @@ public class DebugBoxController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            ClientProgram.startClient();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        gameLoop.start();
     }
 }

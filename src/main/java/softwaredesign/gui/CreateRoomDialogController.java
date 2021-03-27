@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import softwaredesign.client.ClientProgram;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +36,5 @@ public class CreateRoomDialogController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
     }
 }
