@@ -135,6 +135,13 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 for(int i = 1; i < commands.length; ++i) tempString = tempString + commands[i] + " ";
                 System.out.println(tempString);
                 break;
+            case "ATTACKED":
+                String attackingPlayer = commands[1];
+                System.out.println("You have been attacked by: " + attackingPlayer);
+                break;
+            case "TARGETED":
+                System.out.println("You have been targeted by a favor card, choose a card to give away.");
+                break;
             case "PLAYER":
                 switch(commands[2]){
                     case "EXPLODED":

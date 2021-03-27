@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import softwaredesign.client.ClientProgram;
 
 import java.net.URL;
@@ -53,5 +54,10 @@ public class DebugBoxController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gameLoop.start();
+        commandField.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.ENTER ){
+                sendCommand();
+            }
+        });
     }
 }

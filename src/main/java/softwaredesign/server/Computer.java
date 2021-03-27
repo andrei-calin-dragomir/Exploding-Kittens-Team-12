@@ -37,11 +37,42 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
         return null;
     }
 
-    private void playAttack(ServerHeldGame game, Integer index) throws InterruptedException { game.handlePlayAction(index, "1"); }   // Have to implement who to attack, but attack isnt finished yet
-    private void playFavor(ServerHeldGame game, Integer index) throws InterruptedException {
-        System.out.println("Playing favor card");
-        game.handlePlayAction(index, "1");
-    } // Same for attack, will implement logic when favor works.
+    // Finds player with most or least cards // TODO: Test this, probs bugged
+    private String getHandSizes(ServerHeldGame game, Boolean biggest){
+        Player chosenPlayer = null;
+        Integer handSize = 0;
+        if(!biggest) handSize = 99999;                           // Arbitrary big number
+        for(Player player : game.gameManager.getAlivePlayers()){
+            if(player == this) continue;                        // Dont count yourself
+            if(biggest) {
+                if (player.getHand().getHandSize() > handSize) {
+                    handSize = player.getHand().getHandSize();
+                    chosenPlayer = player;
+                }
+            }
+            else {
+                if (player.getHand().getHandSize() < handSize) {
+                    handSize = player.getHand().getHandSize();
+                    chosenPlayer = player;
+                }
+            }
+        }
+        return String.valueOf(game.gameManager.getAlivePlayers().indexOf(chosenPlayer));
+    }
+
+    // Attacks player with least cards
+    private void playAttack(ServerHeldGame game, Integer cardIndex) throws InterruptedException {
+        String indexToAttack = getHandSizes(game, false);
+        System.out.println(indexToAttack);
+        game.handlePlayAction(cardIndex, "1");
+    }
+
+    // Attacks player with most cards
+    private void playFavor(ServerHeldGame game, Integer cardIndex) throws InterruptedException {
+        String indexToAttack = getHandSizes(game, true);
+        System.out.println(indexToAttack);
+        game.handlePlayAction(cardIndex, "1");
+    }
 
 
     // Returns true if a turn is skipped using the skip card or the attack card

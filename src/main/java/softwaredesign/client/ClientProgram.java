@@ -50,7 +50,7 @@ public class ClientProgram {
     }
 
     private static void connectAndLoop(){
-        final String HOST = "127.0.0.1";
+        final String HOST = "77.251.240.28";
         final int PORT = 8007;
         group = new NioEventLoopGroup();
         try {
