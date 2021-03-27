@@ -103,21 +103,24 @@ public class GameViewController implements Initializable {
     }
 
     private void populatePlayers(){
-        for(String playerName : players.keySet()){
-            Text text = new Text("Player " + playerName + "\nhas " + players.get(playerName) + " cards.");
-            text.setFont(Font.font("Verdana", FontWeight.BOLD,20));
-            enemyHBox.getChildren().add(text);
-        }
+//        for(String playerName : players.keySet()){
+//            Text text = new Text("Player " + playerName + "\nhas " + players.get(playerName) + " cards.");
+//            text.setFont(Font.font("Verdana", FontWeight.BOLD,20));
+//            enemyHBox.getChildren().add(text);
+//        }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
             ClientProgram.startClient();
+//            ClientProgram.handleCommand("username francesco");
+//            ClientProgram.handleCommand("create myRoom,2,0");
+//            ClientProgram.handleCommand("USERNAME francesco");
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        System.out.println(ClientProgram.playerNamesAndHandSizes);
+        System.out.println(ClientProgram.playerNamesAndHandSizes);
         populatePlayers();
         populateHand();
     }

@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import softwaredesign.client.ClientProgram;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class InitGui extends Application {
 
     @Override
     public void start(Stage mainStage) throws  Exception{
-        URL url = new File("src/main/resources/fxml/gameView.fxml").toURI().toURL();
+        URL url = new File("src/main/resources/fxml/debugBox.fxml").toURI().toURL();
         Parent root = FXMLLoader.load(url);
         Scene splashScreenScene = new Scene(root);
         ViewsManager viewsManager = new ViewsManager(splashScreenScene);

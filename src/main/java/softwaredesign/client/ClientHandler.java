@@ -12,15 +12,18 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
      * Handle message received from server.
      */
 
+
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String message){
         String tempString = "";     // Used for reconstructing messages with multiple whitespaces, saves a declaration for multiple "cases"
         String[] commands = message.trim().split(" ");
-//        System.out.println(message);
+        System.out.println("Message received from server: " + message);
+        ClientProgram.serverMessage = message;
+        ClientProgram.newMessage = true;
         switch(commands[0]){
             case "START":
                 ClientProgram.ownHand = new ArrayList<>();
-                System.out.println("The game started!");
+//                System.out.println("The game started!");
                 break;
             case "LEAVEREGISTERED":
                 System.out.println("You have left the game!");
@@ -59,12 +62,14 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
 //TODO            case "GIVECARD":
 //                System.out.println("You must give a card to ");
             case "CANTSTART":
-                System.out.println("You are not allowed to start the game, " + commands[1] + " is the game master.");
+                //message= "CANTSTART name", with name being name of room master
+                System.out.println("You are not allowed to start the game, " + commands[1] + " is the room master.");
                 break;
             case "ROOMNOTFOUND":
                 System.out.println("That room doesn't exist");
                 break;
             case "NOSTART":
+                //message= "NOSTART n", with n = num of players needed
                 System.out.println("Not enough players, " + commands[1] + " more needed to start the game!");
                 break;
             case "NOTALLOWED":

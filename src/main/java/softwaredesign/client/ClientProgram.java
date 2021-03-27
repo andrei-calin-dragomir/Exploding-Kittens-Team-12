@@ -10,6 +10,7 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
+import javax.sound.midi.SysexMessage;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -17,14 +18,14 @@ import java.util.*;
 public class ClientProgram {
     static String username;
     static ChannelFuture correspondenceChannel;
+    static EventLoopGroup group;
     public static ArrayList<String> ownHand = new ArrayList<>();
     public static LinkedHashMap<String,Integer> playerNamesAndHandSizes = new LinkedHashMap<>(); //todo maybe needs a getter/setter?
     public static String requestedCard = "";
     public static String deckSize;
     public static String discardDeckTop;
     public static String serverMessage;
-    private static LinkedList<String> commandQueue = new LinkedList<String>(); //use exclusively with add() and removeFirst()
-    private static Boolean exitFlag = false;
+    public static Boolean newMessage;
 
 
 
@@ -38,28 +39,23 @@ public class ClientProgram {
         return true;
     }
 
-    public void addCommandToQueue(String cmd){
-        commandQueue.add(cmd);
-    }
-
     public static void startClient() throws Exception {
         connectAndLoop();
-        System.out.println("connected succesfully");
-        sendRequestToServer("USERNAME ldksj");
-        correspondenceChannel.channel().closeFuture().sync();
-        System.out.println("Disconnected");
-
-//        commandQueue.add("username ff");
-//        System.out.println("command q size = " + commandQueue.size());
-//        while(true){
-//            handleCommand();
-//        }
     }
 
-    public static void connectAndLoop() throws Exception{
+    private void killConnectionSafely() {
+        try{
+            correspondenceChannel.channel().closeFuture().sync();
+            group.shutdownGracefully();
+        } catch (Exception e){
+            System.out.println("exception" + e);
+        }
+    }
+
+    private static void connectAndLoop(){
         final String HOST = "127.0.0.1";
         final int PORT = 8007;
-        EventLoopGroup group = new NioEventLoopGroup();
+        group = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(group)
@@ -82,15 +78,6 @@ public class ClientProgram {
             System.out.println("Attempting connection to " + HOST + " on port " + PORT + "...");
             correspondenceChannel = bootstrap.connect(HOST, PORT).sync();
             System.out.println("Connected");
-
-//            System.out.println("command q size = " + commandQueue.size());
-//            while(!exitFlag){
-//                handleCommand();
-//            }
-
-            //wait for loop to exit and kill connection
-//            correspondenceChannel.channel().closeFuture().sync();
-//            System.out.println("Disconnected");
         }catch(Exception e){
             System.out.println("Connection failed.\nClosing...");
         }
@@ -124,7 +111,7 @@ public class ClientProgram {
                     sendRequestToServer("JOIN " + cmdList[1]);
                     break;
                 case "create":
-                    sendRequestToServer("CREATE " + createRoomString());
+                    sendRequestToServer("CREATE " + cmdList[1]);
                     break;
                 case "offline":
                     playOffline();
@@ -154,8 +141,10 @@ public class ClientProgram {
                 case "hand":
                     System.out.println(ownHand);
                     break;
+                case "exit":
+                    break;
                 default:
-                    System.out.println("Unknown command, try again");
+                    System.err.println("Unknown command, try again");
                     break;
             }
         } catch (Exception e){
