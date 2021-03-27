@@ -18,11 +18,15 @@ public class ClientProgram {
     static String username;
     static ChannelFuture correspondenceChannel;
     public static ArrayList<String> ownHand = new ArrayList<>();
-    public static LinkedHashMap<String,Integer> playerNamesAndHandSizes = new LinkedHashMap<>();
+    public static LinkedHashMap<String,Integer> playerNamesAndHandSizes = new LinkedHashMap<>(); //todo maybe needs a getter/setter?
     public static String requestedCard = "";
     public static String deckSize;
     public static String discardDeckTop;
     public static String serverMessage;
+    private static LinkedList<String> commandQueue = new LinkedList<String>(); //use exclusively with add() and removeFirst()
+    private static Boolean exitFlag = false;
+
+
 
     public static void main(String[] args) throws Exception {
         ClientProgram.startClient();
@@ -34,28 +38,27 @@ public class ClientProgram {
         return true;
     }
 
-    private static void startClient() throws Exception {
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter your username: ");
-        if (scanner.hasNext()) username = scanner.nextLine();
-        System.out.println("Welcome to Exploding Kittens, " + username + "!");
-        System.out.println("Would you like to play offline or online? Answer options: offline/online");
-        while (scanner.hasNext()) {
-            String[] input = scanner.nextLine().split(" ");
-            switch (input[0]) {
-                case "offline": playOffline();
-                case "online" : goOnline();
-                default       : System.out.println("Unexpected command, " +
-                        " again.");
-            }
-        }
+    public void addCommandToQueue(String cmd){
+        commandQueue.add(cmd);
     }
 
-    public static void goOnline() throws Exception{
+    public static void startClient() throws Exception {
+        connectAndLoop();
+        System.out.println("connected succesfully");
+        sendRequestToServer("USERNAME ldksj");
+        correspondenceChannel.channel().closeFuture().sync();
+        System.out.println("Disconnected");
+
+//        commandQueue.add("username ff");
+//        System.out.println("command q size = " + commandQueue.size());
+//        while(true){
+//            handleCommand();
+//        }
+    }
+
+    public static void connectAndLoop() throws Exception{
         final String HOST = "127.0.0.1";
         final int PORT = 8007;
-        Scanner scanner = new Scanner(System.in);
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap();
@@ -78,77 +81,18 @@ public class ClientProgram {
             // Start the client.
             System.out.println("Attempting connection to " + HOST + " on port " + PORT + "...");
             correspondenceChannel = bootstrap.connect(HOST, PORT).sync();
-            sendRequestToServer("USERNAME " + username);
+            System.out.println("Connected");
 
-            /*
-             * Iterate & take chat message inputs from user & then send to server.
-             */
-            while (scanner.hasNext()) {
-                String input = scanner.nextLine();
-                String[] inputArray = input.split(" ");
-                System.out.println(input);
-                switch(inputArray[0].toLowerCase(Locale.ROOT)) {
-                    case "start":
-                        sendRequestToServer("START");
-                        break;
-                    case "leave":
-                        sendRequestToServer("LEAVE");
-                        break;
-                    case "join":
-                        sendRequestToServer("JOIN " + inputArray[1]);
-                        break;
-                    case "create":
-                        sendRequestToServer("CREATE " + createGame());
-                        break;
-                    case "offline":
-                        group.shutdownGracefully();
-                        playOffline();
-                        break;
-                    case "quit":
-                        sendRequestToServer("LEAVE");
-                        group.shutdownGracefully();
-                        System.exit(0);
-                        break;
-//TODO                    case "target":
-//                        sendRequestToServer("TARGETED " + inputArray[1]);
-                    case "play":
-                        requestedCard = inputArray[1];
-                        sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(inputArray[1]));
-                        break;
-                    case "draw":
-                        sendRequestToServer("DRAW");
-                        break;
-                    case "place":
-                        if(inputArray.length != 2) System.out.println("Please specify the location you want to place the card");
-                        if(!isInteger(inputArray[1])) System.out.println("Invalid location, try again");
-                        else sendRequestToServer("PLACE " + inputArray[1]);
-                        break;
-                    case "chat":
-                        sendRequestToServer(input);
-                        break;
-                    case "hand":
-                        System.out.println(ownHand);
-                        break;
-                    default:
-                        System.out.println("Unknown command, try again");
-                        break;
-                }
-            }
-            // Wait until the connection is closed.
-            correspondenceChannel.channel().closeFuture().sync();
+//            System.out.println("command q size = " + commandQueue.size());
+//            while(!exitFlag){
+//                handleCommand();
+//            }
+
+            //wait for loop to exit and kill connection
+//            correspondenceChannel.channel().closeFuture().sync();
+//            System.out.println("Disconnected");
         }catch(Exception e){
-            System.out.println("Connection failed.\nGo offline or try going online again? Answer options: offline/online");
-            while (scanner.hasNext()) {
-                String[] input = scanner.nextLine().split(" ");
-                switch (input[0]) {
-                    case "offline": playOffline();
-                    case "online" : goOnline();
-                    default       : System.out.println("Unexpected command, try again.");
-                }
-            }
-        }finally{
-            // Shut down the event loop to terminate all threads.
-            group.shutdownGracefully();
+            System.out.println("Connection failed.\nClosing...");
         }
     }
     private static void sendRequestToServer(String message) throws Exception{
@@ -161,7 +105,66 @@ public class ClientProgram {
         offlineGame.start(4,3);
     }
 
-    private static String createGame(){
+    static public void handleCommand(String cmd){
+        String[] cmdList = cmd.split(" ");
+        System.out.println("cmdlist = " + Arrays.toString(cmdList));
+        try {
+            switch (cmdList[0]) {
+                case "username":
+                    System.out.println("SENDING SIGNAL");
+                    sendRequestToServer("USERNAME " + cmdList[1]);
+                    break;
+                case "start":
+                    sendRequestToServer("START");
+                    break;
+                case "leave":
+                    sendRequestToServer("LEAVE");
+                    break;
+                case "join":
+                    sendRequestToServer("JOIN " + cmdList[1]);
+                    break;
+                case "create":
+                    sendRequestToServer("CREATE " + createRoomString());
+                    break;
+                case "offline":
+                    playOffline();
+                    break;
+                case "quit":
+                    sendRequestToServer("LEAVE");
+                    System.exit(0);
+                    break;
+                //TODO                    case "target":
+                //                        sendRequestToServer("TARGETED " + inputArray[1]);
+                case "play":
+                    requestedCard = cmdList[1];
+                    sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(cmdList[1]));
+                    break;
+                case "draw":
+                    sendRequestToServer("DRAW");
+                    break;
+                case "place":
+                    if (cmdList.length != 2)
+                        System.out.println("Please specify the location you want to place the card");
+                    if (!isInteger(cmdList[1])) System.out.println("Invalid location, try again");
+                    else sendRequestToServer("PLACE " + cmdList[1]);
+                    break;
+                case "chat":
+                    sendRequestToServer(cmd);
+                    break;
+                case "hand":
+                    System.out.println(ownHand);
+                    break;
+                default:
+                    System.out.println("Unknown command, try again");
+                    break;
+            }
+        } catch (Exception e){
+            System.out.println("Errorrrrr");
+            System.exit(0);
+        }
+    }
+
+    private static String createRoomString(){
         Scanner scanner = new Scanner(System.in);
         int parameter1 = 0;
         int parameter2 = -1;

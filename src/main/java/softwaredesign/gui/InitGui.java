@@ -15,7 +15,7 @@ public class InitGui extends Application {
 
     @Override
     public void start(Stage mainStage) throws  Exception{
-        URL url = new File("src/main/resources/fxml/splashScreen.fxml").toURI().toURL();
+        URL url = new File("src/main/resources/fxml/gameView.fxml").toURI().toURL();
         Parent root = FXMLLoader.load(url);
         Scene splashScreenScene = new Scene(root);
         ViewsManager viewsManager = new ViewsManager(splashScreenScene);

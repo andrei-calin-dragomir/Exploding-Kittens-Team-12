@@ -2,7 +2,9 @@ package softwaredesign.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import softwaredesign.gui.GameViewController;
 
+import javax.sound.midi.SysexMessage;
 import java.util.ArrayList;
 
 public class ClientHandler extends SimpleChannelInboundHandler<String>{

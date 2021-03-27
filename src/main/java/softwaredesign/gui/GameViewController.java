@@ -1,27 +1,22 @@
 package softwaredesign.gui;
 
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import softwaredesign.cards.DefuseCard;
-import softwaredesign.client.GameManager;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
+import softwaredesign.client.ClientProgram;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class GameViewController implements Initializable {
@@ -46,6 +41,23 @@ public class GameViewController implements Initializable {
 
     @FXML
     public GridPane cardsGridPane;
+
+    //non-fxml vars
+
+    static HashMap<String,Integer> players;
+
+    AnimationTimer gameLoop = new AnimationTimer() {
+        @Override
+        public void start(){
+            System.out.println("Started!");
+            players = ClientProgram.playerNamesAndHandSizes;
+        }
+
+        @Override
+        public void handle(long now) {
+            players = ClientProgram.playerNamesAndHandSizes;
+        }
+    };
 
     private void playCard(ImageView iv){
         cardsGridPane.getChildren().remove(iv);
@@ -91,8 +103,8 @@ public class GameViewController implements Initializable {
     }
 
     private void populatePlayers(){
-        for (int i = 0; i < 3; i++) {
-            Text text = new Text("Player " + (i+1) + "\nhas " + (i+2) + " cards.");
+        for(String playerName : players.keySet()){
+            Text text = new Text("Player " + playerName + "\nhas " + players.get(playerName) + " cards.");
             text.setFont(Font.font("Verdana", FontWeight.BOLD,20));
             enemyHBox.getChildren().add(text);
         }
@@ -100,6 +112,12 @@ public class GameViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        try {
+            ClientProgram.startClient();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        System.out.println(ClientProgram.playerNamesAndHandSizes);
         populatePlayers();
         populateHand();
     }

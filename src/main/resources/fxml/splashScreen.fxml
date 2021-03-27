@@ -29,7 +29,7 @@
          <children>
             <Button fx:id="playOnlineButton" maxWidth="100.0" mnemonicParsing="false" onAction="#goOnline" prefWidth="100.0" text="Play Online" />
             <Button fx:id="playOfflineButton" layoutX="127.0" layoutY="83.0" maxWidth="100.0" mnemonicParsing="false" prefWidth="100.0" text="Play Offline" />
-            <Button fx:id="exitButton" layoutX="127.0" layoutY="106.0" maxWidth="100.0" mnemonicParsing="false" prefWidth="100.0" text="Exit" />
+            <Button fx:id="exitButton" layoutX="127.0" layoutY="106.0" maxWidth="100.0" mnemonicParsing="false" onAction="#closeButtonAction" prefWidth="100.0" text="Exit" />
          </children>
          <GridPane.margin>
             <Insets />
