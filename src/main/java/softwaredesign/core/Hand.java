@@ -47,11 +47,12 @@ public class Hand implements Iterable<Card>{
         }
     }
 
-    public Card playCard(int index, ServerHeldGame heldGame) throws InterruptedException {
+    public Card playCard(int index, String target, ServerHeldGame heldGame) throws InterruptedException {
         Card playCard = getCard(index);
         removeCard(index);
         heldGame.gameManager.discardDeck.discardCard(playCard);
-        playCard.action(heldGame);
+        System.out.println("Target: " + target + " Playing card: " + playCard.getName());
+        playCard.action(heldGame, target);
         return playCard;
     }
 

@@ -158,7 +158,7 @@ public class Game {
 
     public void start(int sizeOfGame, int numberOfComputers) throws IOException, InterruptedException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
-        mainDeck = new Deck();
+        mainDeck = new Deck(sizeOfGame);
         discardDeck = new DiscardDeck();
         gameManager = new GameManager();
         mainDeck = gameManager.addPlayers(sizeOfGame,numberOfComputers,mainDeck);

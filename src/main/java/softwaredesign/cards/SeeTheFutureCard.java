@@ -7,8 +7,7 @@ import softwaredesign.server.ServerHeldGame;
 import java.util.ArrayList;
 
 public class SeeTheFutureCard extends Card {
-    public void action(ServerHeldGame heldGame) {
-        heldGame.gameManager.removeCurrentPlayerCard(new SeeTheFutureCard());
+    public void action(ServerHeldGame heldGame, String target) {
         Deck mainDeck = heldGame.gameManager.mainDeck;
         Player currPlayer = heldGame.gameManager.getCurrentPlayer();
         String messageToSend = "";

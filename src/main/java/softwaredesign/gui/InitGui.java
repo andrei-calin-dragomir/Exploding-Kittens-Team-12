@@ -25,7 +25,5 @@ public class InitGui extends Application {
         mainStage.setScene(splashScreenScene);
         mainStage.show();
     }
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args) { launch(args); }
 }

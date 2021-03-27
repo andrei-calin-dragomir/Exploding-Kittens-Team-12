@@ -9,10 +9,8 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import softwaredesign.server.ServerProgram;
 
-import javax.sound.midi.SysexMessage;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class ClientProgram {
@@ -117,6 +115,7 @@ public class ClientProgram {
                     break;
                 case "quit":
                     sendRequestToServer("LEAVE");
+                    group.shutdownGracefully();
                     System.exit(0);
                     break;
                 //TODO                    case "target":

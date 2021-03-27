@@ -5,24 +5,21 @@ import softwaredesign.cards.DefuseCard;
 import softwaredesign.cards.ExplodingKittenCard;
 import softwaredesign.core.Hand;
 import softwaredesign.core.Player;
+import softwaredesign.core.State;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-
-import static java.util.Collections.frequency;
-
 
 public class ServerHeldGame {
     public ServerHeldGameManager gameManager;
     private Room room;
-    private Random rand = new Random();
     public boolean drawnExplodingKitten;
 
     public ServerHeldGame(Room assignedRoom){ this.room = assignedRoom; }
     public void setExplodingBool(boolean exploding) { this.drawnExplodingKitten = exploding; }
     public String getCurrentPlayerName(){ return this.getCurrentPlayer().getName(); }
     public Player getCurrentPlayer(){ return gameManager.getCurrentPlayer(); }
+    public Player getPlayer(int index){ return gameManager.getAlivePlayers().get(index); }
     public Card drawCard(){ return gameManager.mainDeck.draw(); }
     public Room getRoom() { return room; }
 
@@ -47,34 +44,41 @@ public class ServerHeldGame {
             Player currPlayer = getCurrentPlayer();
             currPlayer.getHand().addToHand(cardDrawn);
             room.sendMsgToPlayer(currPlayer,"UPDATEHAND " + cardDrawn.getName());
-            room.sendMsgToRoom(currPlayer, "PLAYER " + currPlayer.getName() + " drew");
+            room.sendMsgToRoom(currPlayer, "PLAYER " + currPlayer.getName() + " DREW");
             room.sendGameStateUpdates("UPDATEPLAYERHANDS");
-            if (cardDrawn.equals(new ExplodingKittenCard())) handleExplodingKitten();
-            else nextTurn();
+            if (cardDrawn.equals(new ExplodingKittenCard()))
+                if(!handleExplodingKitten())
+                    return;
+            if(!checkWin()) nextTurn();
         }
     }
 
-    public void handlePlayAction(int index) throws InterruptedException {
+    public void handlePlayAction(int index, String target) throws InterruptedException {
         Hand currHand = gameManager.getCurrentPlayerHand();
         Player currPlayer = getCurrentPlayer();
-        Card cardPlayed = currHand.playCard(index, this);
-        room.sendMsgToRoom(currPlayer, "PLAYER " + currPlayer.getName() + " played " +  cardPlayed);
+        Card cardPlayed = currHand.playCard(index, target, this);
+        room.sendMsgToRoom(currPlayer, "PLAYER " + currPlayer.getName() + " PLAYED " +  cardPlayed.getName());
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
 
-    public void handleExplodingKitten() throws InterruptedException {
+    // Returns true if the player exploded
+    public Boolean handleExplodingKitten() throws InterruptedException {
         drawnExplodingKitten = true;
         Player currentPlayer = gameManager.getCurrentPlayer();
         if (!currentPlayer.getHand().contains(new DefuseCard())) {
-            room.sendMsgToPlayer(getCurrentPlayer(), "DIED");
-            room.sendMsgToRoom(getCurrentPlayer(), "PLAYER " + getCurrentPlayerName() + " EXPLODED");
+            currentPlayer.setPlayerState(State.SPECTATING);
+            room.sendMsgToPlayer(currentPlayer, "DIED");
+            room.sendMsgToRoom(currentPlayer, "PLAYER " + getCurrentPlayerName() + " EXPLODED");
             gameManager.killPlayer(currentPlayer);
-            if(!checkWin()) nextTurn();
+            drawnExplodingKitten = false;
+            return true;
         }
         else{
-            room.sendMsgToRoom(getCurrentPlayer(), "PLAYER " + getCurrentPlayerName() + " drewexp");
-            room.sendMsgToPlayer(getCurrentPlayer(), "EXPLODING");
+            currentPlayer.setPlayerState(State.EXPLODING);
+            room.sendMsgToRoom(currentPlayer, "PLAYER " + getCurrentPlayerName() + " DREWEXP");
+            room.sendMsgToPlayer(currentPlayer, "EXPLODING");
         }
+        return false;
     }
 
     public void placeExploding(int index) throws InterruptedException {
@@ -82,7 +86,7 @@ public class ServerHeldGame {
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
 
-    private Boolean checkWin(){
+    public Boolean checkWin(){
         if(gameManager.getPlayersLeft() == 1){
             room.sendMsgToRoom(null, "WINNER " + gameManager.getCurrentPlayer().getName());
             gameManager.killPlayer(gameManager.getCurrentPlayer());
@@ -91,45 +95,45 @@ public class ServerHeldGame {
         return false;
     }
 
-    public void handleComputerAction() throws InterruptedException {
-        while(rand.nextInt(3) == 0) handleComputerPlayAction();
-        handleDrawComputerAction();
-    }
-
-    private void handleComputerPlayAction() throws InterruptedException{
-        boolean shouldPlay = true;
-        Hand currentHand = gameManager.getCurrentPlayer().getHand();
-        while(shouldPlay && frequency(currentHand.getHand(), new DefuseCard()) != currentHand.getHandSize()){
-            int pickCardToPlay = rand.nextInt(currentHand.getHandSize());
-            boolean foundGoodCard = false;
-            while(!foundGoodCard){
-                if(currentHand.getCard(pickCardToPlay).equals(new DefuseCard())){
-                    pickCardToPlay = rand.nextInt(currentHand.getHandSize());
-                }else foundGoodCard = true;
-            }
-            handlePlayAction(pickCardToPlay);
-            shouldPlay = rand.nextBoolean();
-        }
-    }
-    private void handleDrawComputerAction() throws InterruptedException {
-        Hand compHand = gameManager.getCurrentPlayerHand();
-        Card cardDrawn = gameManager.mainDeck.draw();
-        compHand.addToHand(cardDrawn);
-        room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " drew");
-        if (cardDrawn.equals(new ExplodingKittenCard())) {
-            room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " drewexp");
-            if (compHand.contains(new DefuseCard())) {
-                int defuseCardIndex = compHand.getHand().indexOf(new DefuseCard());
-                int nextIndex = rand.nextInt(getDeckSize());
-                handlePlayAction(defuseCardIndex);
-                gameManager.mainDeck.insertCard(new ExplodingKittenCard(), nextIndex);
-                room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " defused");
-            } else {
-                room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " exploded");
-                gameManager.killPlayer(gameManager.getCurrentPlayer());
-            }
-        }
-    }
+//    public void handleComputerAction() throws InterruptedException {
+//        while(rand.nextInt(3) == 0) handleComputerPlayAction();
+//        handleDrawComputerAction();
+//    }
+//
+//    private void handleComputerPlayAction() throws InterruptedException{
+//        boolean shouldPlay = true;
+//        Hand currentHand = gameManager.getCurrentPlayer().getHand();
+//        while(shouldPlay && frequency(currentHand.getHand(), new DefuseCard()) != currentHand.getHandSize()){
+//            int pickCardToPlay = rand.nextInt(currentHand.getHandSize());
+//            boolean foundGoodCard = false;
+//            while(!foundGoodCard){
+//                if(currentHand.getCard(pickCardToPlay).equals(new DefuseCard())){
+//                    pickCardToPlay = rand.nextInt(currentHand.getHandSize());
+//                }else foundGoodCard = true;
+//            }
+//            handlePlayAction(pickCardToPlay);
+//            shouldPlay = rand.nextBoolean();
+//        }
+//    }
+//    private void handleDrawComputerAction() throws InterruptedException {
+//        Hand compHand = gameManager.getCurrentPlayerHand();
+//        Card cardDrawn = gameManager.mainDeck.draw();
+//        compHand.addToHand(cardDrawn);
+//        room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " DREW");
+//        if (cardDrawn.equals(new ExplodingKittenCard())) {
+//            room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " drewexp");
+//            if (compHand.contains(new DefuseCard())) {
+//                int defuseCardIndex = compHand.getHand().indexOf(new DefuseCard());
+//                int nextIndex = rand.nextInt(getDeckSize());
+//                handlePlayAction(defuseCardIndex);
+//                gameManager.mainDeck.insertCard(new ExplodingKittenCard(), nextIndex);
+//                room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " defused");
+//            } else {
+//                room.sendMsgToRoom(null, "PLAYER " + getCurrentPlayerName() + " exploded");
+//                gameManager.killPlayer(gameManager.getCurrentPlayer());
+//            }
+//        }
+//    }
 
     public Integer getDeckSize(){
         return gameManager.mainDeck.getDeckSize();

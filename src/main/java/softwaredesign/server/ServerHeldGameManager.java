@@ -15,7 +15,7 @@ public class ServerHeldGameManager{
     public DiscardDeck discardDeck;
 
     public void initGame(Room currentRoom) throws IOException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        mainDeck = new Deck();
+        mainDeck = new Deck(currentRoom.getMaxPlayers());
         discardDeck = new DiscardDeck();
         for(Player player : currentRoom.getRoomPlayerList().values()){
             alivePlayers.add(player);
@@ -55,24 +55,18 @@ public class ServerHeldGameManager{
 
     public void killPlayer(Player target){ alivePlayers.remove(target); }
 
-//    public String getTopThreeCards() {
-//        if(mainDeck.getDeckSize() <= 3){
-//            ArrayList<String> allPlayers = new ArrayList<>();
-//            for(Card card : mainDeck) allPlayers.add(card.getName());
-//            return String.join(" ", allPlayers);
-//        }else return mainDeck.getFullDeck().get(0).getName() + " " +
-//                    mainDeck.getFullDeck().get(1).getName() + " " +
-//                    mainDeck.getFullDeck().get(2).getName();
-//    }
-
     // Not tested but should work
     public void changeNextTurn(Player target){
-        int rotateAmount = alivePlayers.indexOf(target);
+        System.out.println(getAlivePlayers());
+        int rotateAmount = alivePlayers.indexOf(target) * -1;
+        System.out.println("Rotating by: " + rotateAmount);
         Collections.rotate(alivePlayers, rotateAmount);
+        System.out.println(getAlivePlayers());
     }
 
     public void endTurn(){
-        Collections.rotate(alivePlayers, 1);
+        if(getCurrentPlayer().getPlayerState() == State.ATTACKED) getCurrentPlayer().setPlayerState(State.PLAYING);
+        else Collections.rotate(alivePlayers, -1);
     }
 
     public void removeCurrentPlayerCard(Card card) {

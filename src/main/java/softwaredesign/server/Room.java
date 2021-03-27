@@ -3,6 +3,7 @@ package softwaredesign.server;
 import io.netty.channel.ChannelHandlerContext;
 import softwaredesign.cards.*;
 import softwaredesign.core.Player;
+import softwaredesign.core.State;
 
 import java.util.*;
 
@@ -20,6 +21,7 @@ public class Room {
         roomName = name;
         addPlayer(host);
         host.setCurrentRoom(this);
+
         for(int i = 0; i < computerAmount; ++i) {
             Computer newComputer = new Computer(this, i);
             roomPlayerList.put(newComputer.getName(), newComputer);
@@ -35,12 +37,10 @@ public class Room {
         }
         switch(message[0].toUpperCase(Locale.ROOT)){
             case "START":
-                System.out.println(roomPlayerList.toString());
-                System.out.println(getHostName());
-                System.out.println(getClientName(ctx));
                 if(getHostName().equals(getClientName(ctx))){
                     if(!hasFreeSpots()) {
-                        sendMsgToRoom(null,"START");
+                        for(Player p : roomPlayerList.values()) p.setPlayerState(State.PLAYING);
+                        sendMsgToRoom(null, "START");
                         onlineGame.start();
                     }
                     else ctx.writeAndFlush("NOSTART " + (getMaxPlayers() - roomPlayerList.size()));
@@ -51,9 +51,14 @@ public class Room {
                 onlineGame.placeExploding(Integer.parseInt(message[1]));
                 onlineGame.nextTurn();
                 break;
+            case "GIVE":
+
+                break;
             case "PLAY":
                 if(getClientName(ctx).equals(onlineGame.getCurrentPlayerName())){
+                    System.out.println(message[1]);
                     int index = Integer.parseInt(message[1]);
+                    System.out.println(index);
                     if(index < 0 || onlineGame.gameManager.getCurrentPlayerHand().getHandSize() - 1 < index){
                         ctx.writeAndFlush("NOTALLOWED INVALIDPLAY");
                     }
@@ -68,8 +73,10 @@ public class Room {
 //                        break;
 //                    }
                     else {
+                        String target = "";
+                        if(message.length > 2) target = message[2];
                         ctx.writeAndFlush("PLAYCONFIRMED");
-                        onlineGame.handlePlayAction(index);
+                        onlineGame.handlePlayAction(index, target);
                     }
                 }
                 break;
