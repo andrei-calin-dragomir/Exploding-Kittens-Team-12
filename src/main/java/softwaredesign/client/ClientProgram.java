@@ -21,19 +21,13 @@ public class ClientProgram {
     public static String requestedCard = "";
     public static String deckSize;
     public static String discardDeckTop;
-    public static String serverMessage;
+    public static String ServerMessage = "";
 
     public static void main(String[] args) throws Exception {
         ClientProgram.startClient();
     }
 
-    private static Boolean isInteger(String intString){
-        try { Integer.parseInt(intString); }
-        catch(NumberFormatException e){ return false; }
-        return true;
-    }
-
-    private static void startClient() throws Exception {
+    public static void startClient() throws Exception {
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter your username: ");
@@ -128,7 +122,6 @@ public class ClientProgram {
                         break;
                     case "place":
                         if(inputArray.length != 2) System.out.println("Please specify the location you want to place the card");
-                        if(!isInteger(inputArray[1])) System.out.println("Invalid location, try again");
                         else sendRequestToServer("PLACE " + inputArray[1]);
                         break;
                     case "chat":
@@ -161,6 +154,60 @@ public class ClientProgram {
         }finally{
             // Shut down the event loop to terminate all threads.
             group.shutdownGracefully();
+            System.out.println("Connection is successful!\nPlease input your username: ");
+            // Wait until the connection is closed.
+            correspondenceChannel.channel().closeFuture().sync();
+        }
+    }
+    public static void guiInputHandler(String commands) throws Exception{
+        String[] commandArray = commands.split(" ");
+        System.out.println(commands);
+        switch(commandArray[0]) {
+            case "username":
+                username = commandArray[1];
+                sendRequestToServer("USERNAME " + username);
+                break;
+            case "start":
+                sendRequestToServer("START");
+                break;
+            case "leave":
+                sendRequestToServer("LEAVE");
+                break;
+            case "join":
+                sendRequestToServer("JOIN " + commandArray[1]);
+                break;
+            case "create":
+                sendRequestToServer(commands);
+                break;
+            case "offline":
+                correspondenceChannel.channel().close();
+                startGame(true);
+                break;
+            case "quit":
+                sendRequestToServer("LEAVE");
+                correspondenceChannel.channel().close();
+                System.exit(0);
+                break;
+            case "play":
+                requestedCard = commandArray[1];
+                sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(commandArray[1]));
+                break;
+            case "draw":
+                sendRequestToServer("DRAW");
+                break;
+            case "place":
+                if(commandArray.length != 2) System.out.println("Please specify the location you want to place the card");
+                else sendRequestToServer("PLACE " + commandArray[1]);
+                break;
+            case "chat":
+                sendRequestToServer(commands);
+                break;
+            case "hand":
+                System.out.println(ownHand);
+                break;
+            default:
+                System.out.println("Unknown command, try again");
+                break;
         }
     }
     private static void sendRequestToServer(String message) throws Exception{

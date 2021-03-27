@@ -9,6 +9,7 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import softwaredesign.client.ClientProgram;
 
 public final class ServerProgram extends Thread {
 
@@ -69,4 +70,8 @@ public final class ServerProgram extends Thread {
             workerGroup.shutdownGracefully();
         }
     }
+
+//    public static void main(String[] args) throws Exception {
+//        run();
+//    }
 }

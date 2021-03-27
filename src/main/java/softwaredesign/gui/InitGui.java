@@ -21,7 +21,5 @@ public class InitGui extends Application {
         mainStage.setScene(scene);
         mainStage.show();
     }
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args) { launch(args); }
 }

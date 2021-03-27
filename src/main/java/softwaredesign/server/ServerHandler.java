@@ -7,10 +7,6 @@ import softwaredesign.core.State;
 
 import java.util.*;
 
-
-/**
- * Handles a server-side channel.
- */
 public class ServerHandler extends SimpleChannelInboundHandler<String>{
     public static HashMap<ChannelHandlerContext, Player> playerMap = new HashMap<>();
     private static HashMap<String,Room> roomList = new HashMap<>();
@@ -22,12 +18,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         playerMap.put(ctx, new Player(ctx));
     }
 
-    /*
-     * When a message is received from client, send that message to all channels.
-     * FOr the sake of simplicity, currently we will send received chat message to
-     * all clients instead of one specific client. This code has scope to improve to
-     * send message to specific client as per senders choice.
-     */
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         System.out.println("Server received - " + msg);
@@ -38,16 +28,21 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         String[] message = msg.split("\\s+");
         switch(message[0].toUpperCase(Locale.ROOT)){
             case "USERNAME":
-                playerMap.get(ctx).setPlayerName(message[1]);
-                String str = String.join(",", roomList.keySet());
-                if(message.length > 2 && message[2].equals("SOLO")) ctx.writeAndFlush("CONNECTEDTOSERVER SOLO");
-                else if(roomList.isEmpty()) ctx.writeAndFlush("CONNECTEDTOSERVER NOROOM");
-                else ctx.writeAndFlush("CONNECTEDTOSERVER ROOMAVAILABLE " + str);
+                if(checkNameInUse(message[1])) ctx.writeAndFlush("USERNAMETAKEN");
+                else{
+                    ctx.writeAndFlush("USERNAMEACCEPTED");
+                    playerMap.get(ctx).setPlayerName(message[1]);
+                    if(message.length < 3){
+                        String str = String.join(",", roomList.keySet());
+                        if(roomList.isEmpty()) ctx.writeAndFlush("NOROOM");
+                        else ctx.writeAndFlush("AVAILABLE " + str);
+                    }
+                }
                 break;
             case "JOIN":
                 Room roomObj = roomList.get(message[1]);
-                if(roomObj == null) ctx.writeAndFlush("ROOMNOTFOUND");
-                if(!roomObj.addPlayer(playerMap.get(ctx))) ctx.writeAndFlush("ROOMFULL");
+                if(roomObj == null) ctx.writeAndFlush("ROOM NOTFOUND");
+                if(!roomObj.addPlayer(playerMap.get(ctx))) ctx.writeAndFlush("ROOM FULL");
                 else {
                     Player p = playerMap.get(ctx);
                     p.setCurrentRoom(roomObj);
@@ -63,9 +58,14 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             case "CREATE":
                 String[] gameDetails = message[1].split(",");
                 roomList.put(gameDetails[0], new Room(playerMap.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2])));
-                System.out.println("ASD" + playerMap.get(ctx).getName());
-                if (message.length > 2 && message[2].equals("SOLO")) ctx.writeAndFlush("ROOMCREATED SOLO");
-                else ctx.writeAndFlush("ROOMCREATED");
+                if (message.length > 2 && message[2].equals("SOLO")) ctx.writeAndFlush("ROOM CREATED SOLO");
+                else{
+                    if(roomList.keySet().contains(message[1])) ctx.writeAndFlush("ROOM TAKEN");
+                    else{
+                        roomList.put(gameDetails[0], new Room(playerMap.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2])));
+                        ctx.writeAndFlush("ROOM CREATED");
+                    }
+                }
                 break;
             default:
                 getRoom(ctx).channelRespond(ctx, msg);
@@ -76,6 +76,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
     private String getClientName(ChannelHandlerContext ctx){ return playerMap.get(ctx).getName(); }
     private Room getRoom(ChannelHandlerContext ctx){ return playerMap.get(ctx).getCurrentRoom(); }
 
+    private Boolean checkNameInUse(String name){
+        for(Player player : playerMap.values()) if(player.getName().equals(name)) return true;
+        return false;
+    }
     private void cleanRoomOfEntity(ChannelHandlerContext ctx) {
         Room playerRoom = getRoom(ctx);
         Player player = playerMap.get(ctx);
@@ -83,13 +87,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         playerRoom.sendMsgToRoom(player,"LEFT " + player.getName() + " " + playerRoom.playerListAsString());
         if(playerRoom.isRoomEmpty()) roomList.remove(playerRoom.getRoomName());
     }
-
-//    private static ChannelHandlerContext getClientCTX(String clientName){
-//        for(HashMap.Entry<ChannelHandlerContext, Client> entry : clientDetails.entrySet())
-//            if(entry.getValue().getClientName().equals(clientName))
-//                return entry.getKey();
-//        return null;
-//    }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException {

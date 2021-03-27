@@ -6,14 +6,12 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import java.util.ArrayList;
 
 public class ClientHandler extends SimpleChannelInboundHandler<String>{
-    /*
-     * Handle message received from server.
-     */
+
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String message){
         String tempString = "";     // Used for reconstructing messages with multiple whitespaces, saves a declaration for multiple "cases"
         String[] commands = message.trim().split(" ");
-//        System.out.println(message);
+        System.out.println(message);
         switch(commands[0]){
             case "START":
                 ClientProgram.ownHand = new ArrayList<>();
@@ -23,14 +21,42 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println("You have left the game!");
                 ClientProgram.ownHand = new ArrayList<>();
                 break;
-            case "ROOMCREATED":
-                if(commands.length > 1 && commands[1].equals("SOLO"))
-                    System.out.println("Game has been created! Type start to start");
-                else
-                    System.out.println("Room has been created. Waiting for players to connect...");
+            case "USERNAMEACCEPTED":
+                System.out.println("Welcome, " + ClientProgram.username + "!");
                 break;
-            case "ROOMFULL":
-                System.out.println("The room is full, play offline or quit? Answer option: offline/quit");
+            case "USERNAMETAKEN":
+                ClientProgram.username = "";
+                System.out.println("Username is already in use. Try again.");
+                break;
+            case "ROOM":
+                switch (commands[1]){
+                    case "TAKEN":
+                        System.out.println("Room name is already in use.");
+                        break;
+                    case "CREATED":
+                        if(commands.length > 2 && commands[2].equals("SOLO")){
+                            System.out.println("Game has been created! Type start to start");
+                        }else{
+                            System.out.println("Room has been created. Waiting for players to connect...");
+                        }
+                        break;
+                    case "FULL":
+                        System.out.println("The room is full, play offline or quit? Answer option: offline/quit");
+                        break;
+                    case "NOTFOUND":                                       //This will not be needed when GUI is done
+                        System.out.println("That room doesn't exist");
+                        break;
+                    case "NOROOM":
+                        System.out.println("No room has been created, create one now or play offline?" +
+                                "Answer options: create,offline");
+                        break;
+                    case "AVAILABLE":
+                        String[] allRooms = commands[2].split(",");
+                        for(String room : allRooms) tempString = tempString + room + " ";
+                        System.out.println(allRooms.length + " room have been found, join one or create a custom room?\n +" +
+                                "Available rooms: " + tempString);  //Fix grammar
+                        break;
+                }
                 break;
             case "EXPLODING":
                 System.out.println("You drew an exploding kitten, you must defuse it immediately!");
@@ -50,19 +76,11 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 ClientProgram.ownHand = new ArrayList<>();
                 break;
             case "PLAYCONFIRMED":
-//TODO                if(ClientProgram.requestedCard.equals("FavorCard")){
-//                    System.out.println("Chose your target... 'target playername'");
-//                }
                 System.out.println("You played the " + ClientProgram.requestedCard + " card!");
                 ClientProgram.ownHand.remove(ClientProgram.requestedCard);
                 break;
-//TODO            case "GIVECARD":
-//                System.out.println("You must give a card to ");
             case "CANTSTART":
                 System.out.println("You are not allowed to start the game, " + commands[1] + " is the game master.");
-                break;
-            case "ROOMNOTFOUND":
-                System.out.println("That room doesn't exist");
                 break;
             case "NOSTART":
                 System.out.println("Not enough players, " + commands[1] + " more needed to start the game!");
@@ -74,25 +92,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 else if(commands[1].equals("MUSTDEFUSE")) System.out.println("You have to play a defuse card when you draw an Exploding Kitten!");
                 else if(commands[1].equals("INVALIDPLAY")) System.out.println("Trying to play invalid card.");
                 else if(commands[1].equals("NOTYOURTURN")) System.out.println("It is not your turn.");
-//TODO                else if(commands[1].equals("WRONGNAME")) System.out.println("The player name you entered is wrong, try again.");
-                break;
-            case "CONNECTEDTOSERVER":
-                switch(commands[1]){
-                    case "NOROOM":
-                        System.out.println("Connection Successful.");
-                        System.out.println("No room has been created, create one now or play offline?" +
-                                "Answer options: create,offline");
-                        break;
-                    case "ROOMAVAILABLE":
-                        System.out.println("Connection Successful.");
-                        String[] allRooms = commands[2].split(",");
-                        for(String room : allRooms) tempString = tempString + room + " ";
-                        System.out.println(allRooms.length + " room have been found, join one or create a custom room?\nAvailable rooms: " + tempString); // fix grammer
-                        break;
-                    case "SOLO":
-                        System.out.println("TESTING");
-                        break;
-                }
                 break;
             case "TURN":
                 if(commands[1].equals(ClientProgram.username)) System.out.println("It's your turn!");
@@ -115,7 +114,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println("You joined the game.\nPlayers in the room: " + tempString);
                 break;
             case "LEFT":
-                String[] playersInRoom2 = commands[2].split("@@");
                 ClientProgram.playerNamesAndHandSizes.remove(commands[1]);
                 System.out.println(commands[1] + " left the game.\n" +
                         "Players in the room: " + ClientProgram.playerNamesAndHandSizes.keySet().toString());
