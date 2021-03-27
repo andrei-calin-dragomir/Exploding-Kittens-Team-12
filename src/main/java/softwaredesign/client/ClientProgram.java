@@ -22,7 +22,7 @@ public class ClientProgram {
     public static String requestedCard = "";
     public static String deckSize;
     public static String discardDeckTop;
-    public static LinkedList<String> serverMessage = new LinkedList<String>();
+    public static LinkedList<String> serverMessage = new LinkedList<>();
 
 
 
@@ -84,11 +84,6 @@ public class ClientProgram {
         channel.writeAndFlush(message);
     }
 
-    private static void playOffline() throws IOException, InterruptedException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Game offlineGame = new Game();
-        offlineGame.start(4,3);
-    }
-
     static public void handleCommand(String cmd){
         String[] cmdList = cmd.split(" ");
         System.out.println("cmdlist = " + Arrays.toString(cmdList));
@@ -111,7 +106,6 @@ public class ClientProgram {
                     sendRequestToServer("CREATE " + cmdList[1]);
                     break;
                 case "offline":
-                    playOffline();
                     break;
                 case "quit":
                     sendRequestToServer("LEAVE");

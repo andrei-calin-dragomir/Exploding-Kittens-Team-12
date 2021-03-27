@@ -112,15 +112,7 @@ public class GameViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-//            ClientProgram.startClient();
-//            ClientProgram.handleCommand("username francesco");
-//            ClientProgram.handleCommand("create myRoom,2,0");
-//            ClientProgram.handleCommand("USERNAME francesco");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println(ClientProgram.playerNamesAndHandSizes);
+//        System.out.println(ClientProgram.playerNamesAndHandSizes);
         populatePlayers();
         populateHand();
     }
