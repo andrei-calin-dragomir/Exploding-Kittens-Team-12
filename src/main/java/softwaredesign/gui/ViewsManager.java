@@ -4,15 +4,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
 
 class ViewsManager {
     static private HashMap<SceneName, String> scenes = new HashMap<>();
     public enum SceneName {
-        SPLASH_SCREEN, CHOOSE_NAME, ROOM_SELECTION, GAME_VIEW, SERVER_CONNECT, OFFLINE_SETTINGS, CREATE_ROOM
+        SPLASH_SCREEN, CHOOSE_NAME, ROOM_SELECTION, GAME_VIEW, SERVER_CONNECT, OFFLINE_SETTINGS, CREATE_ROOM, ROOM_SCREEN
     }
     static{
         scenes.put(SceneName.SPLASH_SCREEN,"src/main/resources/fxml/splashScreen.fxml");
@@ -22,6 +20,7 @@ class ViewsManager {
         scenes.put(SceneName.SERVER_CONNECT,"src/main/resources/fxml/serverConnect.fxml");
         scenes.put(SceneName.OFFLINE_SETTINGS,"src/main/resources/fxml/offlineSettings.fxml");
         scenes.put(SceneName.CREATE_ROOM,"src/main/resources/fxml/createRoom.fxml");
+        scenes.put(SceneName.ROOM_SCREEN,"src/main/resources/fxml/roomScreen.fxml");
     }
 
     static void loadScene(SceneName name) throws Exception{

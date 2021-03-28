@@ -1,11 +1,6 @@
 package softwaredesign.gui;
 
 import javafx.scene.control.Control;
-import org.javatuples.Tuple;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class CustomAlert {
     Control[] alerts;

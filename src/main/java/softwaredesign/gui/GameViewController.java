@@ -1,6 +1,5 @@
 package softwaredesign.gui;
 
-import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -12,7 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import softwaredesign.cards.DefuseCard;
-import softwaredesign.client.ClientProgram;
+
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;

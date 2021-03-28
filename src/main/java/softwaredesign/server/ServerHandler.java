@@ -28,7 +28,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
         String[] message = msg.split("\\s+");
         switch(message[0].toUpperCase(Locale.ROOT)){
             case "DISCONNECTING":
-                disconnectPlayer(ctx,null);
+                disconnectPlayer(ctx, null);
                 break;
             case "AVAILABLEROOMS" :
                 if(message.length < 3){
@@ -57,7 +57,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                     Player p = playerMap.get(ctx);
                     p.setCurrentRoom(roomObj);
                     p.setPlayerState(State.INROOM);
-                    ctx.writeAndFlush("JOINSUCCESS " + roomObj.playerListAsString());
+                    ctx.writeAndFlush("JOINSUCCESS " + roomObj.playerListAsString() + " " + roomObj.getGameRules()[0] + "," + roomObj.getGameRules()[1]);
                     roomObj.sendMsgToRoom(playerMap.get(ctx), "JOINED " + getClientName(ctx));
                 }
                 break;

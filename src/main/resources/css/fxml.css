@@ -1,0 +1,57 @@
+@font-face {
+    src: url('bebas.ttf');
+}
+
+.navButton:hover {
+    -fx-fill: #c9c9c9;
+}
+
+.clickButton {
+    -fx-background-color: #1f1f1f;
+    -fx-background-radius: 15;
+    -fx-font-size: 26;
+}
+
+.clickButton:hover {
+    -fx-background-color: #797979;
+}
+
+.imageButton {
+    -fx-background-radius: 15;
+    -fx-background-color: #1f1f1f;
+    -fx-graphic: url("img/quit.png")
+}
+
+.imageButton:hover {
+    -fx-background-color: #797979;
+    -fx-graphic: url("img/quitInvert.png")
+}
+
+.chatBox{
+    -fx-background-color: #1f1f1f;
+    -fx-border-color: gray;
+    -fx-border-width: 5 0 0 0;
+}
+
+.list-view{
+    -fx-control-inner-background: #1f1f1f ;
+    -fx-control-inner-background-alt: #363636;
+}
+
+.sendButton{
+    -fx-background-color: gray;
+    -fx-background-size: 25px;
+    -fx-graphic: url("img/send.jpg")
+}
+
+.nextButton:hover {
+    -fx-fill: #383838;
+}
+
+.general{
+    -fx-background-color: radial-gradient(center 50% 50%, radius 70%, rgba(150,24,28,255) 52%, rgba(104,0,1,1) 88%);
+}
+
+.text{
+    -fx-font-family: "Bebas Neue";
+}

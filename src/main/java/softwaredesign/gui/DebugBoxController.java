@@ -61,7 +61,7 @@ public class DebugBoxController extends Application implements Initializable  {
     public void initialize(URL location, ResourceBundle resources) {
         gameLoop.start();
         try {
-//            ClientProgram.startClient("127.0.0.1");
+            ClientProgram.startClient("127.0.0.1", false);
         } catch (Exception e) {
             e.printStackTrace();
         }

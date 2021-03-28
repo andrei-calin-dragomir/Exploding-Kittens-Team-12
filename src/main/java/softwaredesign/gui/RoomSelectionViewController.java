@@ -2,27 +2,26 @@ package softwaredesign.gui;
 
 import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
-
-import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import softwaredesign.client.ClientProgram;
+import softwaredesign.gui.ViewsManager.SceneName;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static javafx.collections.FXCollections.*;
-import softwaredesign.gui.ViewsManager.SceneName;
+import static javafx.collections.FXCollections.observableArrayList;
 
 public class RoomSelectionViewController implements Initializable {
 
@@ -47,22 +46,6 @@ public class RoomSelectionViewController implements Initializable {
         populateList();
         roomSelectionList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        //Action on "join":
-        joinButton.setOnAction(e -> {
-            String selectedItem = roomSelectionList.getSelectionModel().getSelectedItem(); //this is the selected string
-            System.out.println("selected item = " + selectedItem);
-        });
-
-        //Action on "create":
-        createButton.setOnAction(event -> {
-            try {
-//                launchRoomDialog();
-                ViewsManager.loadScene(SceneName.CREATE_ROOM);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
         //Action on "back":
         backButton.setOnAction(e -> {
             try {
@@ -76,6 +59,17 @@ public class RoomSelectionViewController implements Initializable {
     public void createRoom(){
         try {
             ViewsManager.loadScene(SceneName.CREATE_ROOM);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void joinRoom(){
+        try {
+            roomSelectionList.setDisable(true);
+            ClientProgram.handleCommand("join " + roomSelectionList.getSelectionModel().getSelectedItem());
+            ClientProgram.roomName = roomSelectionList.getSelectionModel().getSelectedItem();
+            ViewsManager.loadScene(SceneName.ROOM_SCREEN);
         } catch (Exception e) {
             e.printStackTrace();
         }

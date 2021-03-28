@@ -103,6 +103,10 @@ public class Room {
     public String getHostName(){ return currentHost.getName(); }
     public HashMap<String, Player> getRoomPlayerList() { return roomPlayerList; }
 
+    public int[] getGameRules() {
+        return gameRules;
+    }
+
     public String playerListAsString(){
         ArrayList<String> allPlayers = new ArrayList<>();
         for(Player player : roomPlayerList.values()) allPlayers.add(player.getName());

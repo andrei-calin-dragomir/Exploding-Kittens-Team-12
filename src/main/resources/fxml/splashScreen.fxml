@@ -7,33 +7,34 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 
-<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.SplashScreenController">
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.SplashScreenController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" percentWidth="80.0" prefWidth="366.0" />
       <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints maxHeight="197.0" minHeight="10.0" prefHeight="171.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="270.0" minHeight="10.0" prefHeight="195.0" vgrow="SOMETIMES" />
+    <RowConstraints />
+    <RowConstraints maxHeight="416.0" minHeight="244.0" prefHeight="376.0" />
+      <RowConstraints maxHeight="467.0" minHeight="0.0" prefHeight="90.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="270.0" minHeight="0.0" prefHeight="91.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="356.0" minHeight="10.0" prefHeight="220.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="270.0" minHeight="10.0" prefHeight="123.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <ImageView fitHeight="146.0" fitWidth="216.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+      <ImageView fitHeight="246.0" fitWidth="376.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
          <image>
             <Image url="@../../../../resources/images/logo.png" />
          </image>
       </ImageView>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-         <children>
-            <Button fx:id="playOnlineButton" maxWidth="100.0" mnemonicParsing="false" onAction="#goOnline" prefWidth="100.0" text="Play Online" />
-            <Button fx:id="playOfflineButton" layoutX="127.0" layoutY="83.0" maxWidth="100.0" onAction="#goOffline" mnemonicParsing="false" prefWidth="100.0" text="Play Offline" />
-            <Button fx:id="exitButton" layoutX="127.0" layoutY="106.0" maxWidth="100.0" mnemonicParsing="false" onAction="#closeButtonAction" prefWidth="100.0" text="Exit" />
-         </children>
+      <Button fx:id="playOnlineButton" maxWidth="292.0" mnemonicParsing="false" onAction="#goOnline" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Play Online" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+      <Button fx:id="playOfflineButton" maxWidth="295.0" mnemonicParsing="false" onAction="#goOffline" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Play Local" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+      <Button fx:id="deckButton" maxWidth="299.0" mnemonicParsing="false" onAction="#deckBuilder" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Decks" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+      <Button fx:id="exitButton" mnemonicParsing="false" onAction="#closeButtonAction" prefHeight="50.0" prefWidth="50.0" styleClass="imageButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
          <GridPane.margin>
-            <Insets />
+            <Insets bottom="10.0" left="10.0" />
          </GridPane.margin>
-      </VBox>
+      </Button>
    </children>
 </GridPane>

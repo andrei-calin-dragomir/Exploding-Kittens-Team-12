@@ -21,6 +21,8 @@ public class ClientProgram {
     public static LinkedHashMap<String,Integer> playerNamesAndHandSizes = new LinkedHashMap<>(); //todo maybe needs a getter/setter?
     public static String requestedCard = "";
     public static String currentServer = "";
+    public static String roomName = "";
+    public static String[] gameRules = new String[]{"", ""};
     public static String deckSize;
     public static String discardDeckTop;
     public static LinkedList<String> serverMessage = new LinkedList<>();
@@ -45,9 +47,12 @@ public class ClientProgram {
     }
     public static void killConnectionSafely() {
         try{
-            correspondenceChannel.channel().writeAndFlush("DISCONNECTING");
-            correspondenceChannel.channel().closeFuture().sync();
-            group.shutdownGracefully();
+            if(correspondenceChannel != null){
+                correspondenceChannel.channel().writeAndFlush("DISCONNECTING");
+                correspondenceChannel.channel().closeFuture().sync();
+                group.shutdownGracefully();
+            }
+
         } catch (Exception e){
             System.out.println("exception" + e);
         }
@@ -103,6 +108,9 @@ public class ClientProgram {
         System.out.println("handling commands: " + Arrays.toString(cmdList));
         try {
             switch (cmdList[0]) {
+                case "list_rooms":
+                    sendRequestToServer("AVAILABLEROOMS");
+                    break;
                 case "username":
                     sendRequestToServer("USERNAME " + cmdList[1]);
                     break;
@@ -130,7 +138,9 @@ public class ClientProgram {
                     break;
                 case "play":
                     requestedCard = cmdList[1];
-                    sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(cmdList[1]));
+                    String target = "";
+                    if(cmdList.length > 2) target = cmdList[2];
+                    sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(cmdList[1]) + " " + target);
                     break;
                 case "draw":
                     sendRequestToServer("DRAW");
@@ -152,7 +162,7 @@ public class ClientProgram {
                     break;
             }
         } catch (Exception e) {
-            System.out.println("Errorrrrr");
+            System.out.println("Errorrrrr: " + e);
             System.exit(0);
         }
     }

@@ -103,6 +103,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 else System.out.println("It's " + commands[1] + "'s turn!");
                 break;
             case "JOINED":
+                ClientProgram.playerNamesAndHandSizes.put(commands[1], -1);
                 System.out.println(commands[1] + " joined the game.");
                 break;
             case "WINNER":
@@ -115,7 +116,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 String[] playersInRoom = commands[1].split("@@");
                 for(String player : playersInRoom) {
                     tempString = tempString + player + " ";
+                    ClientProgram.playerNamesAndHandSizes.put(player, -1);
                 }
+                String[] rules = commands[2].split(",");
+                ClientProgram.gameRules = new String[]{rules[0], rules[1]};
                 System.out.println("You joined the game.\nPlayers in the room: " + tempString);
                 break;
             case "LEFT":
