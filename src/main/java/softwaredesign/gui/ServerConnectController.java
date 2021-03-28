@@ -40,54 +40,62 @@ public class ServerConnectController implements Initializable {
         return false;
     }
 
-    private Boolean handleUsername(String username){
+    private void handleUsername(String username){
         if(username.isBlank() || username.length() > 20){
+            usernameField.setText("");
             if(username.isBlank()) usernameError.activate(errorUsernameEmpty);
             else usernameError.activate(errorUsernameLong);
             joinButton.setDisable(false);
-            return true;
+            return;
         }
         ClientProgram.handleCommand("username " + username);
-        while(ClientProgram.serverMessage.isEmpty())
-            try{ Thread.sleep(100); } catch(Exception ignore){} // Stupid java doesn't let me sleep without throwing exception, if I throw an exception then I have  to throw an excpetion at intiailize which doesn't work. Have to do this ugly stuff
-        String serverResponse = ClientProgram.serverMessage.removeFirst();
-        if(serverResponse.equals("USERNAMETAKEN")){
-            usernameField.setText("");
-            usernameError.activate(errorUsernameTaken);
-            joinButton.setDisable(false);
-            return true;
-        }
-        return false;
+        waitForReply.start();
     }
 
+    AnimationTimer waitForReply = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            if(!ClientProgram.serverMessage.isEmpty()){
+                String[] msg = ClientProgram.serverMessage.removeFirst().split(" ");
+                System.out.println(msg[0]);
+                System.out.println(msg[1]);
+                if(msg[0].equals("USERNAMEACCEPTED")){
+                    ClientProgram.username = msg[1];
+                    super.stop();
+                    try {
+                        ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    usernameField.setText("");
+                    usernameError.activate(errorUsernameTaken);
+                    joinButton.setDisable(false);
+                    super.stop();
+                }
+            }
+        }
+    };
+
     @FXML
-    void tryJoin() throws Exception {
+    void tryJoin() {
         joinButton.setDisable(true);
         if(tryConnect(serverField.getText())) return;
-        if(handleUsername(usernameField.getText())) return;
-        ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
+        handleUsername(usernameField.getText());
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         usernameError.setAlerts(errorUsernameEmpty, errorUsernameTaken, errorUsernameLong);
         errorServer.setVisible(false);
-        serverField.setOnKeyPressed(event -> {
+        serverField.setOnKeyPressed(event -> {          // Make "enter" functional
             if(event.getCode() == KeyCode.ENTER) {
-                try {
-                    tryJoin();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
+                tryJoin();
             }
         });
         usernameField.setOnKeyPressed(event -> {
             if(event.getCode() == KeyCode.ENTER) {
-                try {
-                    tryJoin();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
+                tryJoin();
             }
         });
     }

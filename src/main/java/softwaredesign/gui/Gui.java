@@ -34,13 +34,16 @@ public class Gui extends Application {
     @Override
     public void start(Stage mainStage) throws  Exception{
 
-        ClientProgram.startClient("127.0.0.1");
-        gameLoop.start();
+//        ClientProgram.startClient("127.0.0.1");
+//        gameLoop.start();
+//        gameLoop.stop();
 
         URL url = new File("src/main/resources/fxml/splashScreen.fxml").toURI().toURL();
+        URL url2 = new File("src/main/resources/fxml/fxml.css").toURI().toURL();
         Parent root = FXMLLoader.load(url);
         mainScene = new Scene(root);
 
+        mainScene.getStylesheets().add(url2.toExternalForm());
         mainStage.setTitle("Exploding Kittens");
         mainStage.setScene(mainScene);
         mainStage.show();

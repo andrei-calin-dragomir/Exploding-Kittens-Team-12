@@ -37,7 +37,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             case "USERNAME":
                 if(checkNameInUse(message[1])) ctx.writeAndFlush("USERNAMETAKEN");
                 else{
-                    ctx.writeAndFlush("USERNAMEACCEPTED");
+                    ctx.writeAndFlush("USERNAMEACCEPTED " + message[1]);
                     playerMap.get(ctx).setPlayerName(message[1]);
                     if(message.length < 3){
                         String str = String.join(",", roomList.keySet());
