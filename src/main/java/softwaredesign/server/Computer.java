@@ -57,21 +57,19 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
                 }
             }
         }
-        return String.valueOf(game.gameManager.getAlivePlayers().indexOf(chosenPlayer));
+        return chosenPlayer.getName();
     }
 
     // Attacks player with least cards
     private void playAttack(ServerHeldGame game, Integer cardIndex) throws InterruptedException {
-        String indexToAttack = getHandSizes(game, false);
-        System.out.println(indexToAttack);
-        game.handlePlayAction(cardIndex, "1");
+        String playerToAttack = getHandSizes(game, false);
+        game.handlePlayAction(cardIndex, playerToAttack);
     }
 
     // Attacks player with most cards
     private void playFavor(ServerHeldGame game, Integer cardIndex) throws InterruptedException {
-        String indexToAttack = getHandSizes(game, true);
-        System.out.println(indexToAttack);
-        game.handlePlayAction(cardIndex, "1");
+        String playerToAttack = getHandSizes(game, true);
+        game.handlePlayAction(cardIndex, playerToAttack);
     }
 
 
