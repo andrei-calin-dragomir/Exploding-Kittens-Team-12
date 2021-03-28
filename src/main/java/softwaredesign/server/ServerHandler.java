@@ -96,12 +96,13 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             playerRoom.removePlayer(player.getName());
             playerRoom.sendMsgToRoom(player,"LEFT " + player.getName() + " " + playerRoom.playerListAsString());
             if(playerRoom.isRoomEmpty()) roomList.remove(playerRoom.getRoomName());
+            else playerRoom.assignNewHost();
         }
     }
     private void disconnectPlayer(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException{
         System.out.println("Closing connection for client - " + getClientName(ctx));
         if(cause != null) System.out.println("He disconnected because of: " + cause);
-        cleanRoomOfEntity(ctx); //TODO this one must also clear the turns because if a player leaves, his turn still comes in the game // DONE
+        cleanRoomOfEntity(ctx);
         ctx.close();
         playerMap.remove(ctx);
     }

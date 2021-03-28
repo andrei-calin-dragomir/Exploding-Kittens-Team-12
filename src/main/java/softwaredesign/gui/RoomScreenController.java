@@ -28,7 +28,7 @@ public class RoomScreenController implements Initializable {
     ObservableList<String> chatMessages = observableArrayList();
 
     @FXML
-    private Text roomSize, computerAmount, lobbyPlaceholder, player1, player2, player3, player4;
+    private Text startError, roomSize, computerAmount, lobbyPlaceholder, player1, player2, player3, player4;
 
     @FXML
     private TextField sendMessageField;
@@ -67,21 +67,13 @@ public class RoomScreenController implements Initializable {
                     chatMessages.add(tempString);
                     chatBox.setItems(chatMessages);
                 }
-            }
-        }
-    };
-
-    AnimationTimer startHandler = new AnimationTimer() {
-        @Override
-        public void handle(long now) {
-            if (!ClientProgram.serverMessage.isEmpty()) {
-                String[] msg = ClientProgram.serverMessage.removeFirst().split(" ");
-                if(msg[0].equals("JOINED") || msg[0].equals("LEFT")) updatePlayerList();
-                else if(msg[0].equals("CHAT")) {
-                    String tempString = "";
-                    for(int i = 1; i < msg.length; ++i) tempString = tempString + msg[i] + " ";
-                    chatMessages.add(tempString);
-                    chatBox.setItems(chatMessages);
+                else if(msg[0].equals("CANTSTART")) startError.setText("Only the host can start");
+                else if(msg[0].equals("NOSTART")) startError.setText("Not enough players");
+                else if(msg[0].equals("START")){
+                    System.out.println("Starting game");
+//                    super.stop();
+//                    try { ViewsManager.loadScene(ViewsManager.SceneName.GAME_VIEW); }
+//                    catch (Exception ignore) {}
                 }
             }
         }
@@ -104,6 +96,7 @@ public class RoomScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        startError.setText("");
         ClientProgram.playerNamesAndHandSizes.put(ClientProgram.username, -1);
         roomSize.setText("Room Size: " + ClientProgram.gameRules[0]);
         computerAmount.setText("Computers: " + ClientProgram.gameRules[1]);

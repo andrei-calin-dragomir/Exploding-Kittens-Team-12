@@ -84,6 +84,12 @@ public class ServerConnectController implements Initializable {
         handleUsername(usernameField.getText());
     }
 
+    @FXML
+    void returnButton() throws Exception {
+        waitForReply.stop();
+        ViewsManager.loadScene(ViewsManager.SceneName.SPLASH_SCREEN);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         usernameError.setAlerts(errorUsernameEmpty, errorUsernameTaken, errorUsernameLong);

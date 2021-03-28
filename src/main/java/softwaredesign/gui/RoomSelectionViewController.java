@@ -58,6 +58,7 @@ public class RoomSelectionViewController implements Initializable {
 
     public void createRoom(){
         try {
+            checkForRoomsLoop.stop();
             ViewsManager.loadScene(SceneName.CREATE_ROOM);
         } catch (Exception e) {
             e.printStackTrace();

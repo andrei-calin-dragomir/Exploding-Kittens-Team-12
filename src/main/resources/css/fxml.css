@@ -1,5 +1,6 @@
 @font-face {
-    src: url('bebas.ttf');
+    src: url('font/bebas.ttf') format("truetype"),
+         url('font/bebas.woff') format('woff');
 }
 
 .navButton:hover {
@@ -16,15 +17,30 @@
     -fx-background-color: #797979;
 }
 
-.imageButton {
+.quitButton {
     -fx-background-radius: 15;
     -fx-background-color: #1f1f1f;
     -fx-graphic: url("img/quit.png")
 }
 
-.imageButton:hover {
+.quitButton:hover {
     -fx-background-color: #797979;
     -fx-graphic: url("img/quitInvert.png")
+}
+
+.backButton {
+    -fx-background-radius: 15;
+    -fx-background-color: #1f1f1f;
+    -fx-graphic: url("img/back.png")
+}
+
+.backButton:hover {
+    -fx-background-color: #797979;
+    -fx-graphic: url("img/backInvert.png")
+}
+
+.textbox{
+
 }
 
 .chatBox{

@@ -100,5 +100,13 @@
             <Insets bottom="5.0" />
          </GridPane.margin>
       </Button>
+      <Text fx:id="startError" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="StartErrorPlaceholder" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <GridPane.margin>
+            <Insets bottom="-10.0" />
+         </GridPane.margin>
+      </Text>
    </children>
 </GridPane>

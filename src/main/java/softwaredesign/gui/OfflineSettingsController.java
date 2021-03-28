@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Shape;
+import softwaredesign.client.ClientProgram;
 
 import java.io.File;
 import java.net.URL;
@@ -12,15 +13,14 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class OfflineSettingsController implements Initializable {
+    ScrollButton playerAmountScroll = new ScrollButton();
+    ScrollButton deckSelectionScroll = new ScrollButton();
 
     @FXML
     private Label playerAmount, deckSelection;
 
     @FXML
     private Shape startGame, leftButtonPlayers, rightButtonPlayers, leftButtonDeck, rightButtonDeck;
-
-    ScrollButton playerAmountScroll = new ScrollButton();
-    ScrollButton deckSelectionScroll = new ScrollButton();
 
     @FXML
     void rotatePlayerAmount(MouseEvent event){
@@ -40,9 +40,9 @@ public class OfflineSettingsController implements Initializable {
     }
 
     @FXML
-    void tryJoin() throws Exception {
-        startGame.setDisable(true);
-        ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
+    void returnButton() throws Exception {
+        ViewsManager.loadScene(ViewsManager.SceneName.SPLASH_SCREEN);
+        ClientProgram.startClient("127.0.0.1", true);
     }
 
     @Override

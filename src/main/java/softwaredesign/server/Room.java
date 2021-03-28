@@ -104,6 +104,7 @@ public class Room {
     public Integer getMaxPlayers(){ return gameRules[0]; }
     public String getHostName(){ return currentHost.getName(); }
     public HashMap<String, Player> getRoomPlayerList() { return roomPlayerList; }
+    public void assignNewHost(){ currentHost = roomPlayerList.values().iterator().next(); }
 
     public int[] getGameRules() {
         return gameRules;
