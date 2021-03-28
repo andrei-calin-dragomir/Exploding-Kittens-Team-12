@@ -16,38 +16,50 @@
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints maxHeight="248.0" minHeight="10.0" prefHeight="192.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="424.0" minHeight="10.0" prefHeight="424.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="248.0" minHeight="10.0" prefHeight="223.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="424.0" minHeight="0.0" prefHeight="108.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="509.0" minHeight="10.0" prefHeight="110.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="509.0" minHeight="10.0" prefHeight="332.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f1f1f" height="46.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="240.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
       <Label text="Offline Game" GridPane.columnIndex="1" GridPane.halignment="CENTER">
          <font>
             <Font name="System Bold" size="41.0" />
          </font>
       </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" height="46.0" stroke="BLACK" strokeType="INSIDE" width="240.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#797979" height="40.0" stroke="BLACK" strokeType="INSIDE" width="234.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
-         <GridPane.margin>
-            <Insets top="3.0" />
-         </GridPane.margin>
-      </Rectangle>
-      <Label fx:id="playerAmount" prefHeight="17.0" prefWidth="117.0" text="Placeholder" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f1f1f" height="46.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="240.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+      <Label fx:id="playerAmount" alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="241.0" text="Placeholder" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <font>
-            <Font name="System Bold" size="20.0" />
+            <Font name="System Bold" size="28.0" />
          </font>
          <GridPane.margin>
-            <Insets top="7.0" />
+            <Insets />
          </GridPane.margin>
       </Label>
-      <Polygon fx:id="leftButtonPlayers" fill="#797979" onMouseClicked="#rotatePlayerAmount" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" rotate="-90.0" scaleX="0.35" scaleY="0.35" scaleZ="0.35" stroke="BLACK" strokeType="INSIDE" strokeWidth="5.0" styleClass="navButton" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+      <Polygon fx:id="leftButtonPlayers" fill="#797979" onMouseClicked="#rotatePlayerAmount" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" rotate="-90.0" scaleX="0.35" scaleY="0.35" scaleZ="0.35" stroke="#1f1f1f" strokeType="INSIDE" strokeWidth="6.0" styleClass="navButton" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <GridPane.margin>
             <Insets left="-15.0" top="-26.0" />
          </GridPane.margin>
       </Polygon>
-      <Polygon fx:id="rightButtonPlayers" fill="#797979" onMouseClicked="#rotatePlayerAmount" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" rotate="90.0" scaleX="0.35" scaleY="0.35" scaleZ="0.35" stroke="BLACK" strokeType="INSIDE" strokeWidth="5.0" styleClass="navButton" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+      <Polygon fx:id="rightButtonPlayers" fill="#797979" onMouseClicked="#rotatePlayerAmount" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" rotate="90.0" scaleX="0.35" scaleY="0.35" scaleZ="0.35" stroke="#1f1f1f" strokeType="INSIDE" strokeWidth="6.0" styleClass="navButton" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <GridPane.margin>
             <Insets right="-15.0" top="-26.0" />
+         </GridPane.margin>
+      </Polygon>
+      <Label fx:id="deckSelection" alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="242.0" text="Placeholder" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+      </Label>
+      <Polygon fx:id="leftButtonDeck" fill="#797979" onMouseClicked="#rotateDeckAmount" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" rotate="90.0" scaleX="0.35" scaleY="0.35" scaleZ="0.35" stroke="#1f1f1f" strokeType="INSIDE" strokeWidth="6.0" styleClass="navButton" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+         <GridPane.margin>
+            <Insets right="-15.0" top="-26.0" />
+         </GridPane.margin>
+      </Polygon>
+      <Polygon fx:id="rightButtonDeck" fill="#797979" onMouseClicked="#rotateDeckAmount" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" rotate="-90.0" scaleX="0.35" scaleY="0.35" scaleZ="0.35" stroke="#1f1f1f" strokeType="INSIDE" strokeWidth="6.0" styleClass="navButton" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+         <GridPane.margin>
+            <Insets left="-15.0" top="-26.0" />
          </GridPane.margin>
       </Polygon>
    </children>
