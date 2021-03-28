@@ -22,7 +22,7 @@
     <RowConstraints maxHeight="517.0" minHeight="10.0" prefHeight="78.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <ListView fx:id="roomSelectionList" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/fxml.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <ListView fx:id="roomSelectionList" prefHeight="200.0" prefWidth="200.0" style="-fx-font-size: 20;" stylesheets="@../css/fxml.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Text fill="#1f1f1f" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 70;" styleClass="text" text="Available rooms:" GridPane.columnIndex="1" GridPane.halignment="CENTER">
          <font>
             <Font size="26.0" />

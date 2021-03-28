@@ -16,10 +16,7 @@ import softwaredesign.client.ClientProgram;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -71,9 +68,9 @@ public class RoomScreenController implements Initializable {
                 else if(msg[0].equals("NOSTART")) startError.setText("Not enough players");
                 else if(msg[0].equals("START")){
                     System.out.println("Starting game");
-//                    super.stop();
-//                    try { ViewsManager.loadScene(ViewsManager.SceneName.GAME_VIEW); }
-//                    catch (Exception ignore) {}
+                    super.stop();
+                    try { ViewsManager.loadScene(ViewsManager.SceneName.GAME_VIEW); }
+                    catch (Exception ignore) {}
                 }
             }
         }
@@ -89,6 +86,8 @@ public class RoomScreenController implements Initializable {
 
     @FXML
     void leaveGame() throws Exception {
+        ClientProgram.playerNamesAndHandSizes = new LinkedHashMap<>();
+        ClientProgram.playerNamesAndHandSizes.put(ClientProgram.username, -1);
         ClientProgram.handleCommand("leave");
         lobbyUpdates.stop();
         ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
