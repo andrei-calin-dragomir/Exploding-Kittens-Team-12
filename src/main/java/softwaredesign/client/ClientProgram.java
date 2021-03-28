@@ -40,9 +40,9 @@ public class ClientProgram {
         if(offline){
             ServerProgram server = new ServerProgram();
             server.start();
-            connectAndLoop("127.0.0.1",true);
+            connectAndLoop("127.0.0.1", true);
         }else{
-            connectAndLoop(IP,false);
+            connectAndLoop(IP, false);
         }
     }
     public static void killConnectionSafely() {

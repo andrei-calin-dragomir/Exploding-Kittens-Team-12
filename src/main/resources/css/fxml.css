@@ -40,7 +40,11 @@
 }
 
 .textbox{
-
+    -fx-background-color:  #1f1f1f;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: white;
+    -fx-font-size: 20;
+    -fx-font-family:  "Bebas Neue";
 }
 
 .chatBox{

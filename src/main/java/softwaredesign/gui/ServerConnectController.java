@@ -15,15 +15,13 @@ import java.util.ResourceBundle;
 public class ServerConnectController implements Initializable {
 
     @FXML
-    private Label errorServer, errorUsernameTaken, errorUsernameEmpty, errorUsernameLong;
+    private Label errorServer, usernameError;
 
     @FXML
     private TextField serverField, usernameField;
 
     @FXML
     private Button joinButton;
-
-    CustomAlert usernameError = new CustomAlert();
 
     private Boolean tryConnect(String serverIP){
         if(serverIP.equals("")) serverIP = "127.0.0.1";
@@ -42,8 +40,8 @@ public class ServerConnectController implements Initializable {
     private void handleUsername(String username){
         if(username.isBlank() || username.length() > 20){
             usernameField.setText("");
-            if(username.isBlank()) usernameError.activate(errorUsernameEmpty);
-            else usernameError.activate(errorUsernameLong);
+            if(username.isBlank()) usernameError.setText("Username cannot be empty");
+            else usernameError.setText("Username is too long");
             joinButton.setDisable(false);
             return;
         }
@@ -68,7 +66,7 @@ public class ServerConnectController implements Initializable {
                     }
                 } else {
                     usernameField.setText("");
-                    usernameError.activate(errorUsernameTaken);
+                    usernameError.setText("Username already taken");
                     joinButton.setDisable(false);
                     super.stop();
                 }
@@ -92,7 +90,6 @@ public class ServerConnectController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        usernameError.setAlerts(errorUsernameEmpty, errorUsernameTaken, errorUsernameLong);
         errorServer.setVisible(false);
         serverField.setOnKeyPressed(event -> {          // Make "enter" functional
             if(event.getCode() == KeyCode.ENTER) {

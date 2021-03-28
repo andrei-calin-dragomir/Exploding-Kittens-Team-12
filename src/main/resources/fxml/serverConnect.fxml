@@ -18,46 +18,36 @@
    <rowConstraints>
       <RowConstraints maxHeight="150.0" minHeight="0.0" prefHeight="0.0" />
       <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" prefHeight="159.0" />
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="93.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="101.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="103.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" prefHeight="438.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="127.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="119.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="123.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" prefHeight="371.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label alignment="TOP_CENTER" prefHeight="41.0" prefWidth="456.0" stylesheets="@../css/fxml.css" text="Choose a server and username" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Label alignment="TOP_CENTER" prefHeight="41.0" prefWidth="456.0" style="-fx-font-size: 70;" stylesheets="@../css/fxml.css" text="Online play" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <font>
             <Font size="27.0" />
          </font>
       </Label>
-      <TextField fx:id="serverField" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="273.0" promptText="localhost" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <TextField fx:id="serverField" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="41.0" prefWidth="273.0" promptText="localhost" styleClass="textbox" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
       <Label alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="134.0" style="-fx-font-size: 25;" stylesheets="@../css/fxml.css" text="Server:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="usernameField" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#tryJoin" prefHeight="25.0" prefWidth="273.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+      <TextField fx:id="usernameField" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#tryJoin" prefHeight="42.0" prefWidth="273.0" styleClass="textbox" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
       <Label alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="134.0" style="-fx-font-size: 25;" stylesheets="@../css/fxml.css" text="Username:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
       <Button fx:id="joinButton" mnemonicParsing="false" onAction="#tryJoin" prefHeight="48.0" prefWidth="81.0" style="-fx-text-fill: white;" styleClass="clickButton" stylesheets="@../css/fxml.css" text="Join" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-      <Label fx:id="errorServer" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="497.0" text="Cannot reach server" textFill="#bc0505" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+      <Label fx:id="errorServer" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="497.0" style="-fx-font-size: 20;" text="Cannot reach server" textFill="#c9c9c9" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
          <font>
             <Font size="13.0" />
          </font>
       </Label>
-      <Label fx:id="errorUsernameTaken" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="497.0" text="Username already taken" textFill="#bc0505" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Label>
-      <Label fx:id="errorUsernameEmpty" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="497.0" text="Username cannot be empty" textFill="#bc0505" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Label>
-      <Label fx:id="errorUsernameLong" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="497.0" text="Username is too long" textFill="#bc0505" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+      <Label fx:id="usernameError" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="497.0" style="-fx-font-size: 20;" textFill="#c9c9c9" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
          <font>
             <Font size="13.0" />
          </font>

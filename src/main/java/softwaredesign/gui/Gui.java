@@ -42,7 +42,7 @@ public class Gui extends Application {
 
         URL url = new File("src/main/resources/fxml/splashScreen.fxml").toURI().toURL();
         URL urlCSS = new File("src/main/resources/css/fxml.css").toURI().toURL();
-        URL urlFont = new File("/resources/fonts/bebas.ttf").toURI().toURL();
+        URL urlFont = new File("src/main/resources/css/font/bebas.ttf").toURI().toURL();
         Font.loadFont(getClass().getResourceAsStream(urlFont.toExternalForm()), 25);
         Parent root = FXMLLoader.load(url);
         mainScene = new Scene(root);

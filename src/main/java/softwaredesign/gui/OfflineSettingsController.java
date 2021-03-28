@@ -33,16 +33,20 @@ public class OfflineSettingsController implements Initializable {
     }
 
     @FXML
-    void startGame(){
-        Integer amountOfPlayers = Integer.parseInt(playerAmount.getText());
+    void startGame() throws Exception {
+        Integer amountOfComputers = Integer.parseInt(playerAmount.getText());
+        Integer totalPlayers = amountOfComputers + 1;
         String deckToUse = deckSelection.getText();
+        ClientProgram.startClient("127.0.0.1", true);
+        ClientProgram.handleCommand("create sologame," + totalPlayers + "," + amountOfComputers);
+        ClientProgram.handleCommand("start");
+        ViewsManager.loadScene(ViewsManager.SceneName.GAME_VIEW);
         // Offline mode has been deleted wtf? I can't seem to find it anymore. Anyway just pass these arguments and start offline.
     }
 
     @FXML
     void returnButton() throws Exception {
         ViewsManager.loadScene(ViewsManager.SceneName.SPLASH_SCREEN);
-        ClientProgram.startClient("127.0.0.1", true);
     }
 
     @Override
