@@ -10,9 +10,9 @@ public class AttackCard extends Card {
         Player targetPlayer = heldGame.gameManager.getPlayerByName(target);
         heldGame.gameManager.changeNextTurn(targetPlayer);
         targetPlayer.setPlayerState(State.ATTACKED);
+        if(originalPlayer.getPlayerState().equals(State.ATTACKED)) originalPlayer.setPlayerState(State.PLAYING);
         heldGame.getRoom().sendMsgToPlayer(targetPlayer, "ATTACKED " + heldGame.getCurrentPlayer().getName());
         if(!originalPlayer.isComputer() && targetPlayer.isComputer()) heldGame.handleNextTurn();
         else heldGame.getRoom().sendMsgToRoom(null, "TURN " + heldGame.getCurrentPlayerName());
     }
-    //Will be implemented after linked list change
 }

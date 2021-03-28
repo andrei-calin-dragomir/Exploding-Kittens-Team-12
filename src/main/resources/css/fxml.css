@@ -62,6 +62,14 @@
     -fx-border-width: 5 0 0 0;
 }
 
+.scroll-pane{
+   -fx-background-color:transparent;
+}
+
+.scroll-pane .viewport {
+       -fx-background-color: transparent;
+}
+
 .list-view{
     -fx-control-inner-background: #1f1f1f ;
     -fx-control-inner-background-alt: #363636;

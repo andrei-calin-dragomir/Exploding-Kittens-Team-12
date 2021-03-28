@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -14,12 +15,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import softwaredesign.client.ClientProgram;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -59,6 +62,9 @@ public class GameViewController implements Initializable {
 
     @FXML
     private ImageView discardDeck;
+
+    @FXML
+    public ScrollPane cardScrollPane;
 
     @FXML
     public GridPane cardsGridPane;
@@ -392,6 +398,7 @@ public class GameViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        cardScrollPane.setPannable(true);
         refreshPlayers();
         populateHand();
         gameLoop.start();

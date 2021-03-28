@@ -56,8 +56,8 @@ public class ServerHeldGame {
     public void handlePlayAction(int index, String target) throws InterruptedException {
         Hand currHand = gameManager.getCurrentPlayerHand();
         Player currPlayer = getCurrentPlayer();
-        Card cardPlayed = currHand.playCard(index, target, this);
-        room.sendMsgToRoom(currPlayer, "PLAYER " + currPlayer.getName() + " PLAYED " +  cardPlayed.getName());
+        room.sendMsgToRoom(currPlayer, "PLAYER " + currPlayer.getName() + " PLAYED " +  currHand.getCard(index).getName());
+        currHand.playCard(index, target, this);
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
 
