@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Sounds {
 
-    private static final AudioClip clickSound = new AudioClip("file:resources/sounds/click.wav");
+    private static final AudioClip clickSound = new AudioClip("file:resources/sounds/click.mp3");
     private static final AudioClip winSound = new AudioClip("file:resources/sounds/winSound.mp3");
     private static final AudioClip meow_1 = new AudioClip("file:resources/sounds/meow_1.mp3");
     private static final AudioClip meow_2 = new AudioClip("file:resources/sounds/meow_2.mp3");

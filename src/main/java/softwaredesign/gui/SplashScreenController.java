@@ -25,7 +25,7 @@ public class SplashScreenController implements Initializable {
     @FXML
     private void closeButtonAction(){
         Stage stage = (Stage) exitButton.getScene().getWindow();
-        Sounds.playClick();
+//        Sounds.playClick();
         stage.close();
         System.exit(0);
     }
@@ -38,7 +38,7 @@ public class SplashScreenController implements Initializable {
     @FXML
     public void goOnline() throws Exception{
         //skip username selection if it is already set
-        Sounds.playClick();
+//        Sounds.playClick();
         if (ClientProgram.username == null){
             ViewsManager.loadScene(SceneName.SERVER_CONNECT);
         } else {
@@ -48,7 +48,7 @@ public class SplashScreenController implements Initializable {
 
     @FXML
     public void goOffline() throws Exception{
-        Sounds.playClick();
+//        Sounds.playClick();
         System.out.println(playOnlineButton.getUserData());
         ViewsManager.loadScene(SceneName.OFFLINE_SETTINGS);
     }
