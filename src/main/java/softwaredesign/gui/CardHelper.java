@@ -1,27 +1,25 @@
 package softwaredesign.gui;
 
-
-import softwaredesign.cards.Card;
-
 import java.util.Random;
 
 public class CardHelper {
 
-    static String getCardImageUrl(Card card){
+    static String getCardImageUrl(String card){
         Random rand = new Random();
         String res = "file:resources/images/normal/";
-        if(card.getName().equals("CatCardShy")
-                || card.getName().equals("CatCardZombie")
-                || card.getName().equals("CatCardMomma")){
-            res = res.concat(card.getName() + ".png");
+        if(card.equals("CatCardShy")
+                || card.equals("CatCardZombie")
+                || card.equals("CatCardMomma")
+                || card.equals("ReverseCard")){
+            res = res.concat(card + ".png");
         } else {
             res = res.concat(
-                    card.getName()
+                    card
                     + (rand.nextInt(3) + 1)
                     + ".png"
             );
         }
-        System.out.println("res = " + res);
+//        System.out.println("res = " + res);
         return res;
     }
 }

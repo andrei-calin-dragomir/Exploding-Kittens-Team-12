@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.DebugBoxController">
    <children>
       <Label text="Server Messages:" />
@@ -15,7 +14,14 @@
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
             <TextField fx:id="commandField" />
-            <Button fx:id="sendCommandButton" mnemonicParsing="false" onAction="#sendCommand" text="Send command" />
+            <Button fx:id="sendCommandButton" mnemonicParsing="false" onAction="#sendTextAsCommand" text="Send command" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+         <children>
+            <Button fx:id="play1" mnemonicParsing="false" onAction="#connectPlayer1" text="Be player 1" />
+            <Button fx:id="play2" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#connectPlayer2" text="Be player 2" />
+            <Button fx:id="play21" layoutX="335.0" layoutY="45.0" mnemonicParsing="false" onAction="#startGameView" text="Start game view" />
          </children>
       </HBox>
    </children>
