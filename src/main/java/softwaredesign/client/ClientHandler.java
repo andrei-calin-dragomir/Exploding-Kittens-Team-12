@@ -30,7 +30,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println("Welcome, " + ClientProgram.username + "!");
                 break;
             case "USERNAMETAKEN":
-                ClientProgram.username = "";
+//                ClientProgram.username = "";
                 System.out.println("Username is already in use. Try again.");
                 break;
             case "ROOM":

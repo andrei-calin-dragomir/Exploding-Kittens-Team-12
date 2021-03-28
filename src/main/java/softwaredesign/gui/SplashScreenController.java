@@ -37,16 +37,16 @@ public class SplashScreenController implements Initializable {
     public void goOnline() throws Exception{
         //skip username selection if it is already set
         if (ClientProgram.username == null){
-            ViewsManager.loadScene(SceneName.CHOOSE_NAME);
+            ViewsManager.loadScene(SceneName.SERVER_CONNECT);
         } else {
             ViewsManager.loadScene(SceneName.ROOM_SELECTION);
         }
     }
 
     @FXML
-    public void goOffline(){
+    public void goOffline() throws Exception{
         System.out.println(playOnlineButton.getUserData());
-        ViewsManager.activate("offline_settings");
+        ViewsManager.loadScene(SceneName.OFFLINE_SETTINGS);
     }
 
     @Override

@@ -19,8 +19,8 @@ class ViewsManager {
         scenes.put(SceneName.CHOOSE_NAME,"src/main/resources/fxml/chooseName.fxml");
         scenes.put(SceneName.ROOM_SELECTION,"src/main/resources/fxml/roomSelection.fxml");
         scenes.put(SceneName.GAME_VIEW,"src/main/resources/fxml/gameView.fxml");
-        scenes.put(SceneName.SERVER_CONNECT,"src/main/resources/fxml/roomSelection.fxml");
-        scenes.put(SceneName.OFFLINE_SETTINGS,"src/main/resources/fxml/gameView.fxml");
+        scenes.put(SceneName.SERVER_CONNECT,"src/main/resources/fxml/serverConnect.fxml");
+        scenes.put(SceneName.OFFLINE_SETTINGS,"src/main/resources/fxml/offlineSettings.fxml");
     }
 
     static void loadScene(SceneName name) throws Exception{

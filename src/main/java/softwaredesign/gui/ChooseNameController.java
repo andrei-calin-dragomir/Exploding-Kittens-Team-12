@@ -22,7 +22,7 @@ public class ChooseNameController {
     private Button selectGameButton;
 
     @FXML
-    private void sendUsername() throws InterruptedException {
+    private void sendUsername() {
         username = textField.getText();
         ClientProgram.handleCommand("username " + username);
         waitForReply.start();
@@ -31,18 +31,21 @@ public class ChooseNameController {
     AnimationTimer waitForReply = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            if(Gui.latestMessage.equals("USERNAMEACCEPTED")){
-                errorText.setText("Success!");
-                ClientProgram.username = username;
-                try {
-                    ViewsManager.loadScene(SceneName.ROOM_SELECTION);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            if(!ClientProgram.serverMessage.isEmpty()){
+                String msg = ClientProgram.serverMessage.removeFirst();
+                if(msg.equals("USERNAMEACCEPTED")){
+                    errorText.setText("Success!");
+                    ClientProgram.username = username;
+                    try {
+                        ViewsManager.loadScene(SceneName.ROOM_SELECTION);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    super.stop();
+                } else {
+                    errorText.setText("Username taken");
+                    super.stop();
                 }
-                super.stop();
-            } else if (Gui.latestMessage.equals("USERNAMETAKEN")) {
-                errorText.setText("Username taken");
-                super.stop();
             }
         }
     };

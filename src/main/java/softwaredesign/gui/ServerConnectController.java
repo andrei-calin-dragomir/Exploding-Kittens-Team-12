@@ -61,11 +61,11 @@ public class ServerConnectController implements Initializable {
     }
 
     @FXML
-    void tryJoin()  {
+    void tryJoin() throws Exception {
         joinButton.setDisable(true);
         if(tryConnect(serverField.getText())) return;
         if(handleUsername(usernameField.getText())) return;
-        ViewsManager.activate("room_selection");
+        ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
     }
 
     @Override
@@ -73,10 +73,22 @@ public class ServerConnectController implements Initializable {
         usernameError.setAlerts(errorUsernameEmpty, errorUsernameTaken, errorUsernameLong);
         errorServer.setVisible(false);
         serverField.setOnKeyPressed(event -> {
-            if(event.getCode() == KeyCode.ENTER) { tryJoin(); }
+            if(event.getCode() == KeyCode.ENTER) {
+                try {
+                    tryJoin();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
         });
         usernameField.setOnKeyPressed(event -> {
-            if(event.getCode() == KeyCode.ENTER) { tryJoin(); }
+            if(event.getCode() == KeyCode.ENTER) {
+                try {
+                    tryJoin();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
         });
     }
 }

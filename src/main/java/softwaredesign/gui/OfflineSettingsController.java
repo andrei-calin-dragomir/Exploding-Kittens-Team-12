@@ -40,9 +40,9 @@ public class OfflineSettingsController implements Initializable {
     }
 
     @FXML
-    void tryJoin()  {
+    void tryJoin() throws Exception {
         startGame.setDisable(true);
-        ViewsManager.activate("room_selection");
+        ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
     }
 
     @Override

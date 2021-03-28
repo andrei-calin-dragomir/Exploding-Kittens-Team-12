@@ -34,7 +34,7 @@ public class Gui extends Application {
     @Override
     public void start(Stage mainStage) throws  Exception{
 
-        ClientProgram.startClient();
+        ClientProgram.startClient("127.0.0.1");
         gameLoop.start();
 
         URL url = new File("src/main/resources/fxml/splashScreen.fxml").toURI().toURL();
