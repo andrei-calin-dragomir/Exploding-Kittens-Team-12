@@ -58,7 +58,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                     case "AVAILABLE":
                         String[] allRooms = commands[2].split(",");
                         for(String room : allRooms) tempString = tempString + room + " ";
-                        System.out.println(allRooms.length + " room have been found, join one or create a custom room?\n +" +
+                        System.out.println(allRooms.length + " room have been found, join one or create a custom room?\n" +
                                 "Available rooms: " + tempString);  //Fix grammar
                         break;
                 }

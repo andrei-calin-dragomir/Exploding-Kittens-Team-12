@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.ChooseNameController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="394.0" minWidth="10.0" prefWidth="202.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="716.0" minWidth="10.0" prefWidth="716.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints maxHeight="587.0" minHeight="10.0" prefHeight="146.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="587.0" minHeight="10.0" prefHeight="113.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="645.0" minHeight="10.0" prefHeight="79.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="645.0" minHeight="10.0" prefHeight="79.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="644.0" minHeight="10.0" prefHeight="639.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choose your username" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <font>
+            <Font name="System Bold Italic" size="26.0" />
+         </font>
+      </Text>
+      <TextField fx:id="textField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="50.0" right="50.0" />
+         </GridPane.margin>
+      </TextField>
+      <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+        <buttons>
+            <Text fx:id="errorText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+          <Button fx:id="selectGameButton" mnemonicParsing="false" onAction="#sendUsername" text="Select name" />
+        </buttons>
+         <GridPane.margin>
+            <Insets right="50.0" />
+         </GridPane.margin>
+      </ButtonBar>
+   </children>
+</GridPane>

@@ -10,8 +10,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import softwaredesign.cards.DefuseCard;
 import softwaredesign.client.ClientProgram;
@@ -45,19 +43,6 @@ public class GameViewController implements Initializable {
     //non-fxml vars
 
     static HashMap<String,Integer> players;
-
-    AnimationTimer gameLoop = new AnimationTimer() {
-        @Override
-        public void start(){
-            System.out.println("Started!");
-            players = ClientProgram.playerNamesAndHandSizes;
-        }
-
-        @Override
-        public void handle(long now) {
-            players = ClientProgram.playerNamesAndHandSizes;
-        }
-    };
 
     private void playCard(ImageView iv){
         cardsGridPane.getChildren().remove(iv);

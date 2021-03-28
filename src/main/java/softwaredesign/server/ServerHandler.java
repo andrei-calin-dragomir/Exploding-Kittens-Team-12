@@ -27,6 +27,13 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
     public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
         String[] message = msg.split("\\s+");
         switch(message[0].toUpperCase(Locale.ROOT)){
+            case "AVAILABLEROOMS" :
+                if(message.length < 3){
+                    String str = String.join(",", roomList.keySet());
+                    if(roomList.isEmpty()) ctx.writeAndFlush("ROOM NOROOM");
+                    else ctx.writeAndFlush("ROOM AVAILABLE " + str);
+                }
+                break;
             case "USERNAME":
                 if(checkNameInUse(message[1])) ctx.writeAndFlush("USERNAMETAKEN");
                 else{
@@ -35,7 +42,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                     if(message.length < 3){
                         String str = String.join(",", roomList.keySet());
                         if(roomList.isEmpty()) ctx.writeAndFlush("ROOM NOROOM");
-                        else ctx.writeAndFlush("AVAILABLE " + str);
+                        else ctx.writeAndFlush("ROOM AVAILABLE " + str);
                     }
                 }
                 break;

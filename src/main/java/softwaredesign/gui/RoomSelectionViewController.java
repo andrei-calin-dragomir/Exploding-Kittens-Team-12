@@ -1,9 +1,7 @@
 package softwaredesign.gui;
 
-import javafx.collections.FXCollections;
+import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -13,21 +11,26 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import softwaredesign.client.ClientProgram;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.*;
+import softwaredesign.gui.ViewsManager.SceneName;
 
 public class RoomSelectionViewController implements Initializable {
 
     @FXML
     private ListView<String> roomSelectionList;
+
+    @FXML
+    private Text noRoomsText;
 
     @FXML
     private Button joinButton;
@@ -61,16 +64,41 @@ public class RoomSelectionViewController implements Initializable {
 
         //Action on "back":
         backButton.setOnAction(e -> {
-            ViewsManager.activate("splash_screen");
+            try {
+                ViewsManager.loadScene(SceneName.SPLASH_SCREEN);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         });
     }
 
-    private void populateList(){
-        ObservableList<String> items = FXCollections.observableArrayList(
-                "my", "example"
-        );
-        roomSelectionList.setItems(items);
+    public void populateList(){
+        ClientProgram.handleCommand("list_rooms");
+        checkForRoomsLoop.start();
     }
+
+    AnimationTimer checkForRoomsLoop = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            String[] cmdlist = Gui.latestMessage.split(" ");
+            if(cmdlist[0].equals("ROOM")){
+                switch (cmdlist[1]){
+                    case "NOROOM":
+                        System.out.println("NO ROOMS FOUND, DOING NOTHING");
+                        noRoomsText.setVisible(true);
+                        super.stop();
+                        break;
+                    case "AVAILABLE":
+                        System.out.println("ROOMS FOUND INDEED");
+                        noRoomsText.setVisible(false);
+                        ObservableList<String> rooms = observableArrayList(cmdlist[2].split(","));
+                        roomSelectionList.setItems(rooms);
+                        super.stop();
+                        break;
+                }
+            }
+        }
+    };
 
     private void launchRoomDialog() throws IOException {
         URL newUrl = new File("src/main/resources/fxml/createRoomDialog.fxml").toURI().toURL();

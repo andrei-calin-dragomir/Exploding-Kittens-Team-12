@@ -1,0 +1,49 @@
+package softwaredesign.gui;
+
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import softwaredesign.client.ClientProgram;
+
+import java.io.File;
+import java.net.URL;
+
+public class Gui extends Application {
+
+    static String latestMessage = "";
+    static Scene mainScene;
+
+    AnimationTimer gameLoop = new AnimationTimer() {
+        @Override
+        public void start(){
+            System.out.println("Game loop started!!");
+            super.start();
+        }
+
+        @Override
+        public void handle(long now) {
+            if(!ClientProgram.serverMessage.isEmpty()){
+                latestMessage = ClientProgram.serverMessage.removeFirst();
+            }
+        }
+    };
+
+    @Override
+    public void start(Stage mainStage) throws  Exception{
+
+        ClientProgram.startClient();
+        gameLoop.start();
+
+        URL url = new File("src/main/resources/fxml/splashScreen.fxml").toURI().toURL();
+        Parent root = FXMLLoader.load(url);
+        mainScene = new Scene(root);
+
+        mainStage.setTitle("Exploding Kittens");
+        mainStage.setScene(mainScene);
+        mainStage.show();
+    }
+    public static void main(String[] args) { launch(args); }
+}

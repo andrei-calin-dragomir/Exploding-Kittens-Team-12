@@ -14,7 +14,7 @@ import softwaredesign.server.ServerProgram;
 import java.util.*;
 
 public class ClientProgram {
-    static String username;
+    public static String username;
     static ChannelFuture correspondenceChannel;
     static EventLoopGroup group;
     public static ArrayList<String> ownHand = new ArrayList<>();
@@ -40,7 +40,7 @@ public class ClientProgram {
         connectAndLoop();
     }
 
-    private void killConnectionSafely() {
+    private static void killConnectionSafely() {
         try{
             correspondenceChannel.channel().closeFuture().sync();
             group.shutdownGracefully();
@@ -86,11 +86,13 @@ public class ClientProgram {
 
     static public void handleCommand(String cmd){
         String[] cmdList = cmd.split(" ");
-        System.out.println("cmdlist = " + Arrays.toString(cmdList));
+        System.out.println("handling commands: " + Arrays.toString(cmdList));
         try {
             switch (cmdList[0]) {
+                case "list_rooms":
+                    sendRequestToServer("AVAILABLEROOMS");
+                    break;
                 case "username":
-                    System.out.println("SENDING SIGNAL");
                     sendRequestToServer("USERNAME " + cmdList[1]);
                     break;
                 case "start":
@@ -109,7 +111,7 @@ public class ClientProgram {
                     break;
                 case "quit":
                     sendRequestToServer("LEAVE");
-                    group.shutdownGracefully();
+                    killConnectionSafely();
                     System.exit(0);
                     break;
                 //TODO                    case "target":

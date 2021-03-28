@@ -31,8 +31,10 @@
          <children>
             <Button fx:id="joinButton" defaultButton="true" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Join" />
             <Button fx:id="createButton" defaultButton="true" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Create" />
+            <Button fx:id="refreshButton" layoutX="470.0" layoutY="47.0" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#populateList" text="Refresh" />
             <Button fx:id="backButton" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Back" />
          </children>
       </HBox>
+      <Text fx:id="noRoomsText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="No rooms available." visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
    </children>
 </GridPane>
