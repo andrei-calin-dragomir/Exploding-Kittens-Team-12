@@ -11,6 +11,8 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import softwaredesign.client.ClientProgram;
 
+import java.net.InetSocketAddress;
+
 public final class ServerProgram extends Thread {
 
     // Port where chat server will listen for connections.
@@ -53,7 +55,8 @@ public final class ServerProgram extends Thread {
             // Start the server.
             ChannelFuture f = null;
             try {
-                f = b.bind(PORT).sync();
+//                f = b.bind(PORT).sync();
+                f = b.bind(new InetSocketAddress("0.0.0.0", PORT)).sync();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

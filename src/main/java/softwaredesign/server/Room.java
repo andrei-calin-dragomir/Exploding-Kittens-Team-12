@@ -48,11 +48,13 @@ public class Room {
                 else ctx.writeAndFlush("CANTSTART " + getHostName());
                 break;
             case "PLACE":
-                onlineGame.placeExploding(Integer.parseInt(message[1]));
-                onlineGame.nextTurn();
+                if(onlineGame.isExploding()) {
+                    onlineGame.placeExploding(Integer.parseInt(message[1]));
+                    if(onlineGame.getCurrentPlayer().isComputer()) onlineGame.gameManager.endTurn();
+                    else onlineGame.handleNextTurn();
+                }
                 break;
             case "GIVE":
-
                 break;
             case "PLAY":
                 if(getClientName(ctx).equals(onlineGame.getCurrentPlayerName())){
@@ -62,10 +64,10 @@ public class Room {
                     if(index < 0 || onlineGame.gameManager.getCurrentPlayerHand().getHandSize() - 1 < index){
                         ctx.writeAndFlush("NOTALLOWED INVALIDPLAY");
                     }
-                    else if(onlineGame.gameManager.getCurrentPlayerHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && !onlineGame.drawnExplodingKitten){
+                    else if(onlineGame.gameManager.getCurrentPlayerHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && !onlineGame.isExploding()){
                         ctx.writeAndFlush("NOTALLOWED NOTEXPLODING");
                     }
-                    else if(!onlineGame.gameManager.getCurrentPlayerHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && onlineGame.drawnExplodingKitten){
+                    else if(!onlineGame.gameManager.getCurrentPlayerHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && onlineGame.isExploding()){
                         ctx.writeAndFlush("NOTALLOWED MUSTDEFUSE");
                     }
 //TODO                    if(onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new FavorCard())){

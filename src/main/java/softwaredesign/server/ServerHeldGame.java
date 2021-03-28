@@ -39,7 +39,7 @@ public class ServerHeldGame {
     }
 
     public void handleDrawAction() throws InterruptedException {
-        if(!drawnExplodingKitten) {
+        if(!isExploding()) {
             Card cardDrawn = drawCard();
             Player currPlayer = getCurrentPlayer();
             currPlayer.getHand().addToHand(cardDrawn);
@@ -63,18 +63,18 @@ public class ServerHeldGame {
 
     // Returns true if the player exploded
     public Boolean handleExplodingKitten() throws InterruptedException {
-        drawnExplodingKitten = true;
+//        drawnExplodingKitten = true;
         Player currentPlayer = gameManager.getCurrentPlayer();
+        currentPlayer.setPlayerState(State.EXPLODING);
         if (!currentPlayer.getHand().contains(new DefuseCard())) {
             currentPlayer.setPlayerState(State.SPECTATING);
             room.sendMsgToPlayer(currentPlayer, "DIED");
             room.sendMsgToRoom(currentPlayer, "PLAYER " + getCurrentPlayerName() + " EXPLODED");
             gameManager.killPlayer(currentPlayer);
-            drawnExplodingKitten = false;
+//            drawnExplodingKitten = false;
             return true;
         }
         else{
-            currentPlayer.setPlayerState(State.EXPLODING);
             room.sendMsgToRoom(currentPlayer, "PLAYER " + getCurrentPlayerName() + " DREWEXP");
             room.sendMsgToPlayer(currentPlayer, "EXPLODING");
         }
@@ -83,8 +83,11 @@ public class ServerHeldGame {
 
     public void placeExploding(int index) throws InterruptedException {
         gameManager.mainDeck.insertCard(new ExplodingKittenCard(), index);
+        getCurrentPlayer().setPlayerState(State.PLAYING);
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
+
+    public Boolean isExploding(){ return getCurrentPlayer().getPlayerState() == State.EXPLODING; }
 
     public Boolean checkWin(){
         if(gameManager.getPlayersLeft() == 1){

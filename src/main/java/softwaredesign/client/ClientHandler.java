@@ -15,7 +15,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
     public void channelRead0(ChannelHandlerContext ctx, String message){
         String tempString = "";     // Used for reconstructing messages with multiple whitespaces, saves a declaration for multiple "cases"
         String[] commands = message.trim().split(" ");
-        System.out.println("Message received from server: " + message);
+//        System.out.println("Message received from server: " + message);
         ClientProgram.serverMessage.add(message);
         switch(commands[0]){
             case "START":
@@ -134,6 +134,13 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
             case "CHAT":
                 for(int i = 1; i < commands.length; ++i) tempString = tempString + commands[i] + " ";
                 System.out.println(tempString);
+                break;
+            case "ATTACKED":
+                String attackingPlayer = commands[1];
+                System.out.println("You have been attacked by: " + attackingPlayer);
+                break;
+            case "TARGETED":
+                System.out.println("You have been targeted by a favor card, choose a card to give away.");
                 break;
             case "PLAYER":
                 switch(commands[2]){

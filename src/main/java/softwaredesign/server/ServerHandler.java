@@ -90,9 +90,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
     private void cleanRoomOfEntity(ChannelHandlerContext ctx) {
         Room playerRoom = getRoom(ctx);
         Player player = playerMap.get(ctx);
-        playerRoom.removePlayer(player.getName());
-        playerRoom.sendMsgToRoom(player,"LEFT " + player.getName() + " " + playerRoom.playerListAsString());
-        if(playerRoom.isRoomEmpty()) roomList.remove(playerRoom.getRoomName());
+        if(player.getCurrentRoom() != null){
+            playerRoom.removePlayer(player.getName());
+            playerRoom.sendMsgToRoom(player,"LEFT " + player.getName() + " " + playerRoom.playerListAsString());
+            if(playerRoom.isRoomEmpty()) roomList.remove(playerRoom.getRoomName());
+        }
     }
 
     @Override

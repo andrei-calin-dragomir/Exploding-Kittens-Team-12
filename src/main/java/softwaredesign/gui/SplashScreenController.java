@@ -30,6 +30,7 @@ public class SplashScreenController implements Initializable {
     private void closeButtonAction(){
         Stage stage = (Stage) exitButton.getScene().getWindow();
         stage.close();
+        System.exit(0);
     }
 
     @FXML
@@ -40,6 +41,12 @@ public class SplashScreenController implements Initializable {
         } else {
             ViewsManager.loadScene(SceneName.ROOM_SELECTION);
         }
+    }
+
+    @FXML
+    public void goOffline(){
+        System.out.println(playOnlineButton.getUserData());
+        ViewsManager.activate("offline_settings");
     }
 
     @Override

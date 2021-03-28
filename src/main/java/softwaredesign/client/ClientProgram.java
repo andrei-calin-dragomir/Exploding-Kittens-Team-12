@@ -20,6 +20,7 @@ public class ClientProgram {
     public static ArrayList<String> ownHand = new ArrayList<>();
     public static LinkedHashMap<String,Integer> playerNamesAndHandSizes = new LinkedHashMap<>(); //todo maybe needs a getter/setter?
     public static String requestedCard = "";
+    public static String currentServer = "";
     public static String deckSize;
     public static String discardDeckTop;
     public static LinkedList<String> serverMessage = new LinkedList<>();
@@ -27,7 +28,7 @@ public class ClientProgram {
 
 
     public static void main(String[] args) throws Exception {
-        ClientProgram.startClient();
+        ClientProgram.startClient("127.0.0.1");
     }
 
     private static Boolean isInteger(String intString){
@@ -36,8 +37,8 @@ public class ClientProgram {
         return true;
     }
 
-    public static void startClient() throws Exception {
-        connectAndLoop();
+    public static void startClient(String IP) throws Exception {
+        connectAndLoop(IP);
     }
 
     private static void killConnectionSafely() {
@@ -49,8 +50,7 @@ public class ClientProgram {
         }
     }
 
-    private static void connectAndLoop(){
-        final String HOST = "127.0.0.1";
+    public static Boolean connectAndLoop(String HOST){
         final int PORT = 8007;
         group = new NioEventLoopGroup();
         try {
@@ -75,8 +75,11 @@ public class ClientProgram {
             System.out.println("Attempting connection to " + HOST + " on port " + PORT + "...");
             correspondenceChannel = bootstrap.connect(HOST, PORT).sync();
             System.out.println("Connected");
+            currentServer = HOST;
+            return true;
         }catch(Exception e){
             System.out.println("Connection failed.\nClosing...");
+            return false;
         }
     }
     private static void sendRequestToServer(String message) throws Exception{
