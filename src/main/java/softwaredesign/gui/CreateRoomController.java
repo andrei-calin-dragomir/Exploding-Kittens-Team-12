@@ -39,6 +39,11 @@ public class CreateRoomController implements Initializable {
     }
 
     @FXML
+    void returnButton() throws Exception {
+        ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
+    }
+
+    @FXML
     void rotateComputerAmount(MouseEvent event){
         computerAmountScroll.navigate((Shape) event.getSource());
     }

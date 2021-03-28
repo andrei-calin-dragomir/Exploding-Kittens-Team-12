@@ -97,6 +97,7 @@ public class RoomScreenController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         startError.setText("");
+        chatBox.setFocusTraversable(false);
         ClientProgram.playerNamesAndHandSizes.put(ClientProgram.username, -1);
         roomSize.setText("Room Size: " + ClientProgram.gameRules[0]);
         computerAmount.setText("Computers: " + ClientProgram.gameRules[1]);

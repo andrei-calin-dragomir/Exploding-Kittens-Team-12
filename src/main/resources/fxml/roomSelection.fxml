@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -9,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.RoomSelectionViewController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.RoomSelectionViewController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="301.0" minWidth="10.0" percentWidth="20.0" prefWidth="26.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="1054.0" minWidth="10.0" prefWidth="1054.0" />
@@ -21,20 +22,28 @@
     <RowConstraints maxHeight="517.0" minHeight="10.0" prefHeight="78.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <ListView fx:id="roomSelectionList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Available rooms:" GridPane.columnIndex="1">
+      <ListView fx:id="roomSelectionList" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/fxml.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Text fill="#1f1f1f" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 70;" styleClass="text" text="Available rooms:" GridPane.columnIndex="1" GridPane.halignment="CENTER">
          <font>
             <Font size="26.0" />
          </font>
       </Text>
       <HBox alignment="CENTER" spacing="50.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
-            <Button fx:id="joinButton" defaultButton="true" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#joinRoom" text="Join" />
-            <Button fx:id="createButton" defaultButton="true" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#createRoom" text="Create" />
-            <Button fx:id="refreshButton" layoutX="470.0" layoutY="47.0" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#populateList" text="Refresh" />
-            <Button fx:id="backButton" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Back" />
+            <Button fx:id="joinButton" defaultButton="true" maxWidth="120.0" minWidth="100.0" mnemonicParsing="false" onAction="#joinRoom" prefWidth="120.0" styleClass="clickButton" stylesheets="@../css/fxml.css" text="Join" />
+            <Button fx:id="createButton" defaultButton="true" maxWidth="120.0" minWidth="100.0" mnemonicParsing="false" onAction="#createRoom" prefWidth="120.0" styleClass="clickButton" text="Create" />
          </children>
       </HBox>
       <Text fx:id="noRoomsText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="No rooms available." visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+      <Button fx:id="backButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#returnButton" prefHeight="60.0" prefWidth="60.0" styleClass="backButton" stylesheets="@../css/fxml.css" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="refreshButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#populateList" prefHeight="60.0" prefWidth="60.0" styleClass="refreshButton" textFill="#464646" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="TOP">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Button>
    </children>
 </GridPane>

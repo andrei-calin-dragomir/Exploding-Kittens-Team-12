@@ -52,7 +52,7 @@
             <Font size="13.0" />
          </font>
       </Label>
-      <Button mnemonicParsing="false" onAction="#returnButton" prefHeight="50.0" prefWidth="50.0" styleClass="backButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+      <Button maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#returnButton" prefHeight="60.0" prefWidth="60.0" styleClass="backButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" />
          </GridPane.margin></Button>

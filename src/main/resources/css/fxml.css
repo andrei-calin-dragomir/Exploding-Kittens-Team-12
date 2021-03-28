@@ -1,13 +1,11 @@
-@font-face {
-    src: url('font/bebas.ttf') format("truetype"),
-         url('font/bebas.woff') format('woff');
-}
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue");
 
 .navButton:hover {
     -fx-fill: #c9c9c9;
 }
 
 .clickButton {
+    -fx-text-fill: #ffffff;
     -fx-background-color: #1f1f1f;
     -fx-background-radius: 15;
     -fx-font-size: 26;
@@ -37,6 +35,17 @@
 .backButton:hover {
     -fx-background-color: #797979;
     -fx-graphic: url("img/backInvert.png")
+}
+
+.refreshButton {
+    -fx-background-radius: 15;
+    -fx-background-color: #1f1f1f;
+    -fx-graphic: url("img/reverse.png")
+}
+
+.refreshButton:hover {
+    -fx-background-color: #797979;
+    -fx-graphic: url("img/reverseInvert.png")
 }
 
 .textbox{
