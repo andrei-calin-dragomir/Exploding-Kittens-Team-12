@@ -80,7 +80,8 @@ public class RoomSelectionViewController implements Initializable {
     AnimationTimer checkForRoomsLoop = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            String[] cmdlist = Gui.latestMessage.split(" ");
+            if(ClientProgram.serverMessage.isEmpty()) return;
+            String[] cmdlist = ClientProgram.serverMessage.removeFirst().split(" ");
             if(cmdlist[0].equals("ROOM")){
                 switch (cmdlist[1]){
                     case "NOROOM":
