@@ -2,9 +2,7 @@ package softwaredesign.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import softwaredesign.gui.GameViewController;
 
-import javax.sound.midi.SysexMessage;
 import java.util.ArrayList;
 
 public class ClientHandler extends SimpleChannelInboundHandler<String>{
@@ -144,7 +142,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 System.out.println("You have been attacked by: " + attackingPlayer);
                 break;
             case "TARGETED":
-                System.out.println("You have been targeted by a favor card, choose a card to give away.");
+                System.out.println("You have been targeted by, " + commands[1] + ". Choose a card to give away.");
                 break;
             case "PLAYER":
                 switch(commands[2]){

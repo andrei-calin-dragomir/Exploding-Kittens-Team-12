@@ -55,6 +55,8 @@ public class Room {
                 }
                 break;
             case "GIVE":
+                onlineGame.giveCard(Integer.parseInt(message[1]),message[2]);
+                sendGameStateUpdates("UPDATEPLAYERHANDS");
                 break;
             case "PLAY":
                 if(getClientName(ctx).equals(onlineGame.getCurrentPlayerName())){

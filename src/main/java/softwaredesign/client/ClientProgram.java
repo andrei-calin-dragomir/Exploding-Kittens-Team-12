@@ -157,6 +157,10 @@ public class ClientProgram {
                 case "hand":
                     System.out.println(ownHand);
                     break;
+                case "give":
+                    sendRequestToServer("GIVE " + ownHand.indexOf(cmdList[1]) + " " + cmdList[2]);
+                    ownHand.remove(ownHand.indexOf(cmdList[1]));
+                    break;
                 default:
                     System.out.println("Unknown command, try again");
                     break;

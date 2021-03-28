@@ -87,6 +87,13 @@ public class ServerHeldGame {
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
 
+    public void giveCard(int index,String target){
+        Card cardToGive = getCurrentPlayer().getHand().getCard(index);
+        getCurrentPlayer().getHand().removeCard(index);
+        room.roomPlayerList.get(target).getHand().addToHand(cardToGive);
+        room.sendMsgToPlayer(room.roomPlayerList.get(target), "UPDATEHAND " + cardToGive);
+    }
+
     public Boolean isExploding(){ return getCurrentPlayer().getPlayerState() == State.EXPLODING; }
 
     public Boolean checkWin(){
