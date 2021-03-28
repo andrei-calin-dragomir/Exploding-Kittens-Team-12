@@ -185,4 +185,11 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
         }
     }
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException {
+        System.out.println("Server has ended connection abruptly");
+        System.out.println(cause);
+        ClientProgram.serverMessage.add("SERVERCRASH");
+        ctx.close();
+    }
 }

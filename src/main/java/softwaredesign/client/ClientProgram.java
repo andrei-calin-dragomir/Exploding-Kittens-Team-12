@@ -25,10 +25,8 @@ public class ClientProgram {
     public static String discardDeckTop;
     public static LinkedList<String> serverMessage = new LinkedList<>();
 
-
-
     public static void main(String[] args) throws Exception {
-        ClientProgram.startClient("127.0.0.1",true);
+        ClientProgram.startClient("127.0.0.1",false);
     }
     private static Boolean isInteger(String intString){
         try { Integer.parseInt(intString); }
@@ -47,6 +45,7 @@ public class ClientProgram {
     }
     private static void killConnectionSafely() {
         try{
+            correspondenceChannel.channel().writeAndFlush("DISCONNECTING");
             correspondenceChannel.channel().closeFuture().sync();
             group.shutdownGracefully();
         } catch (Exception e){
@@ -79,12 +78,17 @@ public class ClientProgram {
                 System.out.println("Attempting connection to " + HOST + " on port " + PORT + "...");
                 correspondenceChannel = bootstrap.connect(HOST, PORT).sync();
                 System.out.println("Connected");
+
             }else{
                 correspondenceChannel = bootstrap.connect(HOST, PORT).sync();
                 System.out.println("Connected");
                 sendRequestToServer("USERNAME You SOLO");
             }
             currentServer = HOST;
+            Scanner scanner = new Scanner(System.in);
+            while(scanner.hasNext()){
+                handleCommand(scanner.nextLine());
+            }
             return true;
         }catch(Exception e){
             System.out.println("Connection failed.\nClosing...");
@@ -110,7 +114,7 @@ public class ClientProgram {
                     sendRequestToServer("START");
                     break;
                 case "leave":
-                    sendRequestToServer("LEAVE");
+                    sendRequestToServer("LEAVEROOM");
                     break;
                 case "join":
                     sendRequestToServer("JOIN " + cmdList[1]);
@@ -125,7 +129,6 @@ public class ClientProgram {
                     startClient("127.0.0.1", true);
                     break;
                 case "quit":
-                    sendRequestToServer("LEAVE");
                     killConnectionSafely();
                     System.exit(0);
                     break;

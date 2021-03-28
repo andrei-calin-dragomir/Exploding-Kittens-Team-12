@@ -27,6 +27,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
     public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
         String[] message = msg.split("\\s+");
         switch(message[0].toUpperCase(Locale.ROOT)){
+            case "DISCONNECTING":
+                disconnectPlayer(ctx,null);
+                break;
             case "AVAILABLEROOMS" :
                 if(message.length < 3){
                     String str = String.join(",", roomList.keySet());
@@ -58,9 +61,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                     roomObj.sendMsgToRoom(playerMap.get(ctx), "JOINED " + getClientName(ctx));
                 }
                 break;
-            case "LEAVE":
+            case "LEAVEROOM":
                 cleanRoomOfEntity(ctx);
-                ctx.writeAndFlush("LEAVEREGISTERED");
                 break;
             case "CREATE":
                 String[] gameDetails = message[1].split(",");
@@ -96,14 +98,17 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             if(playerRoom.isRoomEmpty()) roomList.remove(playerRoom.getRoomName());
         }
     }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException {
-        System.out.println(cause);
+    private void disconnectPlayer(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException{
         System.out.println("Closing connection for client - " + getClientName(ctx));
+        if(cause != null) System.out.println("He disconnected because of: " + cause);
         cleanRoomOfEntity(ctx); //TODO this one must also clear the turns because if a player leaves, his turn still comes in the game // DONE
         ctx.close();
         playerMap.remove(ctx);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException {
+        disconnectPlayer(ctx,cause);
     }
 }
 
