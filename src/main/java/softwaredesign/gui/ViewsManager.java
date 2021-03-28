@@ -20,6 +20,8 @@ class ViewsManager {
         views.put("room_selection","src/main/resources/fxml/roomSelection.fxml");
         views.put("splash_screen","src/main/resources/fxml/splashScreen.fxml");
         views.put("game_view","src/main/resources/fxml/gameView.fxml");
+        views.put("server_connect","src/main/resources/fxml/serverConnect.fxml");
+        views.put("offline_settings","src/main/resources/fxml/offlineSettings.fxml");
         for (Map.Entry<String, String> entry : views.entrySet()) {
             try {
                 URL newUrl = new File(entry.getValue()).toURI().toURL();

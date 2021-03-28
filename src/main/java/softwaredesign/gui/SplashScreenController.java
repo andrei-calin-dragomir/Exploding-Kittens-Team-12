@@ -24,13 +24,19 @@ public class SplashScreenController implements Initializable {
     private void closeButtonAction(){
         Stage stage = (Stage) exitButton.getScene().getWindow();
         stage.close();
+        System.exit(0);
     }
 
     @FXML
     public void goOnline(){
         System.out.println(playOnlineButton.getUserData());
-        ViewsManager.activate("room_selection");
+        ViewsManager.activate("server_connect");
+    }
 
+    @FXML
+    public void goOffline(){
+        System.out.println(playOnlineButton.getUserData());
+        ViewsManager.activate("offline_settings");
     }
 
     @Override
