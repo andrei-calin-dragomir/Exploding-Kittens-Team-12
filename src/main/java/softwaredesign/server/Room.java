@@ -82,11 +82,6 @@ public class Room {
                     }
                 }
                 break;
-//TODO            case "TARGETED":
-//                if(getRoomPlayerList().containsKey(message[1])){
-//                    onlineGame.handleAction("play " + onlineGame.gameManager.getCurrentPlayerHand().getHand().indexOf(new FavorCard()));
-//                    sendMessageToSingleRoomClient(message[1],"GIVECARD " + getClientName(ctx));
-//                }else ctx.writeAndFlush("NOTALLOWED WRONGNAME");
             case "DRAW":
                 if(getClientName(ctx).equals(onlineGame.getCurrentPlayerName())) onlineGame.handleDrawAction();
                 else ctx.writeAndFlush("NOTALLOWED NOTYOURTURN");

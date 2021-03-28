@@ -30,7 +30,7 @@ public class ServerConnectController implements Initializable {
     private Boolean tryConnect(String serverIP){
         if(serverIP.equals("localhost")) serverIP = "127.0.0.1";
         if(!ClientProgram.currentServer.equals(serverIP))       // Avoids unnecessary reconnects
-            if(!ClientProgram.connectAndLoop(serverIP)) {
+            if(!ClientProgram.connectAndLoop(serverIP,false)) {
                 serverField.setText("");
                 errorServer.setVisible(true);
                 joinButton.setDisable(false);

@@ -27,10 +27,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 ClientProgram.ownHand = new ArrayList<>();
                 break;
             case "USERNAMEACCEPTED":
+                ClientProgram.username = commands[1];
                 System.out.println("Welcome, " + ClientProgram.username + "!");
                 break;
             case "USERNAMETAKEN":
-//                ClientProgram.username = "";
                 System.out.println("Username is already in use. Try again.");
                 break;
             case "ROOM":

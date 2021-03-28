@@ -28,19 +28,23 @@ public class ClientProgram {
 
 
     public static void main(String[] args) throws Exception {
-        ClientProgram.startClient("127.0.0.1");
+        ClientProgram.startClient("127.0.0.1",true);
     }
-
     private static Boolean isInteger(String intString){
         try { Integer.parseInt(intString); }
         catch(NumberFormatException e){ return false; }
         return true;
     }
 
-    public static void startClient(String IP) throws Exception {
-        connectAndLoop(IP);
+    public static void startClient(String IP, boolean offline) throws Exception {
+        if(offline){
+            ServerProgram server = new ServerProgram();
+            server.start();
+            connectAndLoop("127.0.0.1",true);
+        }else{
+            connectAndLoop(IP,false);
+        }
     }
-
     private static void killConnectionSafely() {
         try{
             correspondenceChannel.channel().closeFuture().sync();
@@ -49,8 +53,7 @@ public class ClientProgram {
             System.out.println("exception" + e);
         }
     }
-
-    public static Boolean connectAndLoop(String HOST){
+    public static Boolean connectAndLoop(String HOST,boolean offline){
         final int PORT = 8007;
         group = new NioEventLoopGroup();
         try {
@@ -72,29 +75,34 @@ public class ClientProgram {
                     });
 
             // Start the client.
-            System.out.println("Attempting connection to " + HOST + " on port " + PORT + "...");
-            correspondenceChannel = bootstrap.connect(HOST, PORT).sync();
-            System.out.println("Connected");
+            if(!offline) {
+                System.out.println("Attempting connection to " + HOST + " on port " + PORT + "...");
+                correspondenceChannel = bootstrap.connect(HOST, PORT).sync();
+                System.out.println("Connected");
+            }else{
+                correspondenceChannel = bootstrap.connect(HOST, PORT).sync();
+                System.out.println("Connected");
+                sendRequestToServer("USERNAME You SOLO");
+            }
             currentServer = HOST;
             return true;
         }catch(Exception e){
             System.out.println("Connection failed.\nClosing...");
             return false;
         }
+//        finally{
+//            // Shut down the event loop to terminate all threads.
+//            group.shutdownGracefully();
+//            System.out.println("Connection is successful!\nPlease input your username: ");
+//            // Wait until the connection is closed.
+//            correspondenceChannel.channel().closeFuture().sync();
+//        }
     }
-    private static void sendRequestToServer(String message) throws Exception{
-        Channel channel = correspondenceChannel.sync().channel();
-        channel.writeAndFlush(message);
-    }
-
-    static public void handleCommand(String cmd){
+    public static void handleCommand(String cmd){
         String[] cmdList = cmd.split(" ");
         System.out.println("handling commands: " + Arrays.toString(cmdList));
         try {
             switch (cmdList[0]) {
-                case "list_rooms":
-                    sendRequestToServer("AVAILABLEROOMS");
-                    break;
                 case "username":
                     sendRequestToServer("USERNAME " + cmdList[1]);
                     break;
@@ -110,15 +118,17 @@ public class ClientProgram {
                 case "create":
                     sendRequestToServer("CREATE " + cmdList[1]);
                     break;
+                case "create_solo":
+                    sendRequestToServer("CREATE" + cmdList[1] + "SOLO");
                 case "offline":
+                    killConnectionSafely();
+                    startClient("127.0.0.1", true);
                     break;
                 case "quit":
                     sendRequestToServer("LEAVE");
                     killConnectionSafely();
                     System.exit(0);
                     break;
-                //TODO                    case "target":
-                //                        sendRequestToServer("TARGETED " + inputArray[1]);
                 case "play":
                     requestedCard = cmdList[1];
                     sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(cmdList[1]));
@@ -139,13 +149,17 @@ public class ClientProgram {
                     System.out.println(ownHand);
                     break;
                 default:
-                    System.err.println("Unknown command, try again");
+                    System.out.println("Unknown command, try again");
                     break;
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Errorrrrr");
             System.exit(0);
         }
+    }
+    private static void sendRequestToServer(String message) throws Exception{
+        Channel channel = correspondenceChannel.sync().channel();
+        channel.writeAndFlush(message);
     }
 
     private static String createRoomString(){
