@@ -43,7 +43,7 @@ public class ClientProgram {
             connectAndLoop(IP,false);
         }
     }
-    private static void killConnectionSafely() {
+    public static void killConnectionSafely() {
         try{
             correspondenceChannel.channel().writeAndFlush("DISCONNECTING");
             correspondenceChannel.channel().closeFuture().sync();
@@ -85,10 +85,6 @@ public class ClientProgram {
                 sendRequestToServer("USERNAME You SOLO");
             }
             currentServer = HOST;
-            Scanner scanner = new Scanner(System.in);
-            while(scanner.hasNext()){
-                handleCommand(scanner.nextLine());
-            }
             return true;
         }catch(Exception e){
             System.out.println("Connection failed.\nClosing...");

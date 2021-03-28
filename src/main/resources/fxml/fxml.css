@@ -2,6 +2,14 @@
     -fx-fill: #c9c9c9;
 }
 
+.clickButton {
+    -fx-background-color: #1f1f1f
+}
+
+.clickButton:hover {
+    -fx-background-color: #797979;
+}
+
 .nextButton:hover {
     -fx-fill: #383838;
 }

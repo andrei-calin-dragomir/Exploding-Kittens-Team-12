@@ -26,9 +26,16 @@ public class ScrollButton {
         this.rotationText = rotateText;
     }
 
+    public void resetAndAddText(String... texts){
+        allTexts = new ArrayList<>();
+        addText(texts);
+    }
+
     public void addText(String... texts){
         for(String text : texts) allTexts.add(text);
         rotationText.setText(allTexts.get(0));
         rotationText.setAlignment(Pos.CENTER);
     }
+
+    public void remove(String removal){ allTexts.remove(removal); }
 }

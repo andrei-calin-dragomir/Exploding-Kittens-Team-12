@@ -56,8 +56,9 @@ public class RoomSelectionViewController implements Initializable {
         //Action on "create":
         createButton.setOnAction(event -> {
             try {
-                launchRoomDialog();
-            } catch (IOException e) {
+//                launchRoomDialog();
+                ViewsManager.loadScene(SceneName.CREATE_ROOM);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -70,6 +71,14 @@ public class RoomSelectionViewController implements Initializable {
                 exception.printStackTrace();
             }
         });
+    }
+
+    public void createRoom(){
+        try {
+            ViewsManager.loadScene(SceneName.CREATE_ROOM);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void populateList(){

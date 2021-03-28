@@ -28,7 +28,7 @@ public class ServerConnectController implements Initializable {
     CustomAlert usernameError = new CustomAlert();
 
     private Boolean tryConnect(String serverIP){
-        if(serverIP.equals("localhost")) serverIP = "127.0.0.1";
+        if(serverIP.equals("")) serverIP = "127.0.0.1";
         if(!ClientProgram.currentServer.equals(serverIP))       // Avoids unnecessary reconnects
             if(!ClientProgram.connectAndLoop(serverIP,false)) {
                 serverField.setText("");
@@ -36,6 +36,7 @@ public class ServerConnectController implements Initializable {
                 joinButton.setDisable(false);
                 return true;
             }
+        System.out.println("Connectedserver");
         errorServer.setVisible(false);
         return false;
     }
@@ -48,7 +49,9 @@ public class ServerConnectController implements Initializable {
             joinButton.setDisable(false);
             return;
         }
+        System.out.println("Sending message");
         ClientProgram.handleCommand("username " + username);
+        System.out.println("Starting wait");
         waitForReply.start();
     }
 
@@ -57,8 +60,6 @@ public class ServerConnectController implements Initializable {
         public void handle(long now) {
             if(!ClientProgram.serverMessage.isEmpty()){
                 String[] msg = ClientProgram.serverMessage.removeFirst().split(" ");
-                System.out.println(msg[0]);
-                System.out.println(msg[1]);
                 if(msg[0].equals("USERNAMEACCEPTED")){
                     ClientProgram.username = msg[1];
                     super.stop();
@@ -81,6 +82,7 @@ public class ServerConnectController implements Initializable {
     void tryJoin() {
         joinButton.setDisable(true);
         if(tryConnect(serverField.getText())) return;
+        System.out.println("Going to username");
         handleUsername(usernameField.getText());
     }
 

@@ -24,6 +24,13 @@ public class ServerHeldGameManager{
         }
     }
 
+    public Player getPlayerByName(String playerName){
+        for(Player player : alivePlayers)
+            if(playerName.equals(player.getName()))
+                return player;
+        return null;
+    }
+
     public String createHandAsString(Player player) {
         ArrayList<String> allCards = new ArrayList<>();
         for(Card card : player.getHand()) allCards.add(card.getName());

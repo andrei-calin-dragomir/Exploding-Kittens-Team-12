@@ -30,7 +30,7 @@
       <HBox alignment="CENTER" spacing="50.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
             <Button fx:id="joinButton" defaultButton="true" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Join" />
-            <Button fx:id="createButton" defaultButton="true" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Create" />
+            <Button fx:id="createButton" onAction="#createRoom" defaultButton="true" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Create" />
             <Button fx:id="refreshButton" layoutX="470.0" layoutY="47.0" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#populateList" text="Refresh" />
             <Button fx:id="backButton" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Back" />
          </children>

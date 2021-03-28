@@ -26,7 +26,7 @@
       <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#1f1f1f" height="46.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="240.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
       <Label text="Offline Game" textFill="#bcbcbc" GridPane.columnIndex="1" GridPane.halignment="CENTER">
          <font>
-            <Font name="System Bold Italic" size="50.0" />
+            <Font name="Arial Black" size="50.0" />
          </font>
       </Label>
       <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#1f1f1f" height="46.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="240.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />

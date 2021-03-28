@@ -12,7 +12,7 @@ import java.util.Map;
 class ViewsManager {
     static private HashMap<SceneName, String> scenes = new HashMap<>();
     public enum SceneName {
-        SPLASH_SCREEN, CHOOSE_NAME, ROOM_SELECTION, GAME_VIEW, SERVER_CONNECT, OFFLINE_SETTINGS
+        SPLASH_SCREEN, CHOOSE_NAME, ROOM_SELECTION, GAME_VIEW, SERVER_CONNECT, OFFLINE_SETTINGS, CREATE_ROOM
     }
     static{
         scenes.put(SceneName.SPLASH_SCREEN,"src/main/resources/fxml/splashScreen.fxml");
@@ -21,11 +21,13 @@ class ViewsManager {
         scenes.put(SceneName.GAME_VIEW,"src/main/resources/fxml/gameView.fxml");
         scenes.put(SceneName.SERVER_CONNECT,"src/main/resources/fxml/serverConnect.fxml");
         scenes.put(SceneName.OFFLINE_SETTINGS,"src/main/resources/fxml/offlineSettings.fxml");
+        scenes.put(SceneName.CREATE_ROOM,"src/main/resources/fxml/createRoom.fxml");
     }
 
     static void loadScene(SceneName name) throws Exception{
         URL newUrl = new File(scenes.get(name)).toURI().toURL();
         Pane newScene = FXMLLoader.load(newUrl);
         Gui.mainScene.setRoot(newScene);
+        Gui.mainScene.getRoot().requestFocus();
     }
 }

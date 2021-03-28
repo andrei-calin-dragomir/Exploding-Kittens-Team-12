@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import softwaredesign.client.ClientProgram;
 
@@ -39,11 +40,17 @@ public class Gui extends Application {
 //        gameLoop.stop();
 
         URL url = new File("src/main/resources/fxml/splashScreen.fxml").toURI().toURL();
-        URL url2 = new File("src/main/resources/fxml/fxml.css").toURI().toURL();
+        URL urlCSS = new File("src/main/resources/fxml/fxml.css").toURI().toURL();
+        URL urlFont = new File("/resources/fonts/bebas.ttf").toURI().toURL();
+        Font.loadFont(getClass().getResourceAsStream(urlFont.toExternalForm()), 25);
         Parent root = FXMLLoader.load(url);
         mainScene = new Scene(root);
 
-        mainScene.getStylesheets().add(url2.toExternalForm());
+        mainStage.setOnCloseRequest(event -> {
+//            ClientProgram.killConnectionSafely();
+        });
+
+        mainScene.getStylesheets().add(urlCSS.toExternalForm());
         mainStage.setTitle("Exploding Kittens");
         mainStage.setScene(mainScene);
         mainStage.show();
