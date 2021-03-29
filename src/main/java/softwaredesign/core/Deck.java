@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class Deck implements Iterable<Card>{
-    public List<Card> cardDeck = new ArrayList<>();
+    private List<Card> cardDeck = new ArrayList<>();
 
     public static HashMap<String, Class<? extends Card>> cardMap = new HashMap<>(){{
         put("ExplodingKittenCard", ExplodingKittenCard.class);

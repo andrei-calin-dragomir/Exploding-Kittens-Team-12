@@ -117,10 +117,6 @@ public class ClientInfo {
         ClientInfo.roomName = roomName;
     }
 
-    public static void setServerMessage(LinkedList<String> serverMessage) {
-        ClientInfo.serverMessage = serverMessage;
-    }
-
     public static void setUsername(String username) {
         ClientInfo.username = username;
     }

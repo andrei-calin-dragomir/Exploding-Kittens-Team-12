@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 
 public class Room {
-    public LinkedHashMap<String, Player> roomPlayerList = new LinkedHashMap<>();
+    private LinkedHashMap<String, Player> roomPlayerList = new LinkedHashMap<>();
     private final int[] gameRules; // 0: Max players, 1: NumberOfComputers
     private final ServerHeldGame onlineGame = new ServerHeldGame(this);
     private Player currentHost;
@@ -94,6 +94,7 @@ public class Room {
     public Integer getMaxPlayers(){ return gameRules[0]; }
     public String getRoomName(){ return this.roomName; }
     public String getDeckName() { return deckName; }
+    public Player getPlayer(String playerName) { return roomPlayerList.get(playerName); }
     public String getHostName(){ return currentHost.getName(); }
     public HashMap<String, Player> getRoomPlayerList() { return roomPlayerList; }
     public void assignNewHost(){ currentHost = roomPlayerList.values().iterator().next(); }

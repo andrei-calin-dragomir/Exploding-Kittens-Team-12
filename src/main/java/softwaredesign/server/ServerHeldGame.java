@@ -88,12 +88,12 @@ public class ServerHeldGame {
 
     // Used for favor, it gives a card from the "sender" to the "target"
     public void giveCard(int index,String target, String sender){
-        Hand senderHand = room.roomPlayerList.get(sender).getHand();
+        Hand senderHand = room.getPlayer(sender).getHand();
         if(senderHand.getHandSize() == 0) return;
         Card cardToGive = senderHand.getCard(index);
-        room.roomPlayerList.get(sender).getHand().removeCard(index);
-        room.roomPlayerList.get(target).getHand().addToHand(cardToGive);
-        room.sendMsgToPlayer(room.roomPlayerList.get(target), "UPDATEHAND " + cardToGive.getName());
+        room.getPlayer(sender).getHand().removeCard(index);
+        room.getPlayer(target).getHand().addToHand(cardToGive);
+        room.sendMsgToPlayer(room.getPlayer(target), "UPDATEHAND " + cardToGive.getName());
     }
 
     // Checks if the current player is exploding
