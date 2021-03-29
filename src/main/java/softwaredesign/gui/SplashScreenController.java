@@ -41,12 +41,7 @@ public class SplashScreenController implements Initializable {
 
     @FXML
     public void goOnline() throws Exception{
-        //skip username selection if it is already set
-        if (ClientProgram.username == null){
-            ViewsManager.loadScene(SceneName.SERVER_CONNECT);
-        } else {
-            ViewsManager.loadScene(SceneName.ROOM_SELECTION);
-        }
+        ViewsManager.loadScene(SceneName.SERVER_CONNECT);
     }
 
     @FXML

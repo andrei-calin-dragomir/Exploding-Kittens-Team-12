@@ -24,19 +24,19 @@
       <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" prefHeight="371.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label alignment="TOP_CENTER" prefHeight="41.0" prefWidth="456.0" style="-fx-font-size: 70;" stylesheets="@../css/fxml.css" text="Online play" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Label alignment="TOP_CENTER" prefHeight="41.0" prefWidth="456.0" style="-fx-font-size: 70;" stylesheets="@../css/fxml.css" text="Online play" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <font>
             <Font size="27.0" />
          </font>
       </Label>
       <TextField fx:id="serverField" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="41.0" prefWidth="273.0" promptText="localhost" styleClass="textbox" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-      <Label alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="134.0" style="-fx-font-size: 25;" stylesheets="@../css/fxml.css" text="Server:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+      <Label alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="134.0" style="-fx-font-size: 25;" stylesheets="@../css/fxml.css" text="Server:" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
       <TextField fx:id="usernameField" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#tryJoin" prefHeight="42.0" prefWidth="273.0" styleClass="textbox" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-      <Label alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="134.0" style="-fx-font-size: 25;" stylesheets="@../css/fxml.css" text="Username:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
+      <Label alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="134.0" style="-fx-font-size: 25;" stylesheets="@../css/fxml.css" text="Username:" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
          <font>
             <Font size="20.0" />
          </font>

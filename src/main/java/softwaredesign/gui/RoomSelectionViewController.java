@@ -22,7 +22,7 @@ public class RoomSelectionViewController implements Initializable {
     private ListView<String> roomSelectionList;
 
     @FXML
-    private Text noRoomsText;
+    private Text noRoomsText, roomError;
 
     @FXML
     private Button joinButton;
@@ -35,6 +35,7 @@ public class RoomSelectionViewController implements Initializable {
 
     @FXML
     void returnButton() throws Exception {
+        ClientProgram.killConnectionSafely();
         ViewsManager.loadScene(SceneName.SPLASH_SCREEN);
     }
 
@@ -49,11 +50,14 @@ public class RoomSelectionViewController implements Initializable {
         ViewsManager.loadScene(SceneName.CREATE_ROOM);
     }
 
-    public void joinRoom() throws Exception {
-        roomSelectionList.setDisable(true);
-        ClientProgram.handleCommand("join " + roomSelectionList.getSelectionModel().getSelectedItem());
+    public void joinRoom() {
+        String selectedRoom = roomSelectionList.getSelectionModel().getSelectedItem();
+        if(selectedRoom == null) {
+            roomError.setText("Select a room");
+            return;
+        }
+        ClientProgram.handleCommand("join " + selectedRoom);
         ClientProgram.roomName = roomSelectionList.getSelectionModel().getSelectedItem();
-        ViewsManager.loadScene(SceneName.ROOM_SCREEN);
     }
 
     public void populateList(){
@@ -67,16 +71,27 @@ public class RoomSelectionViewController implements Initializable {
             if(ClientProgram.serverMessage.isEmpty()) return;
             String[] cmdlist = ClientProgram.serverMessage.removeFirst().split(" ");
             if(cmdlist[0].equals("ROOM")){
-                if(cmdlist[1].equals("NOROOM")){
-                    noRoomsText.setVisible(true);
-                    super.stop();
-                    return;
-                }
-                noRoomsText.setVisible(false);
-                ObservableList<String> rooms = observableArrayList(cmdlist[2].split(","));
-                roomSelectionList.setItems(rooms);
-                super.stop();
+                switch(cmdlist[1]){
+                    case "NOROOM":
+                        ObservableList<String> emptyRoom = observableArrayList();
+                        roomSelectionList.setItems(emptyRoom);
+                        noRoomsText.setVisible(true);
+                        break;
+                    case "AVAILABLE":
+                        noRoomsText.setVisible(false);
+                        ObservableList<String> rooms = observableArrayList(cmdlist[2].split(","));
+                        roomSelectionList.setItems(rooms);
+                        break;
+                    case "FULL":
+                        roomError.setText("Room is full");
+                        break;
                 }
             }
-        };
+            else if(cmdlist[0].equals("JOINSUCCESS")){
+                super.stop();
+                try { ViewsManager.loadScene(SceneName.ROOM_SCREEN); }
+                catch (Exception ignore) {}
+            }
+        }
+    };
 }
