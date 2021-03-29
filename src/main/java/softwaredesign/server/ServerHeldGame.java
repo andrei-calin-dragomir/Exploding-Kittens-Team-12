@@ -15,9 +15,8 @@ public class ServerHeldGame {
     private Room room;
 
     public ServerHeldGame(Room assignedRoom){ this.room = assignedRoom; }
-    public String getCurrentPlayerName(){ return this.getCurrentPlayer().getName(); }
-    public Player getCurrentPlayer(){ return gameManager.getCurrentPlayer(); }
-    public Player getPlayer(int index){ return gameManager.getAlivePlayers().get(index); }
+    public String getCurrentPlayerName(){ return this.getCurrentPlayer().getName(); }   // Used to shorten the calls (Law Of Demeter)
+    public Player getCurrentPlayer(){ return gameManager.getCurrentPlayer(); }          // Used to shorten the calls (Law Of Demeter)
     public Card drawCard(){ return gameManager.mainDeck.draw(); }
     public Room getRoom() { return room; }
 
@@ -26,6 +25,7 @@ public class ServerHeldGame {
         handleNextTurn();
     }
 
+    // Sends the end turn message and loops over the bots if they are playing
     public void handleNextTurn() throws InterruptedException {
         room.sendMsgToRoom(null,"TURN " + getCurrentPlayerName());
         while(getCurrentPlayer().isComputer()){
@@ -36,6 +36,7 @@ public class ServerHeldGame {
         }
     }
 
+    //Handles what happens when a player draws, and will handle the exploding kitten, because in that case the player isn't supposed to end their turn.
     public void handleDrawAction() throws InterruptedException {
         if(!isExploding()) {
             Card cardDrawn = drawCard();
@@ -51,6 +52,7 @@ public class ServerHeldGame {
         }
     }
 
+    // Handles what happens if a player tries to play a card, it will call playCard which will then call the appropriate function in the Card subclass
     public void handlePlayAction(int index, String target) throws InterruptedException {
         Hand currHand = gameManager.getCurrentPlayerHand();
         Player currPlayer = getCurrentPlayer();
@@ -59,7 +61,7 @@ public class ServerHeldGame {
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
 
-    // Returns true if the player exploded
+    // Handles what happens if a player is exploding, will kill the player if they have no defuse.
     public Boolean handleExplodingKitten() throws InterruptedException {
         Player currentPlayer = gameManager.getCurrentPlayer();
         currentPlayer.setPlayerState(State.EXPLODING);
@@ -77,21 +79,27 @@ public class ServerHeldGame {
         return false;
     }
 
-    public void placeExploding(int index) throws InterruptedException {
+    // Place the exploding kitten back at a certain index
+    public void placeExploding(int index) {
         gameManager.mainDeck.insertCard(new ExplodingKittenCard(), index);
         getCurrentPlayer().setPlayerState(State.PLAYING);
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
 
+    // Used for favor, it gives a card from the "sender" to the "target"
     public void giveCard(int index,String target, String sender){
-        Card cardToGive = room.roomPlayerList.get(sender).getHand().getCard(index);
+        Hand senderHand = room.roomPlayerList.get(sender).getHand();
+        if(senderHand.getHandSize() == 0) return;
+        Card cardToGive = senderHand.getCard(index);
         room.roomPlayerList.get(sender).getHand().removeCard(index);
         room.roomPlayerList.get(target).getHand().addToHand(cardToGive);
         room.sendMsgToPlayer(room.roomPlayerList.get(target), "UPDATEHAND " + cardToGive.getName());
     }
 
+    // Checks if the current player is exploding
     public Boolean isExploding(){ return getCurrentPlayer().getPlayerState() == State.EXPLODING; }
 
+    // Checks if only one player is left and handles if the player won
     public Boolean checkWin(){
         if(gameManager.getPlayersLeft() == 1){
             room.sendMsgToRoom(null, "WINNER " + gameManager.getCurrentPlayer().getName());
@@ -105,6 +113,7 @@ public class ServerHeldGame {
         return gameManager.mainDeck.getDeckSize();
     }
 
+    // Starts the actual game by initialising the ServerHeldGameManager and starting the first turn
     public void start(String deckName) throws IOException, InterruptedException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         gameManager = new ServerHeldGameManager();
         gameManager.initGame(room, deckName);

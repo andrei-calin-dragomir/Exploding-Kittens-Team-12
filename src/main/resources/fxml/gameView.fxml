@@ -16,14 +16,17 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="root" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.GameViewController">
+<VBox fx:id="root" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.GameViewController">
    <children>
       <HBox>
          <VBox.margin>
             <Insets />
          </VBox.margin>
          <children>
-            <Button fx:id="leaveButton" alignment="CENTER" maxHeight="40.0" minHeight="25.0" mnemonicParsing="false" onAction="#leave" prefHeight="40.0" prefWidth="202.0" style="-fx-font-size: 20;" styleClass="clickButton" text="Leave" />
+            <Button fx:id="leaveButton" alignment="CENTER" maxHeight="40.0" minHeight="25.0" mnemonicParsing="false" onAction="#leave" prefHeight="40.0" prefWidth="202.0" style="-fx-font-size: 20;" styleClass="clickButton" text="Leave">
+               <HBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </HBox.margin></Button>
             <HBox fx:id="enemyHBox" alignment="CENTER" prefHeight="158.0" prefWidth="1200.0" spacing="100.0" />
          </children>
       </HBox>

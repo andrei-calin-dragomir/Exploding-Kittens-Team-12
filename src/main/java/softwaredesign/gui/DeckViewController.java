@@ -43,6 +43,7 @@ public class DeckViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(!Sounds.isPlaying("startGameMusic")) Sounds.playStartGameMusic();
         mapCardAmounts = new HashMap<>(){{
             put("ExplodingKittenCard", explodingAmount);
             put("ReverseCard", reverseAmount);

@@ -14,6 +14,7 @@ public class ServerHeldGameManager{
     public Deck mainDeck;
     public DiscardDeck discardDeck;
 
+    // Creates the Deck, discardDeck and populates the alivePlayers list. Then it will populate the player hands and send it as an update.
     public void initGame(Room currentRoom, String deckName) throws IOException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         mainDeck = new Deck(currentRoom.getMaxPlayers(), deckName);
         discardDeck = new DiscardDeck();
@@ -32,12 +33,14 @@ public class ServerHeldGameManager{
         return null;
     }
 
+    // Returns a string that can be sent over the server, which can then be parsed correctly client side.
     public String createHandAsString(Player player) {
         ArrayList<String> allCards = new ArrayList<>();
         for(Card card : player.getHand()) allCards.add(card.getName());
         return String.join(" ", allCards);
     }
 
+    // Gets the player who's turn it is now
     public Player getCurrentPlayer(){
         return alivePlayers.get(0);
     }
@@ -63,17 +66,19 @@ public class ServerHeldGameManager{
 
     public void killPlayer(Player target){ alivePlayers.remove(target); }
 
-    // Not tested but should work
+    // Changes the turn to a specific player (used in attack and favor)
     public void changeNextTurn(Player target){
         int rotateAmount = alivePlayers.indexOf(target) * -1;
         Collections.rotate(alivePlayers, rotateAmount);
     }
 
+    // Only ends the turn in the case that the player is not attacked, otherwise they will have to play twice.
     public void endTurn(){
         if(getCurrentPlayer().getPlayerState() == State.ATTACKED) getCurrentPlayer().setPlayerState(State.PLAYING);
         else Collections.rotate(alivePlayers, -1);
     }
 
+    // Removes a specific card from the current player
     public void removeCurrentPlayerCard(Card card) {
         getCurrentPlayerHand().removeCard(card);
     }

@@ -174,6 +174,10 @@ public class GameViewController implements Initializable {
                     Sounds.playExplosionSound();
                     personalAnnouncement.setText("You died, bummer. :( ");
                     setDisableAll(true);
+                    if(ClientProgram.playerNamesAndHandSizes.size() == 3 && !Sounds.isPlaying("lastPlayersLeft")){
+                        Sounds.stopSound();
+                        Sounds.playLastPlayersMusic();
+                    }
                     break;
                 case "PLACEKITTEN":
                     Sounds.playPlayCard();

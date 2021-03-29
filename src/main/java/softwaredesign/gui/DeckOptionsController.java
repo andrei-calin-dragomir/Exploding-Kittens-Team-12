@@ -52,6 +52,7 @@ public class DeckOptionsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(!Sounds.isPlaying("startGameMusic")) Sounds.playStartGameMusic();
         deckSelectionScroll.initButtons(deckSelectionLeft, deckSelectionRight, deckSelection);
         deckSelectionScroll.addText(getDeckNames());
     }

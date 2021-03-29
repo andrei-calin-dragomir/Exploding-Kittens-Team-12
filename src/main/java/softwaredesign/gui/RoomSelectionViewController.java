@@ -34,6 +34,7 @@ public class RoomSelectionViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(!Sounds.isPlaying("startGameMusic")) Sounds.playStartGameMusic();
         populateList();
         roomSelectionList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }

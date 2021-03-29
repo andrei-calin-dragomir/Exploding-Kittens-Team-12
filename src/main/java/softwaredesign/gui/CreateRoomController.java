@@ -74,7 +74,7 @@ public class CreateRoomController implements Initializable {
         int amountOfComputers = Integer.parseInt(computerAmount.getText());
         String deckToUse = deckSelection.getText();     // Will be handled
         String serializedDeck = "";
-        if(deckToUse != "default") serializedDeck = Deck.serializeDeck(deckToUse, "Client");
+        if(!deckToUse.equals("default")) serializedDeck = Deck.serializeDeck(deckToUse, "Client");
         ClientProgram.handleCommand("create " + roomName + "," + amountOfPlayers + "," + amountOfComputers + "," + serializedDeck);
         ClientProgram.roomName = roomName;
         ClientProgram.gameRules[0] = roomSize.getText();
@@ -114,6 +114,7 @@ public class CreateRoomController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(!Sounds.isPlaying("startGameMusic")) Sounds.playStartGameMusic();
         roomSizeScroll.initButtons(roomSizeLeft, roomSizeRight, roomSize);
         deckSelectionScroll.initButtons(deckSelectionLeft, deckSelectionRight, deckSelection);
         computerAmountScroll.initButtons(computerAmountLeft, computerAmountRight, computerAmount);

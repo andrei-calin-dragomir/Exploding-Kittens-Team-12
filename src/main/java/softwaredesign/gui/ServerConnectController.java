@@ -102,6 +102,7 @@ public class ServerConnectController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(!Sounds.isPlaying("startGameMusic")) Sounds.playStartGameMusic();
         errorServer.setVisible(false);
         serverField.setOnKeyPressed(event -> {          // Make "enter" functional
             if(event.getCode() == KeyCode.ENTER) {
