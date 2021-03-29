@@ -39,6 +39,10 @@ public class RoomSelectionViewController implements Initializable {
         checkForRoomsLoop.stop();
         ViewsManager.loadScene(SceneName.SPLASH_SCREEN);
     }
+    @FXML
+    public void playClick(){
+        Sounds.playClick();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

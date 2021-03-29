@@ -67,6 +67,10 @@ public class CreateRoomController implements Initializable {
         ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SCREEN);
         // Go to room mode
     }
+    @FXML
+    public void playClick(){
+        Sounds.playClick();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

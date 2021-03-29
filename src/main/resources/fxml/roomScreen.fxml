@@ -27,7 +27,7 @@
       <RowConstraints maxHeight="578.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Button mnemonicParsing="false" onAction="#startGame" prefHeight="52.0" prefWidth="246.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Start the game" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+      <Button mnemonicParsing="false" onAction="#startGame" onMouseClicked="#playClick" prefHeight="52.0" prefWidth="246.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Start the game" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2">
          <font>
             <Font size="1.0" />
          </font>
@@ -87,7 +87,7 @@
             <Insets bottom="5.0" />
          </GridPane.margin>
       </TextField>
-      <Button mnemonicParsing="false" onAction="#leaveGame" prefHeight="59.0" prefWidth="100.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Leave" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+      <Button mnemonicParsing="false" onAction="#leaveGame" onMouseClicked="#playClick" prefHeight="59.0" prefWidth="100.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Leave" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
          <font>
             <Font size="1.0" />
          </font>
@@ -95,7 +95,7 @@
             <Insets bottom="-45.0" right="10.0" />
          </GridPane.margin>
       </Button>
-      <Button mnemonicParsing="false" onAction="#sendMessage" prefHeight="51.0" prefWidth="50.0" style="-fx-background-color: gray;" styleClass="sendButton" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
+      <Button mnemonicParsing="false" onAction="#sendMessage" onMouseClicked="#playMessageSent" prefHeight="51.0" prefWidth="50.0" style="-fx-background-color: gray;" styleClass="sendButton" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
          <GridPane.margin>
             <Insets bottom="5.0" />
          </GridPane.margin>
