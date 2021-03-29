@@ -27,6 +27,7 @@ public class ClientProgram {
     public static String currentDeck;
     public static String discardDeckTop;
     public static Boolean offlineGame;
+    public static ServerProgram server;
     public static LinkedList<String> serverMessage = new LinkedList<>();
 
     public static void main(String[] args) throws Exception {
@@ -38,15 +39,21 @@ public class ClientProgram {
         return true;
     }
 
-    public static void startClient(String IP, boolean offline) throws Exception {
+    public static void startClient(String IP, boolean offline) {
         if(offline){
-            ServerProgram server = new ServerProgram();
+            server = new ServerProgram();
             server.start();
             connectAndLoop("127.0.0.1", true);
         }else{
             connectAndLoop(IP, false);
         }
     }
+
+    public static void killOffline(){
+        server.stop();
+        killConnectionSafely();
+    }
+
     public static void killConnectionSafely() {
         try{
             if(correspondenceChannel != null){
@@ -184,32 +191,5 @@ public class ClientProgram {
     private static void sendRequestToServer(String message) throws Exception{
         Channel channel = correspondenceChannel.sync().channel();
         channel.writeAndFlush(message);
-    }
-
-    private static String createRoomString(){
-        Scanner scanner = new Scanner(System.in);
-        int parameter1 = 0;
-        int parameter2 = -1;
-        String roomName;
-        System.out.println("Give a room name: ");
-        roomName = scanner.nextLine();
-        System.out.println("How many players do you want in your game? Answer options: 2-5");
-        while(parameter1 == 0) {
-            if (scanner.hasNext()) {
-                int roomSize = scanner.nextInt();
-                if (roomSize < 2 || roomSize > 5) System.out.println("Cannot handle this number of players.");
-                else parameter1 = roomSize;
-            }
-        }
-        System.out.println("How many computers do you want in your game? Minimum: 0 Maximum: " + (parameter1 - 1));
-        while(parameter2 == -1){
-            if(scanner.hasNext()){
-                int numberOfComputers = scanner.nextInt();
-                if( numberOfComputers < 0 || numberOfComputers > (parameter1 - 1))
-                    System.out.println("Invalid number of computers");
-                else parameter2 = numberOfComputers;
-            }
-        }
-        return roomName + "," + parameter1 + "," + parameter2;
     }
 }

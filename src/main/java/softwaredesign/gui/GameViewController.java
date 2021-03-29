@@ -494,7 +494,11 @@ public class GameViewController implements Initializable {
     void leave() throws Exception{
         gameLoop.stop();
         sendCommand("leave");
-        if(ClientProgram.offlineGame) ViewsManager.loadScene(ViewsManager.SceneName.SPLASH_SCREEN);
+        if(ClientProgram.offlineGame){
+            ClientProgram.killOffline();
+            Thread.sleep(2000);
+            ViewsManager.loadScene(ViewsManager.SceneName.SPLASH_SCREEN);
+        }
         else ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
     }
 

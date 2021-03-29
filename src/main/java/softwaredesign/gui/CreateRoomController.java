@@ -85,6 +85,7 @@ public class CreateRoomController implements Initializable {
                         super.stop();
                     }
                     else if (msg[1].equals("CREATED")) {
+                        ClientProgram.offlineGame = false;
                         try { ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SCREEN); } catch (Exception ignore) {}
                         super.stop();
                     }
