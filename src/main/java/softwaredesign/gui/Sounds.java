@@ -47,7 +47,8 @@ public class Sounds {
     private static Random rand = new Random();
     private static Boolean mute = false;
 
-    public static void flipMute() { Sounds.mute = !Sounds.mute; }
+    public static void setMute(Boolean mute) { Sounds.mute = mute; }
+    public static Boolean getMute() { return mute; }
 
     private static void playSound(AudioClip clip, double volume){
         if(!mute) clip.play(volume);

@@ -18,34 +18,45 @@
 .quitButton {
     -fx-background-radius: 15;
     -fx-background-color: #1f1f1f;
-    -fx-graphic: url("img/quit.png")
+    -fx-graphic: url("img/quit.png");
 }
 
 .quitButton:hover {
     -fx-background-color: #797979;
-    -fx-graphic: url("img/quitInvert.png")
+    -fx-graphic: url("img/quitInvert.png");
+}
+
+.muteButton {
+    -fx-background-radius: 15;
+    -fx-background-color: #1f1f1f;
+    -fx-graphic: url("img/unmute.png");
+}
+
+.muteButton:hover {
+    -fx-background-color: #797979;
+    -fx-graphic: url("img/unmuteInvert.png");
 }
 
 .backButton {
     -fx-background-radius: 15;
     -fx-background-color: #1f1f1f;
-    -fx-graphic: url("img/back.png")
+    -fx-graphic: url("img/back.png");
 }
 
 .backButton:hover {
     -fx-background-color: #797979;
-    -fx-graphic: url("img/backInvert.png")
+    -fx-graphic: url("img/backInvert.png");
 }
 
 .refreshButton {
     -fx-background-radius: 15;
     -fx-background-color: #1f1f1f;
-    -fx-graphic: url("img/reverse.png")
+    -fx-graphic: url("img/reverse.png");
 }
 
 .refreshButton:hover {
     -fx-background-color: #797979;
-    -fx-graphic: url("img/reverseInvert.png")
+    -fx-graphic: url("img/reverseInvert.png");
 }
 
 .textbox{

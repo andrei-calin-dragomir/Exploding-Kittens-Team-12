@@ -2,6 +2,7 @@ package softwaredesign.gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import softwaredesign.client.ClientProgram;
@@ -12,12 +13,6 @@ import java.util.ResourceBundle;
 
 
 public class SplashScreenController implements Initializable {
-
-    @FXML
-    private Button playOnlineButton;
-
-    @FXML
-    private Button playOfflineButton;
 
     @FXML
     private Button exitButton;
@@ -35,6 +30,12 @@ public class SplashScreenController implements Initializable {
     }
 
     @FXML
+    void muteSounds(){
+        Boolean muted = Sounds.getMute();
+        Sounds.setMute(!muted);
+    }
+
+    @FXML
     public void playClick(){
         Sounds.playClick();
     }
@@ -46,7 +47,6 @@ public class SplashScreenController implements Initializable {
 
     @FXML
     public void goOffline() throws Exception{
-        System.out.println(playOnlineButton.getUserData());
         ViewsManager.loadScene(SceneName.OFFLINE_SETTINGS);
     }
 
