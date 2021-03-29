@@ -1,12 +1,12 @@
 package softwaredesign.core;
 
-import org.jetbrains.annotations.NotNull;
 import softwaredesign.cards.Card;
 import softwaredesign.server.ServerHeldGame;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
+// Contains the cards of one player and has calls that can manipulate the Hand and retrieve information.
 public class Hand implements Iterable<Card>{
     ArrayList<Card> currentHand = new ArrayList<>();
 
@@ -14,7 +14,7 @@ public class Hand implements Iterable<Card>{
         return currentHand.contains(target);
     }
     public boolean isEmpty(){ return currentHand.isEmpty(); }
-    public Integer indexOf(Card target) { return currentHand.indexOf(target); }
+    public Integer indexOf(Card target) { return currentHand.indexOf(target); }     // Reduces the calls (Law Of Demeter). Better than doing getHand().getHand().indexOf()
     public Iterator<Card> iterator() { return currentHand.iterator(); }
 
 
@@ -27,9 +27,7 @@ public class Hand implements Iterable<Card>{
         currentHand.add(cardToAdd);
     }
 
-    public ArrayList<Card> getHand(){
-        return currentHand;
-    }
+    public ArrayList<Card> getHand(){ return currentHand; }   // Needed to check the amount of defuse cards for the computer hand otherwise not used
 
     public int getHandSize(){
         return currentHand.size();
@@ -55,15 +53,4 @@ public class Hand implements Iterable<Card>{
         playCard.action(heldGame, target);
         return playCard;
     }
-
-    // Needs changing or removal
-    public void printHand(){
-        if(isEmpty()) System.out.println("Your hand is empty");
-        else{
-            System.out.println("Your hand consists off:");
-            this.getHand().forEach(x -> System.out.printf("%s - ", x.getName()));
-            System.out.print("\b\b\n");
-        }
-    }
-
 }

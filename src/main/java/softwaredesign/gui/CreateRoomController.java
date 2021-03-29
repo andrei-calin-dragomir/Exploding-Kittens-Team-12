@@ -74,7 +74,7 @@ public class CreateRoomController implements Initializable {
         int amountOfComputers = Integer.parseInt(computerAmount.getText());
         String deckToUse = deckSelection.getText();     // Will be handled
         String serializedDeck = "";
-        if(!deckToUse.equals("default")) serializedDeck = Deck.serializeDeck(deckToUse, "Client");
+        if(!deckToUse.equals("default")) serializedDeck = Deck.serializeDeck(deckToUse);
         ClientProgram.handleCommand("create " + roomName + "," + amountOfPlayers + "," + amountOfComputers + "," + serializedDeck);
         ClientProgram.roomName = roomName;
         ClientProgram.gameRules[0] = roomSize.getText();

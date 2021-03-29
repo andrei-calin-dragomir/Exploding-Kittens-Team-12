@@ -4,7 +4,6 @@ package softwaredesign.core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
-import org.jetbrains.annotations.NotNull;
 import softwaredesign.cards.*;
 
 import java.io.File;
@@ -17,6 +16,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class Deck implements Iterable<Card>{
+    public List<Card> cardDeck = new ArrayList<>();
+
     public static HashMap<String, Class<? extends Card>> cardMap = new HashMap<>(){{
         put("ExplodingKittenCard", ExplodingKittenCard.class);
         put("ReverseCard", ReverseCard.class);
@@ -30,22 +31,18 @@ public class Deck implements Iterable<Card>{
         put("CatCardShy", CatCardShy.class);
         put("CatCardZombie",  CatCardZombie.class);
     }};
-    public List<Card> cardDeck = new ArrayList<>();
 
-    public Iterator<Card> iterator() { return this.cardDeck.iterator(); }
+    public Iterator<Card> iterator() { return this.cardDeck.iterator(); }   // Iterator pattern
 
     public Deck(int players, String deckName) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         deckConstruct(players, deckName);
-    }
-
-    public List<Card> getFullDeck(){
-        return cardDeck;
     }
 
     public void reshuffle(){
         Collections.shuffle(cardDeck);
     }
 
+    // "Spawns" a defuse card
     public Card getDefuse(){
         cardDeck.remove(new DefuseCard());
         return new DefuseCard();
@@ -61,15 +58,13 @@ public class Deck implements Iterable<Card>{
         return cardDeck.size();
     }
 
-    public void insertCard(Card cardToInsert){ insertCard(cardToInsert, 0); }
-
     public void insertCard(Card cardToInsert, int index){ cardDeck.add(index, cardToInsert); }
 
+    // Deals 7 cards to the players, if ExplodingKitten is drawn it places it back and draws a new card.
     public ArrayList<Card> getStartCards(){
         ArrayList<Card> tempHand = new ArrayList<>();
         while(true){
             Card cardDrawn = draw();
-            System.out.println(cardDrawn);
             if(cardDrawn.getName().equals("ExplodingKittenCard")) insertCard(cardDrawn, getDeckSize() - 1);
             else tempHand.add(cardDrawn);
             if(tempHand.size() == 7) {
@@ -79,18 +74,19 @@ public class Deck implements Iterable<Card>{
         }
     }
 
-    public static String serializeDeck(String deckName, String location) throws IOException {
+    // Converts the deck into a string so that the server can parse it
+    public static String serializeDeck(String deckName) throws IOException {
         String deckString = "";
-        String fileContent = Files.readString(Paths.get("resources/decks/" + location + "/" + deckName + ".json"), StandardCharsets.US_ASCII);
+        String fileContent = Files.readString(Paths.get("resources/decks/Client/" + deckName + ".json"), StandardCharsets.US_ASCII);
         ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
         for (LinkedTreeMap<Object, Object> cardTree : cardAmounts) {
             Integer amountAsInt = (int) Double.parseDouble(cardTree.get("deckAmount").toString());
             deckString += cardTree.get("className").toString() + ":" + amountAsInt + "==";
         }
-        System.out.println(deckString);
         return deckString;
     }
 
+    // Creates a custom deck with "deckName" and stores it at /location. It uses the amountMap as info
     public static boolean createCustom(HashMap<String, Integer> amountMap, String deckName, String location) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         ArrayList<Card> customDeck = new ArrayList<>();
         File deckFile = new File("resources/decks/" + location + "/" + deckName + ".json");
@@ -107,21 +103,20 @@ public class Deck implements Iterable<Card>{
         return true;
     }
 
+    // Constructs a deck based on a file, used for both the custom and default deck.
     public void deckConstruct(int players, String deckName) throws IOException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         String fileContent = Files.readString(Paths.get("resources/decks/server/" + deckName + ".json"), StandardCharsets.US_ASCII);
         ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
 
-        for (LinkedTreeMap<Object, Object> cardTree : cardAmounts) {
+        for (LinkedTreeMap<Object, Object> cardTree : cardAmounts)
             for (double j = 0; j < Double.parseDouble(cardTree.get("deckAmount").toString()); j++) {
                 Card newCard = cardMap.get(cardTree.get("className").toString()).getDeclaredConstructor().newInstance();
                 cardDeck.add(newCard);
             }
-        }
-        if(!cardDeck.contains(new ExplodingKittenCard())){
-            for(int i = 0; i < players - 1; i++){
+
+        if(!cardDeck.contains(new ExplodingKittenCard()))
+            for(int i = 0; i < players - 1; i++)
                 cardDeck.add(new ExplodingKittenCard());
-            }
-        }
-        reshuffle();
+        reshuffle();    // Randomizes the deck
     }
 }

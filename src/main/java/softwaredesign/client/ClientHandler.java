@@ -7,41 +7,32 @@ import java.util.ArrayList;
 
 public class ClientHandler extends SimpleChannelInboundHandler<String>{
     /*
-     * Handle message received from server.
+     * Handle messages received from server.
      */
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String message){
         String tempString = "";     // Used for reconstructing messages with multiple whitespaces, saves a declaration for multiple "cases"
         String[] commands = message.trim().split(" ");
-//        System.out.println("Message received from server: " + message);
         ClientProgram.serverMessage.add(message);
         switch(commands[0]){
             case "START":
-                ClientProgram.ownHand = new ArrayList<>();
-                break;
             case "LEAVEREGISTERED":
-                ClientProgram.ownHand = new ArrayList<>();
+            case "DIED":
+            case "ENDED":
+            case "WINNER":
+                ClientProgram.ownHand = new ArrayList<>();  // Empty the hand because the player stopped playing in some way or form.
                 break;
             case "USERNAMEACCEPTED":
                 ClientProgram.username = commands[1];
                 break;
-            case "DIED":
-                ClientProgram.ownHand = new ArrayList<>();
-                break;
             case "PLACEKITTEN":
                 ClientProgram.ownHand.remove("ExplodingKittenCard");
-                break;
-            case "ENDED":
-                ClientProgram.ownHand = new ArrayList<>();
                 break;
             case "PLAYCONFIRMED":
                 ClientProgram.ownHand.remove(ClientProgram.requestedCard);
                 break;
             case "JOINED":
                 ClientProgram.playerNamesAndHandSizes.put(commands[1], -1);
-                break;
-            case "WINNER":
-                ClientProgram.ownHand = new ArrayList<>();
                 break;
             case "JOINSUCCESS":
                 String[] playersInRoom = commands[1].split("@@");
@@ -87,8 +78,9 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
         }
     }
+
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         System.out.println("Server has ended connection abruptly");
         System.out.println(cause);
         ClientProgram.serverMessage.add("SERVERCRASH");

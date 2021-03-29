@@ -51,7 +51,7 @@ public class OfflineSettingsController implements Initializable {
         System.out.println(deckToUse);
         if(!deckToUse.equals("default")) {
             System.out.println("Not equal");
-            serializedDeck = Deck.serializeDeck(deckToUse, "Client");
+            serializedDeck = Deck.serializeDeck(deckToUse);
         }
         ClientProgram.startClient("127.0.0.1", true);
         ClientProgram.handleCommand("create sologame," + totalPlayers + "," + amountOfComputers + "," + serializedDeck);

@@ -11,7 +11,10 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import softwaredesign.server.ServerProgram;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 public class ClientProgram {
     public static String username;
@@ -30,15 +33,13 @@ public class ClientProgram {
     public static ServerProgram server;
     public static LinkedList<String> serverMessage = new LinkedList<>();
 
-    public static void main(String[] args) throws Exception {
-        ClientProgram.startClient("127.0.0.1",false);
-    }
     public static Boolean isInteger(String intString){
         try { Integer.parseInt(intString); }
         catch(NumberFormatException e){ return false; }
         return true;
     }
 
+    // starts the client, which will communicate with the server. If its offline it will create a multithreaded shadow server which it can communicate with (aka local play)
     public static void startClient(String IP, boolean offline) {
         if(offline){
             server = new ServerProgram();
@@ -49,11 +50,13 @@ public class ClientProgram {
         }
     }
 
+    // Kills the server if you exit out of offline
     public static void killOffline(){
-        server.stop();
         killConnectionSafely();
+        server.stop();
     }
 
+    // Disconnects from a server and resets server info so that reconnects are possible
     public static void killConnectionSafely() {
         try{
             if(correspondenceChannel != null){
@@ -69,6 +72,8 @@ public class ClientProgram {
             System.out.println("exception" + e);
         }
     }
+
+    // Tries to connect to a server, will return false if it fails and true if it succeeds
     public static Boolean connectAndLoop(String HOST,boolean offline){
         System.out.println("Trying to connect");
         final int PORT = 8007;
@@ -110,11 +115,11 @@ public class ClientProgram {
             System.out.println("Connection failed.\nClosing...");
             return false;
         }
-
     }
+
+    // Handles commands passed by the GUI, which will then be sent on to the server
     public static void handleCommand(String cmd){
         String[] cmdList = cmd.split(" ");
-        System.out.println("handling commands: " + Arrays.toString(cmdList));
         try {
             switch (cmdList[0]) {
                 case "list_rooms":
@@ -157,10 +162,7 @@ public class ClientProgram {
                     sendRequestToServer("DRAW");
                     break;
                 case "place":
-                    if (cmdList.length != 2)
-                        System.out.println("Please specify the location you want to place the card");
-                    if (!isInteger(cmdList[1])) System.out.println("Invalid location, try again");
-                    else sendRequestToServer("PLACE " + cmdList[1]);
+                    sendRequestToServer("PLACE " + cmdList[1]);
                     break;
                 case "chat":
                     sendRequestToServer(cmd);
@@ -178,10 +180,12 @@ public class ClientProgram {
                     break;
             }
         } catch (Exception e) {
-            System.out.println("Errorrrrr: " + e);
+            System.out.println("Error: " + e);
             System.exit(0);
         }
     }
+
+    // Sends the message to the server
     private static void sendRequestToServer(String message) throws Exception{
         Channel channel = correspondenceChannel.sync().channel();
         channel.writeAndFlush(message);

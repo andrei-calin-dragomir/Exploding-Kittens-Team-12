@@ -3,6 +3,7 @@ package softwaredesign.core;
 import io.netty.channel.ChannelHandlerContext;
 import softwaredesign.server.Room;
 
+// The player class contains all the info about the player, like the CTX (so you can send a message), the username, the state etc
 public class Player {
     private State playerState = State.OUTOFROOM;
     private ChannelHandlerContext ctx;
