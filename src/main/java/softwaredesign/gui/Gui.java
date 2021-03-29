@@ -16,7 +16,7 @@ public class Gui extends Application {
 
     static String latestMessage = "";
     static Scene mainScene;
-    //public static Sounds mixer = new Sounds();
+    public static Sounds mixer = new Sounds();
 
     AnimationTimer gameLoop = new AnimationTimer() {
         @Override

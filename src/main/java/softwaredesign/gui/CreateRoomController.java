@@ -69,7 +69,7 @@ public class CreateRoomController implements Initializable {
     }
     @FXML
     public void playClick(){
-        //Sounds.playClick();
+        Sounds.playClick();
     }
 
     @Override

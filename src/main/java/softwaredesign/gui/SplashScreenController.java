@@ -2,10 +2,8 @@ package softwaredesign.gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import softwaredesign.client.ClientProgram;
 import softwaredesign.gui.ViewsManager.SceneName;
 
 import java.net.URL;
@@ -37,7 +35,7 @@ public class SplashScreenController implements Initializable {
 
     @FXML
     public void playClick(){
-        //Sounds.playClick();
+        Sounds.playClick();
     }
 
     @FXML

@@ -72,10 +72,6 @@ public class Room {
                     else if(!onlineGame.gameManager.getCurrentPlayerHand().getCard(Integer.parseInt(message[1])).equals(new DefuseCard()) && onlineGame.isExploding()){
                         ctx.writeAndFlush("NOTALLOWED MUSTDEFUSE");
                     }
-//TODO                    if(onlineGame.gameManager.getCurrentPlayer().getHand().getCard(Integer.parseInt(message[1])).equals(new FavorCard())){
-//                        ctx.writeAndFlush("PLAYCONFIRMED");
-//                        break;
-//                    }
                     else {
                         String target = "";
                         if(message.length > 2) target = message[2];
