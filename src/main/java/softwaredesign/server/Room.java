@@ -100,6 +100,7 @@ public class Room {
     private Boolean isAlive(ChannelHandlerContext ctx){ return onlineGame.gameManager.isAlive(getClientName(ctx)); }
     private Boolean hasFreeSpots(){ return roomPlayerList.size() < getMaxPlayers(); }
     public Integer getMaxPlayers(){ return gameRules[0]; }
+    public String getDeckName() { return deckName; }
     public String getHostName(){ return currentHost.getName(); }
     public HashMap<String, Player> getRoomPlayerList() { return roomPlayerList; }
     public void assignNewHost(){ currentHost = roomPlayerList.values().iterator().next(); }

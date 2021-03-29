@@ -6,6 +6,7 @@ import softwaredesign.core.Deck;
 import softwaredesign.core.Player;
 import softwaredesign.core.State;
 
+import java.io.File;
 import java.util.*;
 
 public class ServerHandler extends SimpleChannelInboundHandler<String>{
@@ -109,7 +110,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             Player player = playerMap.get(ctx);
             playerRoom.removePlayer(player.getName());
             playerRoom.sendMsgToRoom(player,"LEFT " + player.getName() + " " + playerRoom.playerListAsString());
-            if(playerRoom.isRoomEmpty()) roomList.remove(playerRoom.getRoomName());
+            if(playerRoom.isRoomEmpty()) {
+                File customDeck = new File("resources/decks/server/" + playerRoom.getDeckName() + ".json");
+                customDeck.delete();
+                roomList.remove(playerRoom.getRoomName());
+            }
             else playerRoom.assignNewHost();
         }
     }
