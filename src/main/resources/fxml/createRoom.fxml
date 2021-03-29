@@ -67,7 +67,7 @@
             <Insets left="-15.0" top="-26.0" />
          </GridPane.margin>
       </Polygon>
-      <Button mnemonicParsing="false" onAction="#createRoom" prefHeight="0.0" prefWidth="198.0" styleClass="clickButton" stylesheets="@../css/fxml.css" text="Create Room" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP">
+      <Button mnemonicParsing="false" onAction="#createRoom" onMouseClicked="#playClick" prefHeight="0.0" prefWidth="198.0" styleClass="clickButton" stylesheets="@../css/fxml.css" text="Create Room" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
@@ -89,7 +89,7 @@
          </GridPane.margin>
       </Polygon>
       <TextField fx:id="roomNameField" maxHeight="44.0" maxWidth="236.0" prefHeight="44.0" prefWidth="236.0" promptText="Room name" styleClass="textbox" stylesheets="@../css/fxml.css" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-      <Button mnemonicParsing="false" onAction="#returnButton" prefHeight="50.0" prefWidth="50.0" styleClass="backButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+      <Button mnemonicParsing="false" onAction="#returnButton" onMouseClicked="#playClick" prefHeight="50.0" prefWidth="50.0" styleClass="backButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" />
          </GridPane.margin>

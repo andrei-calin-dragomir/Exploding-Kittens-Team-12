@@ -1,8 +1,6 @@
 package softwaredesign.gui;
 
 import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -23,7 +21,7 @@ public class Sounds {
     private static AudioClip drawnKitten;
     private static AudioClip drawnCard;
     private static AudioClip playCard;
-    private static Media roomMusicWaiting;
+    private static AudioClip roomMusicWaiting;
 
     static {
         try {
@@ -40,7 +38,7 @@ public class Sounds {
             playerExplosion_2 = new AudioClip(new File("resources/sounds/playerExplosion_2.mp3").toURI().toURL().toExternalForm());
             playerExplosion_3 = new AudioClip(new File("resources/sounds/playerExplosion_3.mp3").toURI().toURL().toExternalForm());
             winSound = new AudioClip(new File("resources/sounds/winSound.mp3").toURI().toURL().toExternalForm());
-            roomMusicWaiting = new Media(new File("resources/sounds/roomMusicWaiting.mp3").toURI().toURL().toExternalForm());
+            roomMusicWaiting = new AudioClip(new File("resources/sounds/roomMusicWaiting.mp3").toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -48,33 +46,38 @@ public class Sounds {
 
     private static Random rand = new Random();
 
-    public static void playClick() { clickSound.play();}
-    public static void playWin() { winSound.play();}
+    public static void playClick() { clickSound.play(0.2);}
+    public static void playWin() { winSound.play(0.3);}
     public static void playRoomMusicWaiting() {
-        MediaPlayer music = new MediaPlayer(roomMusicWaiting);
-        music.setCycleCount(3);
+        roomMusicWaiting.play(0.2);
+        roomMusicWaiting.setCycleCount(AudioClip.INDEFINITE);
     }
-    public static void playPlayCard(){ playCard.play(); }
-    public static void drawnCard(){ drawnCard.play(); }
-    public static void playExplodingKittenDrawn(){ drawnKitten.play(); }
+    public static void playPlayCard(){ playCard.play(0.2); }
+    public static void drawnCard(){ drawnCard.play(0.2); }
+    public static void playExplodingKittenDrawn(){ drawnKitten.play(0.1); }
     public static void playExplosionSound() {
         int soundToPlay = rand.nextInt(2);
         switch (soundToPlay){
-            case 0: playerExplosion_1.play(); break;
-            case 1: playerExplosion_2.play(); break;
-            case 2: playerExplosion_3.play(); break;
+            case 0: playerExplosion_1.play(0.2); break;
+            case 1: playerExplosion_2.play(0.2); break;
+            case 2: playerExplosion_3.play(0.2); break;
         }
     }
     public static void playChatSound(Boolean state){
-        if(state) chatReceived.play();
-        else chatSent.play();
+        if(state) chatReceived.play(0.2);
+        else chatSent.play(0.2);
     }
     public static void playMeow() {
         int soundToPlay = rand.nextInt(2);
         switch (soundToPlay){
-            case 0: meow_1.play(); break;
-            case 1: meow_2.play(); break;
-            case 2: meow_3.play(); break;
+            case 0: meow_1.play(0.2); break;
+            case 1: meow_2.play(0.2); break;
+            case 2: meow_3.play(0.2); break;
         }
+    }
+    public static void stopSound() {
+        if(drawnKitten.isPlaying()) drawnKitten.stop();
+        else if(roomMusicWaiting.isPlaying()) roomMusicWaiting.stop();
+        else if(winSound.isPlaying()) winSound.stop();
     }
 }

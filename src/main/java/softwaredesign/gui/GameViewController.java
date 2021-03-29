@@ -72,6 +72,11 @@ public class GameViewController implements Initializable {
     @FXML
     public GridPane cardsGridPane;
 
+    @FXML
+    public void playClick(){
+        Sounds.playClick();
+    }
+
     ArrayList<Button> playerInteractionButtons = new ArrayList<>();
     ArrayList<ImageView> cardImageViews = new ArrayList<>();
 
@@ -92,6 +97,7 @@ public class GameViewController implements Initializable {
                 case "EXPLODING":
                     //must defuse it immediately
                     //alert player, freeze non-defuse cards?
+                    Sounds.playExplodingKittenDrawn();
                     setAnnouncementText("You drew an Exploding Kitten, quick, defuse it!");
                     setDisableDefuseCards(false);
                     setDisableOtherCards(true);
@@ -99,12 +105,14 @@ public class GameViewController implements Initializable {
                 case "DIED":
                     //u died
                     //freeze all interactions
+                    Sounds.playExplosionSound();
                     setAnnouncementText("You died, bummer. :( ");
                     setDisableAll(true);
                     break;
                 case "PLACEKITTEN":
                     //enable selection of index
                     //then send "place + index"
+                    Sounds.playPlayCard();
                     actionPutBackKitten();
                     break;
                 case "ENDED":
@@ -151,6 +159,7 @@ public class GameViewController implements Initializable {
                     //WINNER + name
                     //update announcement and freeze everything
                     if(commands[1].equals(ClientProgram.username)){
+                        Sounds.playWin();
                         setAnnouncementText("You have won! Congrats");
                     }
                     else {
@@ -189,12 +198,14 @@ public class GameViewController implements Initializable {
 //                    updateAll();
                     switch(commands[2]){
                         case "EXPLODED":
+                            Sounds.playExplosionSound();
                             setAnnouncementText(commands[1] + " has just exploded!");
                             break;
                         case "DREW":
                             setAnnouncementText(commands[1] + " has drawn a card.");
                             break;
                         case "DREWEXP":
+                            Sounds.playMeow();
                             setAnnouncementText(commands[1] + " has drawn an exploding kitten!");
                             break;
                         case "DEFUSED":
@@ -329,6 +340,7 @@ public class GameViewController implements Initializable {
     }
 
     private void playCard(ImageView iv){
+        Sounds.stopSound();
         if(iv.getUserData().equals("AttackCard")){
             enableInteraction(true);
             return;
@@ -337,7 +349,7 @@ public class GameViewController implements Initializable {
             enableInteraction(false);
             return;
         }
-
+        Sounds.playPlayCard();
         ClientProgram.handleCommand("play " + iv.getUserData());
 
         removeCardFromHand(iv);
@@ -346,6 +358,7 @@ public class GameViewController implements Initializable {
     }
 
     public void pickCard(){
+        Sounds.drawnCard();
         if(!cardsGridPane.isDisable()) ClientProgram.handleCommand("draw");
     }
 
@@ -406,7 +419,6 @@ public class GameViewController implements Initializable {
 
     private void refreshPlayers(){
         enemyHBox.getChildren().clear();
-        Integer i = 0;
         for (String playerName : ClientProgram.playerNamesAndHandSizes.keySet()){
             if(!playerName.equals(ClientProgram.username)) {
                 VBox enemy = new VBox();
@@ -427,7 +439,6 @@ public class GameViewController implements Initializable {
                 enemy.getChildren().add(attackButton);
 
                 enemyHBox.getChildren().add(enemy);
-                ++i;
             }
         }
     }
