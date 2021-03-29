@@ -4,35 +4,48 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import softwaredesign.client.ClientProgram;
 import softwaredesign.gui.ViewsManager.SceneName;
 
+import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
 public class DeckOptionsController implements Initializable {
+    ScrollButton deckSelectionScroll = new ScrollButton();
 
     @FXML
-    private Button exitButton;
+    private Label deckSelection;
 
     @FXML
-    private void closeButtonAction(){
-        Stage stage = (Stage) exitButton.getScene().getWindow();
-        stage.close();
-        System.exit(0);
+    private Shape deckSelectionRight, deckSelectionLeft;
+
+    @FXML
+    void returnButton() throws Exception {
+        ViewsManager.loadScene(ViewsManager.SceneName.SPLASH_SCREEN);
     }
 
     @FXML
-    private void deckBuilder(){
+    void rotateDeckSelection(MouseEvent event){
+        deckSelectionScroll.navigate((Shape) event.getSource());
+    }
+
+    @FXML
+    private void createDeck() throws Exception {
+        ViewsManager.loadScene(ViewsManager.SceneName.SPLASH_SCREEN);
 
     }
 
     @FXML
-    void muteSounds(){
-        Boolean muted = Sounds.getMute();
-        Sounds.setMute(!muted);
+    private void viewDeck() throws Exception {
+        ClientProgram.currentDeck = deckSelection.getText();
+        ViewsManager.loadScene(ViewsManager.SceneName.DECK_VIEW);
     }
 
     @FXML
@@ -40,18 +53,21 @@ public class DeckOptionsController implements Initializable {
         Sounds.playClick();
     }
 
-    @FXML
-    public void goOnline() throws Exception{
-        ViewsManager.loadScene(SceneName.SERVER_CONNECT);
-    }
-
-    @FXML
-    public void goOffline() throws Exception{
-        ViewsManager.loadScene(SceneName.OFFLINE_SETTINGS);
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        deckSelectionScroll.initButtons(deckSelectionLeft, deckSelectionRight, deckSelection);
+        deckSelectionScroll.addText(getDeckNames());
+    }
 
+    public String[] getDeckNames(){
+        ArrayList<String> allDecks = new ArrayList<>();
+        File folder = new File("resources/decks");
+        File[] allFiles = folder.listFiles();
+
+        for (int i = 0; i < allFiles.length; i++)
+            if (allFiles[i].isFile())
+                allDecks.add(allFiles[i].getName().split("\\.")[0]);
+
+        return allDecks.toArray(new String[allDecks.size()]);
     }
 }

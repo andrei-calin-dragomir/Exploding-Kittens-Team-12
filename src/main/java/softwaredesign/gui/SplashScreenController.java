@@ -23,8 +23,8 @@ public class SplashScreenController implements Initializable {
     }
 
     @FXML
-    private void deckBuilder(){
-
+    private void deckBuilder() throws Exception {
+        ViewsManager.loadScene(SceneName.DECK_OPTIONS);
     }
 
     @FXML

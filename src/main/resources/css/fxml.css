@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue");
 
+@font-face{
+    src: url("font/bebas.ttf");
+}
+
 .navButton:hover {
     -fx-fill: #c9c9c9;
 }

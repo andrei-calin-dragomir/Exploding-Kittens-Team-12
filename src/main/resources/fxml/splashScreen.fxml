@@ -28,9 +28,9 @@
             <Image url="@../../../../resources/images/logo.png" />
          </image>
       </ImageView>
-      <Button maxWidth="292.0" mnemonicParsing="false" onAction="#goOnline" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Play Online" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-      <Button maxWidth="295.0" mnemonicParsing="false" onAction="#goOffline" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Play Local" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-      <Button maxWidth="299.0" mnemonicParsing="false" onAction="#deckBuilder" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Decks" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+      <Button maxWidth="292.0" mnemonicParsing="false" onAction="#goOnline" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Play Online" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+      <Button maxWidth="295.0" mnemonicParsing="false" onAction="#goOffline" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Play Local" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+      <Button maxWidth="299.0" mnemonicParsing="false" onAction="#deckBuilder" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Decks" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP" />
       <Button fx:id="exitButton" mnemonicParsing="false" onAction="#closeButtonAction" onMouseClicked="#playClick" prefHeight="50.0" prefWidth="50.0" styleClass="quitButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" />
