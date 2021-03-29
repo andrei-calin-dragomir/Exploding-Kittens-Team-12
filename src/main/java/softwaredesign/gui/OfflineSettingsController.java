@@ -39,6 +39,7 @@ public class OfflineSettingsController implements Initializable {
 
     @FXML
     void startGame() throws Exception {
+        Sounds.stopSound();
         Integer amountOfComputers = Integer.parseInt(playerAmount.getText());
         Integer totalPlayers = amountOfComputers + 1;
         String deckToUse = deckSelection.getText();

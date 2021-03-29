@@ -65,10 +65,16 @@ public class Sounds {
 
     public static void setMute(Boolean mute) { Sounds.mute = mute; }
     public static Boolean getMute() { return mute; }
+    public static Boolean isPlaying(String sound){
+        if(sound.equals("lastPlayersLeft")) if(lastPlayersLeft.isPlaying()) return true;
+        return false;
+    }
 
     private static void playSound(AudioClip clip, double volume){
         if(!mute) clip.play(volume);
     }
+    public static void stopTicking(){ if(drawnKitten.isPlaying()) drawnKitten.stop();}
+    public static void playErrorSound() { playSound(errorSound,0.3); }
     public static void playNextTurnSound() { playSound(nextTurn,0.2); }
     public static void playPlayerJoined() { playSound(playerJoinedSound,0.2); }
     public static void playPlayerLeft() { playSound(playerLeftSound,0.2);}
@@ -122,8 +128,5 @@ public class Sounds {
         else if(lastPlayersLeft.isPlaying()) lastPlayersLeft.stop();
         else if(inGameMusic.isPlaying()) inGameMusic.stop();
     }
-    public static void stopTicking(){ if(drawnKitten.isPlaying()) drawnKitten.stop();}
 
-    public static void playErrorSound() { playSound(errorSound,0.3);
-    }
 }

@@ -94,6 +94,7 @@ public class RoomSelectionViewController implements Initializable {
                         ClientProgram.roomName = "";
                         break;
                     case "STARTED":
+                        Sounds.playErrorSound();
                         roomError.setText("Game in progress");
                         ClientProgram.roomName = "";
                         break;
