@@ -22,13 +22,13 @@ public class DeckCreateController implements Initializable {
     HashMap<String, TextField> mapCardAmounts;
 
     @FXML
-    public TextField deckName, explodingAmount, defuseAmount, attackAmount, favorAmount, shuffleAmount, futureAmount, skipAmount, reverseAmount, mommaAmount, zombieAmount, shyAmount;
+    private TextField deckName, explodingAmount, defuseAmount, attackAmount, favorAmount, shuffleAmount, futureAmount, skipAmount, reverseAmount, mommaAmount, zombieAmount, shyAmount;
 
     @FXML
-    public Button createButton;
+    private Button createButton;
 
     @FXML
-    public Text deckCreationText;
+    private Text deckCreationText;
 
     @FXML
     void returnButton() throws Exception {

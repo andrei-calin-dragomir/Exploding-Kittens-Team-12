@@ -64,7 +64,7 @@ public class RoomSelectionViewController implements Initializable {
     /**
      * Loop that constantly check for new rooms.
      */
-    AnimationTimer checkForRoomsLoop = new AnimationTimer() {
+    private AnimationTimer checkForRoomsLoop = new AnimationTimer() {
         @Override
         public void handle(long now) {
             if(ClientInfo.getServerMessage().isEmpty()) return;

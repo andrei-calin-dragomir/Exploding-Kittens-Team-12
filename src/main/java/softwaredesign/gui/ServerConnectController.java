@@ -62,7 +62,7 @@ public class ServerConnectController implements Initializable {
         waitForReply.start();
     }
 
-    AnimationTimer waitForReply = new AnimationTimer() {
+    private AnimationTimer waitForReply = new AnimationTimer() {
         @Override
         public void handle(long now) {
             if(!ClientInfo.getServerMessage().isEmpty()){

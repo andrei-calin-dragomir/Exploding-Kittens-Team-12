@@ -17,19 +17,19 @@ import java.util.ResourceBundle;
  * To setup and start a solo game.
  */
 public class OfflineSettingsController implements Initializable {
-    ScrollButton playerAmountScroll = new ScrollButton();
-    ScrollButton deckSelectionScroll = new ScrollButton();
-
-    @FXML
-    public void playClick(){
-        Sounds.playClick();
-    }
+    private ScrollButton playerAmountScroll = new ScrollButton();
+    private ScrollButton deckSelectionScroll = new ScrollButton();
 
     @FXML
     private Label playerAmount, deckSelection;
 
     @FXML
-    private Shape startGame, leftButtonPlayers, rightButtonPlayers, leftButtonDeck, rightButtonDeck;
+    private Shape leftButtonPlayers, rightButtonPlayers, leftButtonDeck, rightButtonDeck;
+
+    @FXML
+    public void playClick(){
+        Sounds.playClick();
+    }
 
     @FXML
     void rotatePlayerAmount(MouseEvent event){

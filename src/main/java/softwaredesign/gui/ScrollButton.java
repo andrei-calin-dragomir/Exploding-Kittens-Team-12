@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ScrollButton {
-    Shape leftButton, rightButton;
-    Label rotationText;
-    ArrayList<String> allTexts = new ArrayList<>();
+    private Shape leftButton;
+    private Label rotationText;
+    private ArrayList<String> allTexts = new ArrayList<>();
 
     public void navigate(Shape button){
         Sounds.playClick();
@@ -22,7 +22,6 @@ public class ScrollButton {
 
     public void initButtons(Shape left, Shape right, Label rotateText){
         this.leftButton = left;
-        this.rightButton = right;
         this.rotationText = rotateText;
     }
 

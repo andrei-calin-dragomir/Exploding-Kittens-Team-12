@@ -22,7 +22,7 @@ import static javafx.collections.FXCollections.observableArrayList;
  */
 public class RoomScreenController implements Initializable {
 
-    ObservableList<String> chatMessages = observableArrayList();
+    private ObservableList<String> chatMessages = observableArrayList();
 
     @FXML
     private Text startError, roomSize, computerAmount, lobbyPlaceholder, player1, player2, player3, player4;
@@ -58,7 +58,7 @@ public class RoomScreenController implements Initializable {
         }
     }
 
-    AnimationTimer lobbyUpdates = new AnimationTimer() {
+    private AnimationTimer lobbyUpdates = new AnimationTimer() {
         @Override
         public void handle(long now) {
             if (!ClientInfo.getServerMessage().isEmpty()) {

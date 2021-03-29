@@ -31,9 +31,9 @@ public class CreateRoomController implements Initializable {
     @FXML
     private Text roomNameExists;
 
-    ScrollButton roomSizeScroll = new ScrollButton();
-    ScrollButton computerAmountScroll = new ScrollButton();
-    ScrollButton deckSelectionScroll = new ScrollButton();
+    private ScrollButton roomSizeScroll = new ScrollButton();
+    private ScrollButton computerAmountScroll = new ScrollButton();
+    private ScrollButton deckSelectionScroll = new ScrollButton();
 
 
     /**
@@ -86,7 +86,7 @@ public class CreateRoomController implements Initializable {
     /**
      * Sends server the request for a room, joins it if accepted.
      */
-    AnimationTimer waitForReply = new AnimationTimer() {
+    private AnimationTimer waitForReply = new AnimationTimer() {
         @Override
         public void handle(long now) {
             if (!ClientInfo.getServerMessage().isEmpty()) {
@@ -123,7 +123,7 @@ public class CreateRoomController implements Initializable {
         deckSelectionScroll.addText(getDeckNames());
     }
 
-    public String[] getDeckNames(){
+    private String[] getDeckNames(){
         ArrayList<String> allDecks = new ArrayList<>();
         File folder = new File("resources/decks/client");
         File[] allFiles = folder.listFiles();

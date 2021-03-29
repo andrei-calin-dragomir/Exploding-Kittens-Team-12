@@ -24,12 +24,12 @@ import java.util.ResourceBundle;
  */
 public class DeckViewController implements Initializable {
     @FXML
-    public Text explodingAmount, defuseAmount, attackAmount, favorAmount, shuffleAmount, futureAmount, skipAmount, reverseAmount, mommaAmount, zombieAmount, shyAmount;
+    private Text explodingAmount, defuseAmount, attackAmount, favorAmount, shuffleAmount, futureAmount, skipAmount, reverseAmount, mommaAmount, zombieAmount, shyAmount;
 
     @FXML
-    public Label deckName;
+    private Label deckName;
 
-    HashMap<String, Text> mapCardAmounts;
+    private HashMap<String, Text> mapCardAmounts;
 
 
     @FXML
@@ -66,8 +66,8 @@ public class DeckViewController implements Initializable {
         }
     }
 
-    public void deckLoader() throws IOException {
-        String fileContent = "";
+    public void deckLoader() {
+        String fileContent;
         try{ fileContent = Files.readString(Paths.get("resources/decks/client/" + ClientInfo.getCurrentDeck() + ".json"), StandardCharsets.US_ASCII); }
         catch(Exception e){ System.out.println("Deck not found? " + e); return; }
         ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
