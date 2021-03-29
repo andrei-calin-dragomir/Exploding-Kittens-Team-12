@@ -47,7 +47,7 @@ public class RoomScreenController implements Initializable {
     @FXML
     void updatePlayerList(){
         Text[] playerTexts = new Text[]{player1, player2, player3, player4};
-        Object[] players = ClientInfo.getPlayerNamesAndHandSizes().keySet().toArray();
+        Object[] players = ClientInfo.getPlayersInfo().keySet().toArray();
         for(Integer i = 0; i < 4; i++){
             if(i < players.length) {
                 String player = players[i].toString();
@@ -114,8 +114,8 @@ public class RoomScreenController implements Initializable {
     @FXML
     void leaveGame() throws Exception {
         Sounds.stopSound();
-        ClientInfo.setPlayerNamesAndHandSizes(new LinkedHashMap<>());
-        ClientInfo.getPlayerNamesAndHandSizes().put(ClientInfo.getUsername(), -1);  // Resets the local username list
+        ClientInfo.setPlayersInfo(new LinkedHashMap<>());
+        ClientInfo.getPlayersInfo().put(ClientInfo.getUsername(), -1);  // Resets the local username list
         ClientProgram.handleCommand("leave");
         lobbyUpdates.stop();
         ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
@@ -126,7 +126,7 @@ public class RoomScreenController implements Initializable {
         Sounds.playRoomMusicWaiting();
         startError.setText("");
         chatBox.setFocusTraversable(false);
-        ClientInfo.getPlayerNamesAndHandSizes().put(ClientInfo.getUsername(), -1);
+        ClientInfo.getPlayersInfo().put(ClientInfo.getUsername(), -1);
         roomSize.setText("Room Size: " + ClientInfo.getGameRules()[0]);
         computerAmount.setText("Computers: " + ClientInfo.getGameRules()[1]);
         lobbyPlaceholder.setText(ClientInfo.getRoomName());

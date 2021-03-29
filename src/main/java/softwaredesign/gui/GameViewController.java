@@ -176,7 +176,7 @@ public class GameViewController implements Initializable {
                     Sounds.playExplosionSound();
                     personalAnnouncement.setText("You died, bummer. :( ");
                     setDisableAll(true);
-                    if(ClientInfo.getPlayerNamesAndHandSizes().size() == 3 && !Sounds.isPlaying("lastPlayersLeft")){
+                    if(ClientInfo.getPlayersInfo().size() == 3 && !Sounds.isPlaying("lastPlayersLeft")){
                         Sounds.stopSound();
                         Sounds.playLastPlayersMusic();
                     }
@@ -247,7 +247,7 @@ public class GameViewController implements Initializable {
                             Sounds.playExplosionSound();
                             personalAnnouncement.setText(commands[1] + " has just exploded!");
                             updateAll();
-                            if(ClientInfo.getPlayerNamesAndHandSizes().size() == 2 && !Sounds.isPlaying("lastPlayersLeft")){
+                            if(ClientInfo.getPlayersInfo().size() == 2 && !Sounds.isPlaying("lastPlayersLeft")){
                                 Sounds.stopSound();
                                 Sounds.playLastPlayersMusic();
                             }
@@ -371,7 +371,7 @@ public class GameViewController implements Initializable {
     void updateAll(){
         refreshPlayers();
         populateHand();
-        setMostRecentDiscardedCard(ClientInfo.getDiscardDeckTop());
+        setMostRecentDiscardedCard(ClientInfo.getDiscardTop());
     }
 
     /**
@@ -465,13 +465,13 @@ public class GameViewController implements Initializable {
 
     private void refreshPlayers(){
         enemyHBox.getChildren().clear();
-        for (String playerName : ClientInfo.getPlayerNamesAndHandSizes().keySet()){
+        for (String playerName : ClientInfo.getPlayersInfo().keySet()){
             if(!playerName.equals(ClientInfo.getUsername())) {
                 VBox enemy = new VBox();
                 enemy.setAlignment(Pos.CENTER);
                 enemy.setUserData(playerName);
 
-                Text text = new Text("Player " + playerName + "\nhas " + ClientInfo.getPlayerNamesAndHandSizes().get(playerName) + " cards.");
+                Text text = new Text("Player " + playerName + "\nhas " + ClientInfo.getPlayersInfo().get(playerName) + " cards.");
                 text.setFont(Font.font("Bebas Neue", FontWeight.BOLD, 20));
                 text.setStyle("-fx-font-size: 25");
 

@@ -9,14 +9,14 @@ import java.util.LinkedList;
 public class ClientInfo {
     private static String username;
     private static ArrayList<String> ownHand = new ArrayList<>();
-    private static LinkedHashMap<String,Integer> playerNamesAndHandSizes = new LinkedHashMap<>();
+    private static LinkedHashMap<String,Integer> playersInfo = new LinkedHashMap<>();
     private static String requestedCard = "";
     private static String currentServer = "";
     private static String roomName = "";
     private static String[] gameRules = new String[]{"", ""};
     private static String deckSize;
     private static String currentDeck;
-    private static String discardDeckTop;
+    private static String discardTop;
     private static Boolean offlineGame;
     private static ServerProgram server;
     private static LinkedList<String> serverMessage = new LinkedList<>();
@@ -29,8 +29,8 @@ public class ClientInfo {
         return offlineGame;
     }
 
-    public static LinkedHashMap<String, Integer> getPlayerNamesAndHandSizes() {
-        return playerNamesAndHandSizes;
+    public static LinkedHashMap<String, Integer> getPlayersInfo() {
+        return playersInfo;
     }
 
     public static LinkedList<String> getServerMessage() {
@@ -61,8 +61,8 @@ public class ClientInfo {
         return roomName;
     }
 
-    public static String getDiscardDeckTop() {
-        return discardDeckTop;
+    public static String getDiscardTop() {
+        return discardTop;
     }
 
     public static String getUsername() {
@@ -85,8 +85,8 @@ public class ClientInfo {
         ClientInfo.deckSize = deckSize;
     }
 
-    public static void setDiscardDeckTop(String discardDeckTop) {
-        ClientInfo.discardDeckTop = discardDeckTop;
+    public static void setDiscardTop(String discardTop) {
+        ClientInfo.discardTop = discardTop;
     }
 
     public static void setGameRules(String[] gameRules) {
@@ -101,8 +101,8 @@ public class ClientInfo {
         ClientInfo.ownHand = ownHand;
     }
 
-    public static void setPlayerNamesAndHandSizes(LinkedHashMap<String, Integer> playerNamesAndHandSizes) {
-        ClientInfo.playerNamesAndHandSizes = playerNamesAndHandSizes;
+    public static void setPlayersInfo(LinkedHashMap<String, Integer> playersInfo) {
+        ClientInfo.playersInfo = playersInfo;
     }
 
     public static void setRequestedCard(String requestedCard) {

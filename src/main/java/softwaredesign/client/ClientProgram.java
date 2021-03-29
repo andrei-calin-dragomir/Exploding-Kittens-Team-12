@@ -117,8 +117,8 @@ public class ClientProgram {
                     sendRequestToServer("START");
                     break;
                 case "leave":
-                    ClientInfo.setPlayerNamesAndHandSizes(new LinkedHashMap<>());
-                    ClientInfo.getPlayerNamesAndHandSizes().put(ClientInfo.getUsername(), -1);
+                    ClientInfo.setPlayersInfo(new LinkedHashMap<>());
+                    ClientInfo.getPlayersInfo().put(ClientInfo.getUsername(), -1);
                     sendRequestToServer("LEAVEROOM");
                     break;
                 case "join":

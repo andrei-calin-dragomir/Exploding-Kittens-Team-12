@@ -32,19 +32,19 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 ClientInfo.getOwnHand().remove(ClientInfo.getRequestedCard());
                 break;
             case "JOINED":
-                ClientInfo.getPlayerNamesAndHandSizes().put(commands[1], -1);
+                ClientInfo.getPlayersInfo().put(commands[1], -1);
                 break;
             case "JOINSUCCESS":
                 String[] playersInRoom = commands[1].split("@@");
                 for(String player : playersInRoom) {
                     tempString = tempString + player + " ";
-                    ClientInfo.getPlayerNamesAndHandSizes().put(player, -1);
+                    ClientInfo.getPlayersInfo().put(player, -1);
                 }
                 String[] rules = commands[2].split(",");
                 ClientInfo.setGameRules(new String[]{rules[0], rules[1]});
                 break;
             case "LEFT":
-                ClientInfo.getPlayerNamesAndHandSizes().remove(commands[1]);
+                ClientInfo.getPlayersInfo().remove(commands[1]);
                 break;
             case "UPDATEHAND":
                 for(int i = 1; i < commands.length;i++) ClientInfo.getOwnHand().add(commands[i]);
@@ -52,7 +52,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
             case "PLAYER":
                 switch(commands[2]){
                     case "EXPLODED":
-                        ClientInfo.getPlayerNamesAndHandSizes().remove(commands[1]);
+                        ClientInfo.getPlayersInfo().remove(commands[1]);
                         break;
                     default:
                         break;
@@ -60,19 +60,19 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "UPDATEPLAYERHANDS":
                 for(int i = 1; i < commands.length; i+=2) {
-                    if (ClientInfo.getPlayerNamesAndHandSizes().containsKey(commands[i])) {
-                        ClientInfo.getPlayerNamesAndHandSizes().replace(commands[i], Integer.parseInt(commands[i + 1]));
+                    if (ClientInfo.getPlayersInfo().containsKey(commands[i])) {
+                        ClientInfo.getPlayersInfo().replace(commands[i], Integer.parseInt(commands[i + 1]));
                     }
                 }
                 break;
             case "CREATEPLAYERHANDS":
                 for(int i = 1; i < commands.length; i+=2) {
-                    ClientInfo.getPlayerNamesAndHandSizes().put(commands[i], Integer.parseInt(commands[i + 1]));
+                    ClientInfo.getPlayersInfo().put(commands[i], Integer.parseInt(commands[i + 1]));
                 }
                 break;
             case "UPDATEDECKS":
                 ClientInfo.setDeckSize(commands[1]);
-                if(commands[2] != null) ClientInfo.setDiscardDeckTop(commands[2]);
+                if(commands[2] != null) ClientInfo.setDiscardTop(commands[2]);
                 break;
             default:
                 break;
