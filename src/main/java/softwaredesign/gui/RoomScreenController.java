@@ -68,7 +68,9 @@ public class RoomScreenController implements Initializable {
                     Sounds.playPlayerLeft();
                 }
                 else if(msg[0].equals("CHAT")) {
-                    if(!msg[1].equals(ClientProgram.username)) Sounds.playChatSound(true);
+                    if(!msg[1].equals(ClientProgram.username)) {
+                        Sounds.playChatSound(true);
+                    }
                     String tempString = "";
                     for(int i = 1; i < msg.length; ++i) tempString = tempString + msg[i] + " ";
                     chatMessages.add(tempString);

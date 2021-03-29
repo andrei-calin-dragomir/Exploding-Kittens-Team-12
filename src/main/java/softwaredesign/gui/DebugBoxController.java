@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -81,7 +80,7 @@ public class DebugBoxController extends Application implements Initializable  {
     public void connectPlayer1(){
         try {
             sendCommand("username player1");
-            sendCommand("create room,3,1");
+            sendCommand("create room,2,0");
 
         } catch (IOException e) {
             e.printStackTrace();

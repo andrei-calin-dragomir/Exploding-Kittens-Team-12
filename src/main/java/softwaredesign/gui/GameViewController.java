@@ -333,13 +333,13 @@ public class GameViewController implements Initializable {
 
 
     void actionPutBackKitten(){
+        placeError.setText("Insert value between \n0 (top of deck) and " + ClientProgram.deckSize);
         setDisableAll(true);
         setDisableInsertIndexBox(false);
     }
 
     @FXML
     void placeKitten(){
-        System.out.println(ClientProgram.deckSize);
         String index = indexField.getText();
         if(!ClientProgram.isInteger(index)) {
             Sounds.playErrorSound();
@@ -388,7 +388,7 @@ public class GameViewController implements Initializable {
         } else {
             sendCommand("play " + iv.getUserData());
         }
-        //Sounds.playPlayCard();
+        Sounds.playPlayCard();
 
         removeCardFromHand(iv);
 
@@ -396,7 +396,7 @@ public class GameViewController implements Initializable {
     }
 
     public void pickCard(){
-        //Sounds.drawnCard();
+        Sounds.drawnCard();
         if(!cardsGridPane.isDisable()) {
             sendCommand("draw");
         }
