@@ -55,7 +55,7 @@ public class Room {
                 }
                 break;
             case "GIVE":
-                onlineGame.giveCard(Integer.parseInt(message[1]),message[2]);
+                onlineGame.giveCard(Integer.parseInt(message[1]),message[2],getClientName(ctx));
                 sendGameStateUpdates("UPDATEPLAYERHANDS");
                 break;
             case "PLAY":
