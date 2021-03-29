@@ -16,7 +16,7 @@ public class Gui extends Application {
 
     static String latestMessage = "";
     static Scene mainScene;
-    static Sounds mixer = new Sounds();
+    public static Sounds mixer = new Sounds();
 
     AnimationTimer gameLoop = new AnimationTimer() {
         @Override
@@ -35,11 +35,6 @@ public class Gui extends Application {
 
     @Override
     public void start(Stage mainStage) throws  Exception{
-
-//        ClientProgram.startClient("127.0.0.1");
-//        gameLoop.start();
-//        gameLoop.stop();
-
         URL url = new File("src/main/resources/fxml/splashScreen.fxml").toURI().toURL();
         URL urlCSS = new File("src/main/resources/css/fxml.css").toURI().toURL();
         URL urlFont = new File("src/main/resources/css/font/bebas.ttf").toURI().toURL();
@@ -49,6 +44,7 @@ public class Gui extends Application {
 
         mainStage.setOnCloseRequest(event -> {
             ClientProgram.killConnectionSafely();
+            System.exit(0);
         });
 
         mainScene.getStylesheets().add(urlCSS.toExternalForm());

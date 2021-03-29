@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.SplashScreenController">
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.SplashScreenController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" percentWidth="80.0" prefWidth="366.0" />
@@ -28,10 +28,10 @@
             <Image url="@../../../../resources/images/logo.png" />
          </image>
       </ImageView>
-      <Button fx:id="playOnlineButton" maxWidth="292.0" mnemonicParsing="false" onAction="#goOnline" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Play Online" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-      <Button fx:id="playOfflineButton" maxWidth="295.0" mnemonicParsing="false" onAction="#goOffline" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Play Local" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-      <Button fx:id="deckButton" maxWidth="299.0" mnemonicParsing="false" onAction="#deckBuilder" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Decks" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP" />
-      <Button fx:id="exitButton" mnemonicParsing="false" onAction="#closeButtonAction" prefHeight="50.0" prefWidth="50.0" styleClass="quitButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+      <Button fx:id="playOnlineButton" maxWidth="292.0" mnemonicParsing="false" onAction="#goOnline" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Play Online" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+      <Button fx:id="playOfflineButton" maxWidth="295.0" mnemonicParsing="false" onAction="#goOffline" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Play Local" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+      <Button fx:id="deckButton" maxWidth="299.0" mnemonicParsing="false" onAction="#deckBuilder" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 28;" styleClass="clickButton" text="Decks" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+      <Button fx:id="exitButton" mnemonicParsing="false" onAction="#closeButtonAction" onMouseClicked="#playClick" prefHeight="50.0" prefWidth="50.0" styleClass="quitButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" />
          </GridPane.margin>

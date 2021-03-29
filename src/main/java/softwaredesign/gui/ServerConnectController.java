@@ -23,6 +23,11 @@ public class ServerConnectController implements Initializable {
     @FXML
     private Button joinButton;
 
+    @FXML
+    public void playClick(){
+        Sounds.playClick();
+    }
+
     private Boolean tryConnect(String serverIP){
         if(serverIP.equals("")) serverIP = "127.0.0.1";
         if(!ClientProgram.currentServer.equals(serverIP))       // Avoids unnecessary reconnects

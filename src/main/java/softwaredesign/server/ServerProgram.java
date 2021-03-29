@@ -54,19 +54,11 @@ public final class ServerProgram extends Thread {
 
             // Start the server.
             ChannelFuture f = null;
-            try {
-//                f = b.bind(PORT).sync();
-                f = b.bind(new InetSocketAddress("0.0.0.0", PORT)).sync();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            try { f = b.bind(new InetSocketAddress("0.0.0.0", PORT)).sync(); }
+            catch (InterruptedException ignore) {}
             System.out.println("Exploding Kittens Server started. Ready to accept players.");
-            // Wait until the server socket is closed.
-            try {
-                f.channel().closeFuture().sync();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            try { f.channel().closeFuture().sync(); }
+            catch (InterruptedException ignore) {}
         } finally {
             // Shut down all event loops to terminate all threads.
             bossGroup.shutdownGracefully();

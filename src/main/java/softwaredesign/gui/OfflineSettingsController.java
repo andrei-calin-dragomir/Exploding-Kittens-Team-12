@@ -17,6 +17,11 @@ public class OfflineSettingsController implements Initializable {
     ScrollButton deckSelectionScroll = new ScrollButton();
 
     @FXML
+    public void playClick(){
+        Sounds.playClick();
+    }
+
+    @FXML
     private Label playerAmount, deckSelection;
 
     @FXML

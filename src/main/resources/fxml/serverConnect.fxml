@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.ServerConnectController">
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.ServerConnectController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" percentWidth="38.0" prefWidth="366.0" />
@@ -41,7 +41,7 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Button fx:id="joinButton" mnemonicParsing="false" onAction="#tryJoin" prefHeight="48.0" prefWidth="81.0" style="-fx-text-fill: white;" styleClass="clickButton" stylesheets="@../css/fxml.css" text="Join" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+      <Button fx:id="joinButton" mnemonicParsing="false" onAction="#tryJoin" onMouseClicked="#playClick" prefHeight="48.0" prefWidth="81.0" style="-fx-text-fill: white;" styleClass="clickButton" stylesheets="@../css/fxml.css" text="Join" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
       <Label fx:id="errorServer" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="497.0" style="-fx-font-size: 20;" text="Cannot reach server" textFill="#c9c9c9" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
          <font>
             <Font size="13.0" />
@@ -52,7 +52,7 @@
             <Font size="13.0" />
          </font>
       </Label>
-      <Button maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#returnButton" prefHeight="60.0" prefWidth="60.0" styleClass="backButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+      <Button maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#returnButton" onMouseClicked="#playClick" prefHeight="60.0" prefWidth="60.0" styleClass="backButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" />
          </GridPane.margin></Button>
