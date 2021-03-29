@@ -25,13 +25,14 @@ public class ServerConnectController implements Initializable {
 
     @FXML
     public void playClick(){
-        //Sounds.playClick();
+        Sounds.playClick();
     }
 
     private Boolean tryConnect(String serverIP){
         if(serverIP.equals("")) serverIP = "127.0.0.1";
         if(!ClientProgram.currentServer.equals(serverIP))       // Avoids unnecessary reconnects
             if(!ClientProgram.connectAndLoop(serverIP,false)) {
+                Sounds.playErrorSound();
                 serverField.setText("");
                 errorServer.setVisible(true);
                 joinButton.setDisable(false);
@@ -45,6 +46,7 @@ public class ServerConnectController implements Initializable {
     private void handleUsername(String username){
         if(username.isBlank() || username.length() > 20){
             usernameField.setText("");
+            Sounds.playErrorSound();
             if(username.isBlank()) usernameError.setText("Username cannot be empty");
             else usernameError.setText("Username is too long");
             joinButton.setDisable(false);
@@ -71,6 +73,7 @@ public class ServerConnectController implements Initializable {
                     }
                 } else {
                     System.out.println(msg[0]);
+                    Sounds.playErrorSound();
                     usernameField.setText("");
                     usernameError.setText("Username already taken");
                     joinButton.setDisable(false);

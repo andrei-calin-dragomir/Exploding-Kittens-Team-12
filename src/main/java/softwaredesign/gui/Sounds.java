@@ -22,9 +22,25 @@ public class Sounds {
     private static AudioClip drawnCard;
     private static AudioClip playCard;
     private static AudioClip roomMusicWaiting;
+    private static AudioClip inGameMusic;
+    private static AudioClip lastPlayersLeft;
+    private static AudioClip giveCardSound;
+    private static AudioClip startGameMusic;
+    private static AudioClip playerJoinedSound;
+    private static AudioClip nextTurn;
+    private static AudioClip playerLeftSound;
+    private static AudioClip errorSound;
 
     static {
         try {
+            errorSound = new AudioClip(new File("resources/sounds/errorSound.mp3").toURI().toURL().toExternalForm());
+            playerLeftSound = new AudioClip(new File("resources/sounds/playerLeft.mp3").toURI().toURL().toExternalForm());
+            playerJoinedSound = new AudioClip(new File("resources/sounds/playerJoined.mp3").toURI().toURL().toExternalForm());
+            nextTurn = new AudioClip(new File("resources/sounds/nextTurn.mp3").toURI().toURL().toExternalForm());
+            startGameMusic = new AudioClip(new File("resources/sounds/startGameMusic.mp3").toURI().toURL().toExternalForm());
+            giveCardSound = new AudioClip(new File("resources/sounds/giveCardSound.mp3").toURI().toURL().toExternalForm());
+            lastPlayersLeft = new AudioClip(new File("resources/sounds/lastPlayersLeft.mp3").toURI().toURL().toExternalForm());
+            inGameMusic = new AudioClip(new File("resources/sounds/inGameMusic.mp3").toURI().toURL().toExternalForm());
             drawnCard = new AudioClip(new File("resources/sounds/drawnCard.mp3").toURI().toURL().toExternalForm());
             playCard = new AudioClip(new File("resources/sounds/playCard.mp3").toURI().toURL().toExternalForm());
             chatReceived = new AudioClip(new File("resources/sounds/chatReceived.mp3").toURI().toURL().toExternalForm());
@@ -53,12 +69,27 @@ public class Sounds {
     private static void playSound(AudioClip clip, double volume){
         if(!mute) clip.play(volume);
     }
-
+    public static void playNextTurnSound() { playSound(nextTurn,0.2); }
+    public static void playPlayerJoined() { playSound(playerJoinedSound,0.2); }
+    public static void playPlayerLeft() { playSound(playerLeftSound,0.2);}
+    public static void playGiveCard() { playSound(giveCardSound,0.2); }
     public static void playClick() { playSound(clickSound, 0.2);}
     public static void playWin() { playSound(winSound, 0.3);}
     public static void playRoomMusicWaiting() {
         playSound(roomMusicWaiting, 0.2);
         roomMusicWaiting.setCycleCount(AudioClip.INDEFINITE);
+    }
+    public static void playInGameMusic() {
+        playSound(inGameMusic, 0.2);
+        inGameMusic.setCycleCount(AudioClip.INDEFINITE);
+    }
+    public static void playStartGameMusic() {
+        playSound(startGameMusic, 0.2);
+        startGameMusic.setCycleCount(AudioClip.INDEFINITE);
+    }
+    public static void playLastPlayersMusic() {
+        playSound(lastPlayersLeft, 0.2);
+        lastPlayersLeft.setCycleCount(AudioClip.INDEFINITE);
     }
     public static void playPlayCard(){ playSound(playCard, 0.2); }
     public static void drawnCard(){ playSound(drawnCard, 0.2); }
@@ -87,5 +118,12 @@ public class Sounds {
         if(drawnKitten.isPlaying()) drawnKitten.stop();
         else if(roomMusicWaiting.isPlaying()) roomMusicWaiting.stop();
         else if(winSound.isPlaying()) winSound.stop();
+        else if(startGameMusic.isPlaying()) startGameMusic.stop();
+        else if(lastPlayersLeft.isPlaying()) lastPlayersLeft.stop();
+        else if(inGameMusic.isPlaying()) inGameMusic.stop();
+    }
+    public static void stopTicking(){ if(drawnKitten.isPlaying()) drawnKitten.stop();}
+
+    public static void playErrorSound() { playSound(errorSound,0.3);
     }
 }

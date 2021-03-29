@@ -31,6 +31,8 @@ public class SplashScreenController implements Initializable {
     void muteSounds(){
         Boolean muted = Sounds.getMute();
         Sounds.setMute(!muted);
+        if(Sounds.getMute()) Sounds.stopSound();
+        else Sounds.playStartGameMusic();
     }
 
     @FXML
@@ -49,5 +51,8 @@ public class SplashScreenController implements Initializable {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {}
+    public void initialize(URL location, ResourceBundle resources) {
+        Sounds.setMute(true);
+        Sounds.playStartGameMusic();
+    }
 }

@@ -69,6 +69,7 @@ public class CreateRoomController implements Initializable {
         ClientProgram.roomName = roomName;
         ClientProgram.gameRules[0] = roomSize.getText();
         ClientProgram.gameRules[1] = computerAmount.getText();
+        Sounds.stopSound();
         waitForReply.start();
         // Go to room mode
     }

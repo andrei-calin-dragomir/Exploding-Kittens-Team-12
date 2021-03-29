@@ -89,6 +89,7 @@ public class RoomSelectionViewController implements Initializable {
                         roomSelectionList.setItems(rooms);
                         break;
                     case "FULL":
+                        Sounds.playErrorSound();
                         roomError.setText("Room is full");
                         ClientProgram.roomName = "";
                         break;
@@ -100,6 +101,7 @@ public class RoomSelectionViewController implements Initializable {
             }
             else if(cmdlist[0].equals("JOINSUCCESS")){
                 super.stop();
+                Sounds.stopSound();
                 try { ViewsManager.loadScene(SceneName.ROOM_SCREEN); }
                 catch (Exception ignore) {}
             }

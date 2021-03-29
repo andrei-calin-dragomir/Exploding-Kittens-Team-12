@@ -46,7 +46,6 @@ public class Gui extends Application {
             ClientProgram.killConnectionSafely();
             System.exit(0);
         });
-
         mainScene.getStylesheets().add(urlCSS.toExternalForm());
         mainStage.setTitle("Exploding Kittens");
         mainStage.setScene(mainScene);

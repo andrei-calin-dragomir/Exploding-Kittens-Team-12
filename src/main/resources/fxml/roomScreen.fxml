@@ -95,7 +95,7 @@
             <Insets bottom="-45.0" right="10.0" />
          </GridPane.margin>
       </Button>
-      <Button mnemonicParsing="false" onAction="#sendMessage" onMouseClicked="#playMessageSent" prefHeight="51.0" prefWidth="50.0" style="-fx-background-color: gray;" styleClass="sendButton" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
+      <Button mnemonicParsing="false" onAction="#sendMessage" prefHeight="51.0" prefWidth="50.0" style="-fx-background-color: gray;" styleClass="sendButton" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
          <GridPane.margin>
             <Insets bottom="5.0" />
          </GridPane.margin>

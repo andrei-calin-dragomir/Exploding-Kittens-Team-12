@@ -38,10 +38,7 @@ public class RoomScreenController implements Initializable {
     public void playClick(){
         Sounds.playClick();
     }
-    @FXML
-    public void playMessageSent(){
-        Sounds.playChatSound(false);
-    }
+
 
     @FXML
     void updatePlayerList(){
@@ -62,7 +59,14 @@ public class RoomScreenController implements Initializable {
         public void handle(long now) {
             if (!ClientProgram.serverMessage.isEmpty()) {
                 String[] msg = ClientProgram.serverMessage.removeFirst().split(" ");
-                if(msg[0].equals("JOINED") || msg[0].equals("LEFT")) updatePlayerList();
+                if(msg[0].equals("JOINED")) {
+                    Sounds.playPlayerJoined();
+                    updatePlayerList();
+                }
+                else if(msg[0].equals("LEFT")) {
+                    updatePlayerList();
+                    Sounds.playPlayerLeft();
+                }
                 else if(msg[0].equals("CHAT")) {
                     if(!msg[1].equals(ClientProgram.username)) Sounds.playChatSound(true);
                     String tempString = "";
@@ -70,8 +74,14 @@ public class RoomScreenController implements Initializable {
                     chatMessages.add(tempString);
                     chatBox.setItems(chatMessages);
                 }
-                else if(msg[0].equals("CANTSTART")) startError.setText("Only the host can start");
-                else if(msg[0].equals("NOSTART")) startError.setText("Not enough players");
+                else if(msg[0].equals("CANTSTART")) {
+                    Sounds.playErrorSound();
+                    startError.setText("Only the host can start");
+                }
+                else if(msg[0].equals("NOSTART")) {
+                    Sounds.playErrorSound();
+                    startError.setText("Not enough players");
+                }
                 else if(msg[0].equals("START")){
                     Sounds.stopSound();
                     System.out.println("Starting game");
@@ -87,6 +97,7 @@ public class RoomScreenController implements Initializable {
     void sendMessage(){
         String textToSend = sendMessageField.getText();
         if(textToSend.isBlank()) return;
+        Sounds.playChatSound(false);
         ClientProgram.handleCommand("chat " + textToSend);
         sendMessageField.setText("");
     }
@@ -117,7 +128,6 @@ public class RoomScreenController implements Initializable {
 
         sendMessageField.setOnKeyPressed(event -> {
             if(event.getCode() == KeyCode.ENTER ){
-                Sounds.playChatSound(false);
                 sendMessage();
             }
         });
