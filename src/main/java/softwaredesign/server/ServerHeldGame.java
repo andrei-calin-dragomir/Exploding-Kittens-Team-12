@@ -36,6 +36,7 @@ public class ServerHeldGame {
         }
     }
 
+    //Handles what happens when a player draws, and will handle the exploding kitten.
     public void handleDrawAction() throws InterruptedException {
         if(!isExploding()) {
             Card cardDrawn = drawCard();
@@ -51,6 +52,7 @@ public class ServerHeldGame {
         }
     }
 
+    // Handles what happens if a player tries to play a card, it will call playCard which will then call the appropriate function in the Card subclass
     public void handlePlayAction(int index, String target) throws InterruptedException {
         Hand currHand = gameManager.getCurrentPlayerHand();
         Player currPlayer = getCurrentPlayer();
