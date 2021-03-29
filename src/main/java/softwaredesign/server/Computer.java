@@ -1,6 +1,8 @@
 package softwaredesign.server;
 
 import static java.util.Collections.frequency;
+import static java.util.Collections.min;
+
 import softwaredesign.cards.Card;
 import softwaredesign.cards.DefuseCard;
 import softwaredesign.cards.ExplodingKittenCard;
@@ -24,7 +26,9 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
     public void startAction(ServerHeldGame game) throws InterruptedException {
         while(rand.nextInt(3) == 0)    // 25% chance to play a card at every action
             if(compPlay(game)) return;
+        Thread.sleep(rand.nextInt(2000) + 2000);
         compDraw(game);
+        Thread.sleep(rand.nextInt(2000) + 500);
         game.gameManager.endTurn();
     }
 
@@ -75,6 +79,7 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
 
     // Returns true if a turn is skipped using the skip card or the attack card
     private Boolean compPlay(ServerHeldGame game) throws InterruptedException {
+        Thread.sleep(rand.nextInt(2000) + 2000);
         Hand cHand = getHand();
         Integer randCardIndex = getRandCard();
         System.out.println(randCardIndex);
@@ -110,8 +115,10 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
         if(cardDrawn.equals(new ExplodingKittenCard()))
             if(!game.handleExplodingKitten()){
                 System.out.println("Placing kitten by " + getName());
+                Thread.sleep(rand.nextInt(2000) + 2000);
                 game.handlePlayAction(getHand().indexOf(new DefuseCard()), "");
-                game.placeExploding(0);     // TODO: Randomize where the kitten is placed, but keep it at a place where one of the next player in the turn will draw it. So for 4 players randomzie between 3 ints
+                Thread.sleep(rand.nextInt(1000) + 1000);
+                game.placeExploding(rand.nextInt(Math.min(4, game.getDeckSize())));   // Places the exploding kitting somewhere near the top
             }
     }
 }

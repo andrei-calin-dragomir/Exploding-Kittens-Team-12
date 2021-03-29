@@ -1,6 +1,7 @@
 package softwaredesign.gui;
 
 import javafx.animation.AnimationTimer;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -20,12 +21,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import softwaredesign.client.ClientProgram;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.ResourceBundle;
 
 public class GameViewController implements Initializable {
@@ -46,7 +49,7 @@ public class GameViewController implements Initializable {
     private HBox enemyHBox;
 
     @FXML
-    private Text announcementText;
+    private Text announcementText, placeError, deckSizeText;
 
     @FXML
     private ImageView mainDeck;
@@ -248,12 +251,12 @@ public class GameViewController implements Initializable {
         mainDeck.setVisible(value);
         insertIndexBox.setVisible(!value);
         insertIndexBox.setDisable(value);
-        indexField.setDisable(!value);
-        placeButton.setDisable(!value);
+        indexField.setDisable(value);
+        placeButton.setDisable(value);
     }
 
     void setDisableAll(Boolean value){
-        mainDeck.setDisable(value);
+//        mainDeck.setDisable(value);
         cardsGridPane.setDisable(value);
     }
 
@@ -288,7 +291,7 @@ public class GameViewController implements Initializable {
         mainDeck.setDisable(true);
 
         for(Button button : playerInteractionButtons){
-            button.setText(buttonText);
+//            button.setText(buttonText);
             button.setOnAction(event -> interactWithPlayer((String) button.getParent().getUserData(),attack));
             button.setVisible(true);
         }
@@ -298,9 +301,31 @@ public class GameViewController implements Initializable {
     void actionPutBackKitten(){
         setDisableAll(true);
         setDisableInsertIndexBox(false);
+    }
 
-        //do the rest
+    @FXML
+    void placeKitten(){
+        System.out.println(ClientProgram.deckSize);
+        String index = indexField.getText();
+        if(!ClientProgram.isInteger(index)) placeError.setText("Enter a valid number");
+        else if(Integer.parseInt(index) > Integer.parseInt(ClientProgram.deckSize)) placeError.setText("That number is too big");
+        else if(Integer.parseInt(index) < 1) placeError.setText("That number is too small");
+        else {
+            ClientProgram.handleCommand("place " + (Integer.parseInt(index) - 1));
+            setDisableAll(false);
+            setDisableInsertIndexBox(true);
+        }
+    }
 
+    @FXML
+    void showDeckSize(){
+        deckSizeText.setText("The deck has " + ClientProgram.deckSize + " cards");
+        deckSizeText.setTextAlignment(TextAlignment.CENTER);
+    }
+
+    @FXML
+    void hideDeckSize(){
+        deckSizeText.setText("");
     }
 
     private void playCard(ImageView iv){
@@ -321,7 +346,7 @@ public class GameViewController implements Initializable {
     }
 
     public void pickCard(){
-        ClientProgram.handleCommand("draw");
+        if(!cardsGridPane.isDisable()) ClientProgram.handleCommand("draw");
     }
 
     private void removeCardFromHand(ImageView iv){
@@ -373,8 +398,15 @@ public class GameViewController implements Initializable {
         setDisableOtherCards(false);
     }
 
+    private void onHoverButton(Node node){
+        node.setStyle("-fx-background-color: #1f1f1f; -fx-background-radius: 15; -fx-font-size: 20; -fx-text-fill: white;");
+        node.setOnMouseEntered(mouseEvent -> node.setStyle("-fx-background-color: #797979; -fx-background-radius: 15; -fx-font-size: 20; -fx-text-fill: white;"));
+        node.setOnMouseExited(mouseEvent -> node.setStyle("-fx-background-color: #1f1f1f; -fx-background-radius: 15; -fx-font-size: 20; -fx-text-fill: white;"));
+    }
+
     private void refreshPlayers(){
         enemyHBox.getChildren().clear();
+        Integer i = 0;
         for (String playerName : ClientProgram.playerNamesAndHandSizes.keySet()){
             if(!playerName.equals(ClientProgram.username)) {
                 VBox enemy = new VBox();
@@ -382,9 +414,12 @@ public class GameViewController implements Initializable {
                 enemy.setUserData(playerName);
 
                 Text text = new Text("Player " + playerName + "\nhas " + ClientProgram.playerNamesAndHandSizes.get(playerName) + " cards.");
-                text.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+                text.setFont(Font.font("Bebas Neue", FontWeight.BOLD, 20));
 
                 Button attackButton = new Button("Attack!");
+                attackButton.setPrefWidth(100);
+                attackButton.setPrefHeight(30);
+                onHoverButton(attackButton);
                 playerInteractionButtons.add(attackButton);
                 attackButton.setVisible(false);
 
@@ -392,6 +427,7 @@ public class GameViewController implements Initializable {
                 enemy.getChildren().add(attackButton);
 
                 enemyHBox.getChildren().add(enemy);
+                ++i;
             }
         }
     }

@@ -19,7 +19,6 @@ public class Deck implements Iterable<Card>{
         put("ReverseCard", ReverseCard.class);
         put("DefuseCard", DefuseCard.class);
         put("AttackCard", AttackCard.class);
-        put("NopeCard",NopeCard.class);
         put("FavorCard", FavorCard.class);
         put("SeeTheFutureCard", SeeTheFutureCard.class);
         put("ShuffleCard", ShuffleCard.class);

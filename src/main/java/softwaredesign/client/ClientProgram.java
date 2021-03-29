@@ -30,7 +30,7 @@ public class ClientProgram {
     public static void main(String[] args) throws Exception {
         ClientProgram.startClient("127.0.0.1",false);
     }
-    private static Boolean isInteger(String intString){
+    public static Boolean isInteger(String intString){
         try { Integer.parseInt(intString); }
         catch(NumberFormatException e){ return false; }
         return true;

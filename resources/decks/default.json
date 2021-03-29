@@ -12,10 +12,6 @@
     "className": "AttackCard"
   },
   {
-    "deckAmount": 5,
-    "className": "NopeCard"
-  },
-  {
     "deckAmount": 4,
     "className": "FavorCard"
   },

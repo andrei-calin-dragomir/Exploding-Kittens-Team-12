@@ -23,9 +23,9 @@
             <Insets />
          </VBox.margin>
       </HBox>
-      <HBox alignment="TOP_CENTER" prefHeight="63.0" prefWidth="1200.0">
+      <HBox alignment="TOP_CENTER" prefHeight="63.0" prefWidth="1200.0" styleClass="text">
          <children>
-            <Text fx:id="announcementText" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the game!" textAlignment="CENTER">
+            <Text fx:id="announcementText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Welcome to the game!" textAlignment="CENTER">
                <font>
                   <Font size="39.0" />
                </font>
@@ -36,18 +36,29 @@
          <children>
             <AnchorPane>
                <children>
-                  <ImageView fx:id="mainDeck" fitHeight="350.0" onMouseClicked="#pickCard" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="mainDeck" fitHeight="350.0" onMouseClicked="#pickCard" onMouseEntered="#showDeckSize" onMouseExited="#hideDeckSize" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../resources/images/BackSide.png" />
                      </image>
                   </ImageView>
                   <VBox fx:id="insertIndexBox" alignment="CENTER" disable="true" prefHeight="200.0" prefWidth="100.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
-                        <Text stroke="RED" strokeType="OUTSIDE" strokeWidth="6.0" text="Insert place index" textAlignment="CENTER" />
-                        <TextField fx:id="indexField" alignment="CENTER" promptText="Index in deck" />
-                        <Button fx:id="placeButton" mnemonicParsing="false" text="Place" />
+                        <Text fx:id="placeError" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" />
+                        <TextField fx:id="indexField" alignment="CENTER" prefHeight="50.0" prefWidth="241.0" promptText="Index in deck" style="-fx-background-radius: 20;" styleClass="textbox" />
+                        <Button fx:id="placeButton" maxHeight="40.0" minHeight="40.0" mnemonicParsing="false" onAction="#placeKitten" prefHeight="40.0" prefWidth="94.0" style="-fx-font-size: 20;" styleClass="clickButton" text="Place">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font></Button>
                      </children>
                   </VBox>
+                  <Text fx:id="deckSizeText" fill="WHITE" layoutX="4.0" layoutY="328.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 25;" styleClass="text" wrappingWidth="195.255859375" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Text>
                </children>
             </AnchorPane>
             <AnchorPane>
@@ -64,8 +75,8 @@
                   <TextArea fx:id="debugBox" editable="false" prefHeight="419.0" prefWidth="371.0" />
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <TextField fx:id="commandField" />
-                        <Button fx:id="sendCommandButton" mnemonicParsing="false" onAction="#sendTextAsCommand" text="Send command" />
+                        <TextField fx:id="commandField" promptText="Command" styleClass="textbox" />
+                        <Button fx:id="sendCommandButton" maxHeight="40.0" minHeight="25.0" mnemonicParsing="false" onAction="#sendTextAsCommand" prefHeight="40.0" prefWidth="92.0" style="-fx-font-size: 20;" styleClass="clickButton" text="Send" />
                      </children>
                   </HBox>
                </children>
