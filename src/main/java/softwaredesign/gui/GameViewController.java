@@ -84,6 +84,7 @@ public class GameViewController implements Initializable {
 
     @FXML
     void leave() throws Exception{
+        Sounds.stopSound();
         gameLoop.stop();
         sendCommand("leave");
         if(ClientInfo.getOfflineGame()){
