@@ -66,7 +66,7 @@ public class DeckCreateController implements Initializable {
             amountMap.put(cardName, amount);
             totalDeckSize += amount;
         }
-        if(totalDeckSize <= 40) {
+        if(totalDeckSize < 40) {
             deckCreationText.setText("You need at least 40 cards");
             return;
         }

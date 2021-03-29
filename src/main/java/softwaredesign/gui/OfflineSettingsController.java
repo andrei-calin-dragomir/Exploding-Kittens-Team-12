@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Shape;
 import softwaredesign.client.ClientProgram;
+import softwaredesign.core.Deck;
 
 import java.io.File;
 import java.net.URL;
@@ -43,8 +44,10 @@ public class OfflineSettingsController implements Initializable {
         Integer amountOfComputers = Integer.parseInt(playerAmount.getText());
         Integer totalPlayers = amountOfComputers + 1;
         String deckToUse = deckSelection.getText();
+        String serializedDeck = "";
+        if(deckToUse != "default") serializedDeck = Deck.serializeDeck(deckToUse, "Client");
         ClientProgram.startClient("127.0.0.1", true);
-        ClientProgram.handleCommand("create sologame," + totalPlayers + "," + amountOfComputers);
+        ClientProgram.handleCommand("create sologame," + totalPlayers + "," + amountOfComputers + "," + serializedDeck);
         ClientProgram.handleCommand("start");
         ViewsManager.loadScene(ViewsManager.SceneName.GAME_VIEW);
         // Offline mode has been deleted wtf? I can't seem to find it anymore. Anyway just pass these arguments and start offline.
