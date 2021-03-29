@@ -49,7 +49,7 @@
             <Font name="System Bold" size="26.0" />
          </font>
       </Button>
-      <Button mnemonicParsing="false" onAction="#returnButton" onMouseClicked="#playClick" prefHeight="50.0" prefWidth="50.0" styleClass="backButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+      <Button maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#returnButton" onMouseClicked="#playClick" prefHeight="60.0" prefWidth="60.0" styleClass="backButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" />
          </GridPane.margin>

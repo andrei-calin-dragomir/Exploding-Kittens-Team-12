@@ -26,6 +26,7 @@ public class ClientProgram {
     public static String deckSize;
     public static String currentDeck;
     public static String discardDeckTop;
+    public static Boolean offlineGame;
     public static LinkedList<String> serverMessage = new LinkedList<>();
 
     public static void main(String[] args) throws Exception {
@@ -96,6 +97,7 @@ public class ClientProgram {
                 sendRequestToServer("USERNAME You SOLO");
             }
             currentServer = HOST;
+            offlineGame = offline;
             return true;
         }catch(Exception e){
             System.out.println("Connection failed.\nClosing...");

@@ -38,8 +38,7 @@ public class DeckOptionsController implements Initializable {
 
     @FXML
     private void createDeck() throws Exception {
-        ViewsManager.loadScene(ViewsManager.SceneName.SPLASH_SCREEN);
-
+        ViewsManager.loadScene(ViewsManager.SceneName.DECK_CREATE);
     }
 
     @FXML

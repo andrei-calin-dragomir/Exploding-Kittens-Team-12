@@ -14,7 +14,7 @@ import java.util.HashMap;
 class ViewsManager {
     static private HashMap<SceneName, String> scenes = new HashMap<>();
     public enum SceneName {
-        SPLASH_SCREEN, CHOOSE_NAME, ROOM_SELECTION, GAME_VIEW, SERVER_CONNECT, OFFLINE_SETTINGS, CREATE_ROOM, ROOM_SCREEN, DECK_OPTIONS, DECK_VIEW, SEE_THE_FUTURE_DIALOG
+        SPLASH_SCREEN, CHOOSE_NAME, ROOM_SELECTION, GAME_VIEW, SERVER_CONNECT, OFFLINE_SETTINGS, CREATE_ROOM, ROOM_SCREEN, DECK_OPTIONS, DECK_VIEW, DECK_CREATE, SEE_THE_FUTURE_DIALOG
     }
     static{
         scenes.put(SceneName.SPLASH_SCREEN,"src/main/resources/fxml/splashScreen.fxml");
@@ -28,6 +28,7 @@ class ViewsManager {
         scenes.put(SceneName.DECK_OPTIONS,"src/main/resources/fxml/deckOptions.fxml");
         scenes.put(SceneName.DECK_VIEW,"src/main/resources/fxml/deckView.fxml");
         scenes.put(SceneName.SEE_THE_FUTURE_DIALOG,"src/main/resources/fxml/seeTheFutureDialog.fxml");
+        scenes.put(SceneName.DECK_CREATE,"src/main/resources/fxml/deckCreate.fxml");
     }
 
     static void loadScene(SceneName name) throws Exception{

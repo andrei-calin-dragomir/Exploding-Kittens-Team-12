@@ -2,10 +2,13 @@ package softwaredesign.core;
 
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import org.jetbrains.annotations.NotNull;
 import softwaredesign.cards.*;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
@@ -74,6 +77,22 @@ public class Deck implements Iterable<Card>{
                 return tempHand;
             }
         }
+    }
+
+    public static boolean createCustom(HashMap<String, Integer> amountMap, String deckName) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        ArrayList<Card> customDeck = new ArrayList<>();
+        File deckFile = new File("resources/decks/" + deckName + ".json");
+        deckFile.createNewFile();
+        for(String cardName : amountMap.keySet()){
+            if(amountMap.get(cardName) == 0) continue;
+            Card tempCard = cardMap.get(cardName).getDeclaredConstructor().newInstance();
+            tempCard.setDeckAmount(amountMap.get(cardName));
+            customDeck.add(tempCard);
+        }
+        FileWriter myWriter = new FileWriter("resources/decks/" + deckName + ".json");
+        myWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson(customDeck, ArrayList.class));
+        myWriter.close();
+        return true;
     }
 
     public void deckConstruct(int players) throws IOException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {

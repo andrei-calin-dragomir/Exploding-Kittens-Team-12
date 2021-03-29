@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -10,9 +11,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1123.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.DeckViewController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1123.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.DeckCreateController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="561.5" minWidth="561.5" prefWidth="561.5" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.0" minWidth="0.0" prefWidth="0.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.0" minWidth="0.0" prefWidth="0.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="561.5" minWidth="561.5" prefWidth="561.5" />
    </columnConstraints>
@@ -27,28 +29,28 @@
       <RowConstraints maxHeight="509.0" minHeight="10.0" prefHeight="140.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label fx:id="deckName" alignment="CENTER" contentDisplay="CENTER" minWidth="-Infinity" prefHeight="104.0" prefWidth="560.0" style="-fx-font-size: 80; -fx-font-fill: #ffffff;" text="Deck placeholder" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <Label alignment="CENTER" contentDisplay="CENTER" minWidth="-Infinity" prefHeight="104.0" prefWidth="560.0" style="-fx-font-size: 80; -fx-font-fill: #ffffff;" text="Create deck" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <font>
             <Font name="Arial Black" size="84.0" />
          </font>
       </Label>
-      <Button mnemonicParsing="false" onAction="#returnButton" onMouseClicked="#playClick" prefHeight="50.0" prefWidth="50.0" styleClass="backButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="7" GridPane.valignment="BOTTOM">
+      <Button maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#returnButton" onMouseClicked="#playClick" prefHeight="60.0" prefWidth="60.0" styleClass="backButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="7" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" />
          </GridPane.margin>
       </Button>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="6">
          <children>
             <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="Exploding Kittens :">
                <HBox.margin>
                   <Insets left="30.0" />
                </HBox.margin>
             </Text>
-            <Text fx:id="explodingAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="Computed">
+            <TextField fx:id="explodingAmount" prefHeight="22.0" prefWidth="158.0" promptText="computed" styleClass="textbox">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </HBox.margin>
-            </Text>
+            </TextField>
          </children>
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
@@ -58,11 +60,11 @@
                   <Insets left="30.0" />
                </HBox.margin>
             </Text>
-            <Text fx:id="defuseAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="0">
+            <TextField fx:id="defuseAmount" prefHeight="22.0" prefWidth="158.0" promptText="0" styleClass="textbox">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </HBox.margin>
-            </Text>
+            </TextField>
          </children>
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
@@ -72,11 +74,11 @@
                   <Insets left="30.0" />
                </HBox.margin>
             </Text>
-            <Text fx:id="attackAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="0">
+            <TextField fx:id="attackAmount" prefHeight="22.0" prefWidth="158.0" promptText="0" styleClass="textbox">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </HBox.margin>
-            </Text>
+            </TextField>
          </children>
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
@@ -86,11 +88,11 @@
                   <Insets left="30.0" />
                </HBox.margin>
             </Text>
-            <Text fx:id="favorAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="0">
+            <TextField fx:id="favorAmount" prefHeight="22.0" prefWidth="158.0" promptText="0" styleClass="textbox">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </HBox.margin>
-            </Text>
+            </TextField>
          </children>
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="5">
@@ -100,11 +102,11 @@
                   <Insets left="30.0" />
                </HBox.margin>
             </Text>
-            <Text fx:id="shuffleAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="0">
+            <TextField fx:id="shuffleAmount" prefHeight="22.0" prefWidth="158.0" promptText="0" styleClass="textbox">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </HBox.margin>
-            </Text>
+            </TextField>
          </children>
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="6">
@@ -114,82 +116,106 @@
                   <Insets left="30.0" />
                </HBox.margin>
             </Text>
-            <Text fx:id="futureAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="0">
+            <TextField fx:id="futureAmount" prefHeight="22.0" prefWidth="158.0" promptText="0" styleClass="textbox">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </HBox.margin>
-            </Text>
+            </TextField>
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
          <children>
             <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="Skip cards:">
                <HBox.margin>
                   <Insets left="30.0" />
                </HBox.margin>
             </Text>
-            <Text fx:id="skipAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="0">
+            <TextField fx:id="skipAmount" prefHeight="22.0" prefWidth="158.0" promptText="0" styleClass="textbox">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </HBox.margin>
-            </Text>
+            </TextField>
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
          <children>
             <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="Reverse card:">
                <HBox.margin>
                   <Insets left="30.0" />
                </HBox.margin>
             </Text>
-            <Text fx:id="reverseAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="0">
+            <TextField fx:id="reverseAmount" prefHeight="22.0" prefWidth="158.0" promptText="0" styleClass="textbox">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </HBox.margin>
-            </Text>
+            </TextField>
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
          <children>
             <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="Momma cat cards :">
                <HBox.margin>
                   <Insets left="30.0" />
                </HBox.margin>
             </Text>
-            <Text fx:id="mommaAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="0">
+            <TextField fx:id="mommaAmount" prefHeight="22.0" prefWidth="158.0" promptText="0" styleClass="textbox">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </HBox.margin>
-            </Text>
+            </TextField>
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
          <children>
             <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="Zombie cat cards:">
                <HBox.margin>
                   <Insets left="30.0" />
                </HBox.margin>
             </Text>
-            <Text fx:id="zombieAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="0">
+            <TextField fx:id="zombieAmount" prefHeight="22.0" prefWidth="158.0" promptText="0" styleClass="textbox">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </HBox.margin>
-            </Text>
+            </TextField>
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="5">
          <children>
             <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="Shy cat cards:">
                <HBox.margin>
                   <Insets left="30.0" />
                </HBox.margin>
             </Text>
-            <Text fx:id="shyAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="0">
+            <TextField fx:id="shyAmount" prefHeight="22.0" prefWidth="158.0" promptText="0" styleClass="textbox">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </HBox.margin>
-            </Text>
+            </TextField>
          </children>
       </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+         <children>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35;" styleClass="text" text="Deck name:">
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </Text>
+            <TextField fx:id="deckName" prefHeight="22.0" prefWidth="158.0" promptText="0" styleClass="textbox">
+               <HBox.margin>
+                  <Insets left="10.0" top="5.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
+      <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deckConstructor" prefWidth="100.0" styleClass="clickButton" text="Create" textFill="WHITE" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets right="-50.0" />
+         </GridPane.margin>
+      </Button>
+      <Text fx:id="deckCreationText" fill="#cbcbcb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" styleClass="text" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </Text>
    </children>
 </GridPane>
