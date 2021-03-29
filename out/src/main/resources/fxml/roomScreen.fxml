@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.RoomScreenController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="29.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" percentWidth="41.0" prefWidth="366.0" />
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="29.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints maxHeight="416.0" minHeight="92.0" prefHeight="139.0" />
+      <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="681.0" minHeight="10.0" prefHeight="416.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="578.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <Button mnemonicParsing="false" onAction="#startGame" onMouseClicked="#playClick" prefHeight="52.0" prefWidth="246.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Start the game" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+         <font>
+            <Font size="1.0" />
+         </font>
+      </Button>
+      <Text fx:id="lobbyPlaceholder" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Lobby" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+         <font>
+            <Font size="75.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Players:" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </Text>
+      <Text fx:id="player1" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Player1" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Text>
+      <Text fx:id="player2" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Player2" GridPane.columnIndex="2" GridPane.rowIndex="3">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Text>
+      <Text fx:id="player3" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Player3" GridPane.columnIndex="2" GridPane.rowIndex="4">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Text>
+      <Text fx:id="player4" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Player4" GridPane.columnIndex="2" GridPane.rowIndex="5">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Text>
+      <Text fx:id="roomSize" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Room Size: " GridPane.halignment="LEFT" GridPane.rowIndex="3">
+         <font>
+            <Font size="29.0" />
+         </font>
+         <GridPane.margin>
+            <Insets left="20.0" />
+         </GridPane.margin>
+      </Text>
+      <Text fx:id="computerAmount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Amount of Computers:" GridPane.halignment="LEFT" GridPane.rowIndex="4">
+         <font>
+            <Font size="29.0" />
+         </font>
+         <GridPane.margin>
+            <Insets left="20.0" />
+         </GridPane.margin>
+      </Text>
+      <ListView fx:id="chatBox" fixedCellSize="-20.0" focusTraversable="false" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="500.0" style="-fx-font-size: 20;" stylesheets="@../css/fxml.css" GridPane.rowIndex="6" GridPane.valignment="BOTTOM" />
+      <TextField fx:id="sendMessageField" prefHeight="65.0" prefWidth="348.0" promptText="Type your message here...." style="-fx-prompt-text-fill: white; -fx-font-family: &quot;Bebas Neue&quot;; -fx-font-size: 16; -fx-text-fill: white;" styleClass="chatBox" GridPane.rowIndex="7">
+         <GridPane.margin>
+            <Insets bottom="5.0" />
+         </GridPane.margin>
+      </TextField>
+      <Button mnemonicParsing="false" onAction="#leaveGame" onMouseClicked="#playClick" prefHeight="59.0" prefWidth="100.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Leave" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+         <font>
+            <Font size="1.0" />
+         </font>
+         <GridPane.margin>
+            <Insets bottom="-45.0" right="10.0" />
+         </GridPane.margin>
+      </Button>
+      <Button mnemonicParsing="false" onAction="#sendMessage" prefHeight="51.0" prefWidth="50.0" style="-fx-background-color: gray;" styleClass="sendButton" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
+         <GridPane.margin>
+            <Insets bottom="5.0" />
+         </GridPane.margin>
+      </Button>
+      <Text fx:id="startError" fill="#cbcbcb" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="StartErrorPlaceholder" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <GridPane.margin>
+            <Insets bottom="-10.0" />
+         </GridPane.margin>
+      </Text>
+   </children>
+</GridPane>

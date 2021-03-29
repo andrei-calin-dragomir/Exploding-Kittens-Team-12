@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.SplashScreenController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" percentWidth="80.0" prefWidth="366.0" />
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints />
+    <RowConstraints maxHeight="416.0" minHeight="244.0" prefHeight="376.0" />
+      <RowConstraints maxHeight="467.0" minHeight="0.0" prefHeight="90.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="270.0" minHeight="0.0" prefHeight="91.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="356.0" minHeight="10.0" prefHeight="220.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="270.0" minHeight="10.0" prefHeight="123.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <ImageView fitHeight="246.0" fitWidth="376.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+         <image>
+            <Image url="@../../../../resources/images/logo.png" />
+         </image>
+      </ImageView>
+      <Button maxWidth="292.0" mnemonicParsing="false" onAction="#goOnline" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Play Online" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+      <Button maxWidth="295.0" mnemonicParsing="false" onAction="#goOffline" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Play Local" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+      <Button maxWidth="299.0" mnemonicParsing="false" onAction="#deckBuilder" onMouseClicked="#playClick" prefHeight="55.0" prefWidth="295.0" style="-fx-font-size: 30;" styleClass="clickButton" text="Decks" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+      <Button fx:id="exitButton" mnemonicParsing="false" onAction="#closeButtonAction" onMouseClicked="#playClick" prefHeight="50.0" prefWidth="50.0" styleClass="quitButton" stylesheets="@../css/fxml.css" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" />
+         </GridPane.margin>
+      </Button>
+      <Button maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#muteSounds" onMouseClicked="#playClick" prefHeight="60.0" prefWidth="60.0" styleClass="muteButton" stylesheets="@../css/fxml.css" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+         <GridPane.margin>
+            <Insets bottom="10.0" right="10.0" />
+         </GridPane.margin>
+      </Button>
+   </children>
+</GridPane>
