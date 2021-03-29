@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 // Contains the cards of one player and has calls that can manipulate the Hand and retrieve information.
 public class Hand implements Iterable<Card>{
-    ArrayList<Card> currentHand = new ArrayList<>();
+    private ArrayList<Card> currentHand = new ArrayList<>();
 
     public boolean contains(Card target){
         return currentHand.contains(target);
