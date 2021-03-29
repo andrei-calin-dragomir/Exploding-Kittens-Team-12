@@ -1,11 +1,12 @@
 package softwaredesign.gui;
 
 import javafx.animation.AnimationTimer;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -32,6 +33,9 @@ public class GameViewController implements Initializable {
 
     @FXML
     private VBox root;
+
+    @FXML
+    private Button leaveButton;
 
     @FXML
     private TextField commandField;
@@ -332,9 +336,9 @@ public class GameViewController implements Initializable {
         String index = indexField.getText();
         if(!ClientProgram.isInteger(index)) placeError.setText("Enter a valid number");
         else if(Integer.parseInt(index) > Integer.parseInt(ClientProgram.deckSize)) placeError.setText("That number is too big");
-        else if(Integer.parseInt(index) < 1) placeError.setText("That number is too small");
+        else if(Integer.parseInt(index) < 0) placeError.setText("That number is too small");
         else {
-            sendCommand("place " + (Integer.parseInt(index) - 1));
+            sendCommand("place " + (Integer.parseInt(index)));
             setDisableAll(false);
             setDisableInsertIndexBox(true);
         }
@@ -353,11 +357,11 @@ public class GameViewController implements Initializable {
 
     private void playCard(ImageView iv){
         //Sounds.stopSound();
-        if(iv.getUserData().equals("AttackCard")){
+        if(iv.getUserData().equals("AttackCard") && !giveCardMode){
             enableInteraction(true);
             return;
         }
-        if(iv.getUserData().equals("FavorCard")){
+        if(iv.getUserData().equals("FavorCard") && !giveCardMode){
             enableInteraction(false);
             return;
         }
@@ -468,6 +472,12 @@ public class GameViewController implements Initializable {
                 enemyHBox.getChildren().add(enemy);
             }
         }
+    }
+
+    @FXML
+    void leave() throws Exception{
+        sendCommand("leave");
+        ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
     }
 
     @Override
