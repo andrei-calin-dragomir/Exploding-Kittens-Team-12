@@ -70,6 +70,7 @@ public class ServerConnectController implements Initializable {
                         e.printStackTrace();
                     }
                 } else {
+                    System.out.println(msg[0]);
                     usernameField.setText("");
                     usernameError.setText("Username already taken");
                     joinButton.setDisable(false);

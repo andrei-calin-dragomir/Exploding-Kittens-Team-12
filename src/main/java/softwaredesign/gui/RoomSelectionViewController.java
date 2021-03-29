@@ -36,6 +36,7 @@ public class RoomSelectionViewController implements Initializable {
     @FXML
     void returnButton() throws Exception {
         ClientProgram.killConnectionSafely();
+        checkForRoomsLoop.stop();
         ViewsManager.loadScene(SceneName.SPLASH_SCREEN);
     }
 
@@ -84,6 +85,7 @@ public class RoomSelectionViewController implements Initializable {
                         break;
                     case "FULL":
                         roomError.setText("Room is full");
+                        ClientProgram.roomName = "";
                         break;
                 }
             }

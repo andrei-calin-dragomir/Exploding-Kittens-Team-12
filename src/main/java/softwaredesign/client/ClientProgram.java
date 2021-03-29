@@ -51,6 +51,9 @@ public class ClientProgram {
                 correspondenceChannel.channel().writeAndFlush("DISCONNECTING");
                 correspondenceChannel.channel().closeFuture().sync();
                 group.shutdownGracefully();
+                correspondenceChannel = null;
+                group = null;
+                currentServer = "";
             }
 
         } catch (Exception e){
@@ -58,6 +61,7 @@ public class ClientProgram {
         }
     }
     public static Boolean connectAndLoop(String HOST,boolean offline){
+        System.out.println("Trying to connect");
         final int PORT = 8007;
         group = new NioEventLoopGroup();
         try {
@@ -79,6 +83,7 @@ public class ClientProgram {
                     });
 
             // Start the client.
+            System.out.println("Trying to connect 2");
             if(!offline) {
                 System.out.println("Attempting connection to " + HOST + " on port " + PORT + "...");
                 correspondenceChannel = bootstrap.connect(HOST, PORT).sync();
