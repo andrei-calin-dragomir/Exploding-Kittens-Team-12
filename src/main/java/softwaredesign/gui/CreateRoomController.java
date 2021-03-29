@@ -1,11 +1,13 @@
 package softwaredesign.gui;
 
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Text;
 import softwaredesign.client.ClientProgram;
 
 import java.io.File;
@@ -23,6 +25,9 @@ public class CreateRoomController implements Initializable {
 
     @FXML
     private TextField roomNameField;
+
+    @FXML
+    private Text roomNameExists;
 
     ScrollButton roomSizeScroll = new ScrollButton();
     ScrollButton computerAmountScroll = new ScrollButton();
@@ -64,9 +69,29 @@ public class CreateRoomController implements Initializable {
         ClientProgram.roomName = roomName;
         ClientProgram.gameRules[0] = roomSize.getText();
         ClientProgram.gameRules[1] = computerAmount.getText();
-        ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SCREEN);
+        waitForReply.start();
         // Go to room mode
     }
+
+    AnimationTimer waitForReply = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            if (!ClientProgram.serverMessage.isEmpty()) {
+                String[] msg = ClientProgram.serverMessage.removeFirst().split(" ");
+                if (msg[0].equals("ROOM")) {
+                    if (msg[1].equals("TAKEN")) {
+                        roomNameExists.setVisible(true);
+                        super.stop();
+                    }
+                    else if (msg[1].equals("CREATED")) {
+                        try { ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SCREEN); } catch (Exception ignore) {}
+                        super.stop();
+                    }
+                }
+            }
+        }
+    };
+
     @FXML
     public void playClick(){
         Sounds.playClick();
