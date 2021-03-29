@@ -1,0 +1,42 @@
+[
+  {
+    "deckAmount": 4,
+    "className": "ReverseCard"
+  },
+  {
+    "deckAmount": 6,
+    "className": "DefuseCard"
+  },
+  {
+    "deckAmount": 4,
+    "className": "AttackCard"
+  },
+  {
+    "deckAmount": 4,
+    "className": "FavorCard"
+  },
+  {
+    "deckAmount": 5,
+    "className": "SeeTheFutureCard"
+  },
+  {
+    "deckAmount": 4,
+    "className": "ShuffleCard"
+  },
+  {
+    "deckAmount": 4,
+    "className": "SkipCard"
+  },
+  {
+    "deckAmount": 4,
+    "className": "CatCardMomma"
+  },
+  {
+    "deckAmount": 4,
+    "className": "CatCardShy"
+  },
+  {
+    "deckAmount": 4,
+    "className": "CatCardZombie"
+  }
+]
