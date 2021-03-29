@@ -427,6 +427,7 @@ public class GameViewController implements Initializable {
 
                 Text text = new Text("Player " + playerName + "\nhas " + ClientProgram.playerNamesAndHandSizes.get(playerName) + " cards.");
                 text.setFont(Font.font("Bebas Neue", FontWeight.BOLD, 20));
+                text.setStyle("-fx-font-size: 25");
 
                 Button attackButton = new Button("Attack!");
                 attackButton.setPrefWidth(100);
