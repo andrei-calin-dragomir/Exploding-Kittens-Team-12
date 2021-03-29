@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.SeeTheFutureDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="600.0" styleClass="general" stylesheets="@../css/fxml.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="softwaredesign.gui.SeeTheFutureDialogController">
    <children>
       <VBox prefHeight="315.0" prefWidth="600.0">
          <children>
-            <HBox fx:id="cardBox" prefHeight="304.0" prefWidth="600.0" />
+            <HBox fx:id="cardBox" prefHeight="304.0" prefWidth="600.0" stylesheets="@../css/fxml.css" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="80.0">
                <children>
-                  <Label text="First card in the deck" />
-                  <Label layoutX="249.0" layoutY="14.0" text="Second card in the deck" />
-                  <Label layoutX="310.0" layoutY="14.0" text="Third card in the deck" />
+                  <Label style="-fx-font-size: 18;" text="First card in the deck" textFill="WHITE" />
+                  <Label layoutX="249.0" layoutY="14.0" style="-fx-font-size: 18;" text="Second card in the deck" textFill="WHITE" />
+                  <Label layoutX="310.0" layoutY="14.0" style="-fx-font-size: 18;" text="Third card in the deck" textFill="WHITE" />
                </children>
             </HBox>
          </children>
       </VBox>
-      <ButtonBar prefHeight="40.0" prefWidth="200.0">
-        <buttons>
-          <Button fx:id="exitButton" mnemonicParsing="false" onAction="#closeButtonAction" text="Done" />
-        </buttons>
-      </ButtonBar>
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+          <Button fx:id="exitButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="35.0" minHeight="35.0" mnemonicParsing="false" onAction="#closeButtonAction" prefHeight="35.0" prefWidth="79.0" style="-fx-font-size: 20;" styleClass="clickButton" text="Done" GridPane.halignment="CENTER">
+               <padding>
+                  <Insets bottom="1.0" />
+               </padding>
+            </Button>
+         </children>
+      </GridPane>
    </children>
 </VBox>

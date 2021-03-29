@@ -97,6 +97,6 @@
       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" styleClass="text" text="Amount of players" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" styleClass="text" text="Amount of Computers" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" styleClass="text" text="Deck to use" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
-      <Text fx:id="roomNameExists" fill="#cbcbcb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" styleClass="text" text="Name already exists" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
+      <Text fx:id="roomNameExists" fill="#cbcbcb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" styleClass="text" text="Name already exists" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
    </children>
 </GridPane>

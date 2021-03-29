@@ -24,6 +24,7 @@ public class ClientProgram {
     public static String roomName = "";
     public static String[] gameRules = new String[]{"", ""};
     public static String deckSize;
+    public static String currentDeck;
     public static String discardDeckTop;
     public static LinkedList<String> serverMessage = new LinkedList<>();
 

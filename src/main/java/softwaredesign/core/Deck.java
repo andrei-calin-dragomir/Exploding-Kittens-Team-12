@@ -82,7 +82,7 @@ public class Deck implements Iterable<Card>{
 
         for (LinkedTreeMap<Object, Object> cardTree : cardAmounts) {
             for (double j = 0; j < Double.parseDouble(cardTree.get("deckAmount").toString()); j++) {
-                Card newCard = cardMap.get(cardTree.get("className").toString()).getDeclaredConstructor().newInstance();        // Reflection wasn't allowed, so the easiest way to get a class for a string is with a HashMap
+                Card newCard = cardMap.get(cardTree.get("className").toString()).getDeclaredConstructor().newInstance();
                 cardDeck.add(newCard);
             }
         }

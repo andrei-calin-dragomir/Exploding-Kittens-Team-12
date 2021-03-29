@@ -75,7 +75,7 @@ public class GameViewController implements Initializable {
 
     @FXML
     public void playClick(){
-        //Sounds.playClick();
+        Sounds.playClick();
     }
 
     ArrayList<Button> playerInteractionButtons = new ArrayList<>();
@@ -102,7 +102,7 @@ public class GameViewController implements Initializable {
                 case "EXPLODING":
                     //must defuse it immediately
                     //alert player, freeze non-defuse cards?
-                    //Sounds.playExplodingKittenDrawn();
+                    Sounds.playExplodingKittenDrawn();
                     setAnnouncementText("You drew an Exploding Kitten, quick, defuse it!");
                     setDisableDefuseCards(false);
                     setDisableOtherCards(true);
@@ -110,14 +110,14 @@ public class GameViewController implements Initializable {
                 case "DIED":
                     //u died
                     //freeze all interactions
-                    //Sounds.playExplosionSound();
+                    Sounds.playExplosionSound();
                     setAnnouncementText("You died, bummer. :( ");
                     setDisableAll(true);
                     break;
                 case "PLACEKITTEN":
                     //enable selection of index
                     //then send "place + index"
-                    //Sounds.playPlayCard();
+                    Sounds.playPlayCard();
                     actionPutBackKitten();
                     break;
                 case "ENDED":
@@ -146,8 +146,6 @@ public class GameViewController implements Initializable {
                         //make cards other than defuse freeze
                         System.out.println("You have to play a defuse card when you draw an Exploding Kitten!");
                     }
-//                    else if(commands[1].equals("INVALIDPLAY")) System.out.println("Trying to play invalid card.");
-//                    else if(commands[1].equals("NOTYOURTURN")) System.out.println("It is not your turn.");
                     break;
                 case "TURN":
                     //unfreeze nodes if it's ur turn
@@ -164,7 +162,7 @@ public class GameViewController implements Initializable {
                     //WINNER + name
                     //update announcement and freeze everything
                     if(commands[1].equals(ClientProgram.username)){
-                        //Sounds.playWin();
+                        Sounds.playWin();
                         setAnnouncementText("You have won! Congrats");
                     }
                     else {
@@ -209,14 +207,14 @@ public class GameViewController implements Initializable {
 //                    updateAll();
                     switch(commands[2]){
                         case "EXPLODED":
-                            //Sounds.playExplosionSound();
+                            Sounds.playExplosionSound();
                             setAnnouncementText(commands[1] + " has just exploded!");
                             break;
                         case "DREW":
                             setAnnouncementText(commands[1] + " has drawn a card.");
                             break;
                         case "DREWEXP":
-                            //Sounds.playMeow();
+                            Sounds.playMeow();
                             setAnnouncementText(commands[1] + " has drawn an exploding kitten!");
                             break;
                         case "DEFUSED":
@@ -356,7 +354,7 @@ public class GameViewController implements Initializable {
     }
 
     private void playCard(ImageView iv){
-        //Sounds.stopSound();
+        Sounds.stopSound();
         if(iv.getUserData().equals("AttackCard") && !giveCardMode){
             enableInteraction(true);
             return;

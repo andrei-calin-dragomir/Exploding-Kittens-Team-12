@@ -66,10 +66,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "CREATE":
                 String[] gameDetails = message[1].split(",");
-                roomList.put(gameDetails[0], new Room(playerMap.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2])));
                 if (message.length > 2 && message[2].equals("SOLO")) ctx.writeAndFlush("ROOM CREATED SOLO");
                 else{
-                    if(roomList.keySet().contains(message[1])) ctx.writeAndFlush("ROOM TAKEN");
+                    if(roomList.keySet().contains(gameDetails[0])) ctx.writeAndFlush("ROOM TAKEN");
                     else{
                         roomList.put(gameDetails[0], new Room(playerMap.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2])));
                         ctx.writeAndFlush("ROOM CREATED");
