@@ -10,7 +10,6 @@ import java.util.*;
 public class ServerHandler extends SimpleChannelInboundHandler<String>{
     public static HashMap<ChannelHandlerContext, Player> playerMap = new HashMap<>();
     private static HashMap<String,Room> roomList = new HashMap<>();
-    public static ArrayList<String> serverPlayerList = new ArrayList<>();
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
@@ -52,7 +51,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             case "JOIN":
                 Room roomObj = roomList.get(message[1]);
                 if(roomObj == null) ctx.writeAndFlush("ROOM NOTFOUND");
-                if(!roomObj.addPlayer(playerMap.get(ctx))) ctx.writeAndFlush("ROOM FULL");
+                else if(roomObj.hasStarted()) ctx.writeAndFlush("ROOM STARTED");
+                else if(!roomObj.addPlayer(playerMap.get(ctx))) ctx.writeAndFlush("ROOM FULL");
                 else {
                     Player p = playerMap.get(ctx);
                     p.setCurrentRoom(roomObj);
@@ -98,7 +98,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             else playerRoom.assignNewHost();
         }
     }
-    private void disconnectPlayer(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException{
+    private void disconnectPlayer(ChannelHandlerContext ctx, Throwable cause){
         System.out.println("Closing connection for client - " + getClientName(ctx));
         if(cause != null) System.out.println("He disconnected because of: " + cause);
         cleanRoomOfEntity(ctx);

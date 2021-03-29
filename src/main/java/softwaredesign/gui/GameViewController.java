@@ -474,6 +474,7 @@ public class GameViewController implements Initializable {
 
     @FXML
     void leave() throws Exception{
+        gameLoop.stop();
         sendCommand("leave");
         ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
     }

@@ -18,6 +18,7 @@ public class ServerHeldGameManager{
         mainDeck = new Deck(currentRoom.getMaxPlayers());
         discardDeck = new DiscardDeck();
         for(Player player : currentRoom.getRoomPlayerList().values()){
+            player.setPlayerState(State.PLAYING);
             alivePlayers.add(player);
             player.initHand(mainDeck);
             currentRoom.sendMsgToPlayer(player, "UPDATEHAND " + createHandAsString(player));
@@ -64,11 +65,8 @@ public class ServerHeldGameManager{
 
     // Not tested but should work
     public void changeNextTurn(Player target){
-        System.out.println(getAlivePlayers());
         int rotateAmount = alivePlayers.indexOf(target) * -1;
-        System.out.println("Rotating by: " + rotateAmount);
         Collections.rotate(alivePlayers, rotateAmount);
-        System.out.println(getAlivePlayers());
     }
 
     public void endTurn(){
@@ -77,7 +75,6 @@ public class ServerHeldGameManager{
     }
 
     public void removeCurrentPlayerCard(Card card) {
-
         getCurrentPlayerHand().removeCard(card);
     }
 }

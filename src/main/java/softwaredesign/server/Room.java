@@ -101,6 +101,7 @@ public class Room {
     public String getHostName(){ return currentHost.getName(); }
     public HashMap<String, Player> getRoomPlayerList() { return roomPlayerList; }
     public void assignNewHost(){ currentHost = roomPlayerList.values().iterator().next(); }
+    public Boolean hasStarted(){ return onlineGame.gameManager != null; }
 
     public int[] getGameRules() {
         return gameRules;
@@ -158,6 +159,7 @@ public class Room {
     }
 
     public Boolean isRoomEmpty(){
+        System.out.println(roomPlayerList.keySet());
         for(String name: roomPlayerList.keySet())
             if(!roomPlayerList.get(name).isComputer())
                 return false;

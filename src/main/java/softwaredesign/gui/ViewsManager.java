@@ -32,7 +32,8 @@ class ViewsManager {
 
     static void loadScene(SceneName name) throws Exception{
         URL newUrl = new File(scenes.get(name)).toURI().toURL();
-        Pane newScene = FXMLLoader.load(newUrl);
+        FXMLLoader loader = new FXMLLoader(newUrl);
+        Pane newScene = loader.load();
         Gui.mainScene.setRoot(newScene);
         Gui.mainScene.getRoot().requestFocus();
     }

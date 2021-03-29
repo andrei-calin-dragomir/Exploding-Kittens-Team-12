@@ -124,6 +124,8 @@ public class ClientProgram {
                     sendRequestToServer("START");
                     break;
                 case "leave":
+                    playerNamesAndHandSizes = new LinkedHashMap<>();
+                    playerNamesAndHandSizes.put(username, -1);
                     sendRequestToServer("LEAVEROOM");
                     break;
                 case "join":

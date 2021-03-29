@@ -56,6 +56,7 @@ public class RoomSelectionViewController implements Initializable {
     }
 
     public void joinRoom() {
+        checkForRoomsLoop.start();
         String selectedRoom = roomSelectionList.getSelectionModel().getSelectedItem();
         if(selectedRoom == null) {
             roomError.setText("Select a room");
@@ -66,8 +67,8 @@ public class RoomSelectionViewController implements Initializable {
     }
 
     public void populateList(){
-        ClientProgram.handleCommand("list_rooms");
         checkForRoomsLoop.start();
+        ClientProgram.handleCommand("list_rooms");
     }
 
     AnimationTimer checkForRoomsLoop = new AnimationTimer() {
@@ -89,6 +90,10 @@ public class RoomSelectionViewController implements Initializable {
                         break;
                     case "FULL":
                         roomError.setText("Room is full");
+                        ClientProgram.roomName = "";
+                        break;
+                    case "STARTED":
+                        roomError.setText("Game in progress");
                         ClientProgram.roomName = "";
                         break;
                 }
