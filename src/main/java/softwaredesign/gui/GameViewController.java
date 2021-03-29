@@ -155,7 +155,7 @@ public class GameViewController implements Initializable {
      * The main loop that checks for updates from the server. When it finds an update, it act accordingly.
      * This function gets called at every frame, ~60 times a second.
      */
-    AnimationTimer gameLoop = new AnimationTimer() {
+    private AnimationTimer gameLoop = new AnimationTimer() {
         @Override
         public void handle(long now) {
             if(ClientInfo.getServerMessage().isEmpty()){
