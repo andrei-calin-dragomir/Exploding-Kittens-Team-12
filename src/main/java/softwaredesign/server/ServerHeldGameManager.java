@@ -14,8 +14,8 @@ public class ServerHeldGameManager{
     public Deck mainDeck;
     public DiscardDeck discardDeck;
 
-    public void initGame(Room currentRoom) throws IOException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        mainDeck = new Deck(currentRoom.getMaxPlayers());
+    public void initGame(Room currentRoom, String deckName) throws IOException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        mainDeck = new Deck(currentRoom.getMaxPlayers(), deckName);
         discardDeck = new DiscardDeck();
         for(Player player : currentRoom.getRoomPlayerList().values()){
             player.setPlayerState(State.PLAYING);

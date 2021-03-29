@@ -34,8 +34,8 @@ public class Deck implements Iterable<Card>{
 
     public Iterator<Card> iterator() { return this.cardDeck.iterator(); }
 
-    public Deck(int players) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        deckConstruct(players);
+    public Deck(int players, String deckName) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        deckConstruct(players, deckName);
     }
 
     public List<Card> getFullDeck(){
@@ -79,9 +79,21 @@ public class Deck implements Iterable<Card>{
         }
     }
 
-    public static boolean createCustom(HashMap<String, Integer> amountMap, String deckName) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static String serializeDeck(String deckName, String location) throws IOException {
+        String deckString = "";
+        String fileContent = Files.readString(Paths.get("resources/decks/" + location + "/" + deckName + ".json"), StandardCharsets.US_ASCII);
+        ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
+        for (LinkedTreeMap<Object, Object> cardTree : cardAmounts) {
+            Integer amountAsInt = (int) Double.parseDouble(cardTree.get("deckAmount").toString());
+            deckString += cardTree.get("className").toString() + ":" + amountAsInt + "==";
+        }
+        System.out.println(deckString);
+        return deckString;
+    }
+
+    public static boolean createCustom(HashMap<String, Integer> amountMap, String deckName, String location) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         ArrayList<Card> customDeck = new ArrayList<>();
-        File deckFile = new File("resources/decks/" + deckName + ".json");
+        File deckFile = new File("resources/decks/" + location + "/" + deckName + ".json");
         deckFile.createNewFile();
         for(String cardName : amountMap.keySet()){
             if(amountMap.get(cardName) == 0) continue;
@@ -89,14 +101,14 @@ public class Deck implements Iterable<Card>{
             tempCard.setDeckAmount(amountMap.get(cardName));
             customDeck.add(tempCard);
         }
-        FileWriter myWriter = new FileWriter("resources/decks/" + deckName + ".json");
+        FileWriter myWriter = new FileWriter("resources/decks/" + location + "/" + deckName + ".json");
         myWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson(customDeck, ArrayList.class));
         myWriter.close();
         return true;
     }
 
-    public void deckConstruct(int players) throws IOException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        String fileContent = Files.readString(Paths.get("resources/decks/default.json"), StandardCharsets.US_ASCII);
+    public void deckConstruct(int players, String deckName) throws IOException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        String fileContent = Files.readString(Paths.get("resources/decks/server/" + deckName + ".json"), StandardCharsets.US_ASCII);
         ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
 
         for (LinkedTreeMap<Object, Object> cardTree : cardAmounts) {

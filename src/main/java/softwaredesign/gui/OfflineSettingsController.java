@@ -65,7 +65,7 @@ public class OfflineSettingsController implements Initializable {
 
     public String[] getDeckNames(){
         ArrayList<String> allDecks = new ArrayList<>();
-        File folder = new File("resources/decks");
+        File folder = new File("resources/decks/client");
         File[] allFiles = folder.listFiles();
 
         for (int i = 0; i < allFiles.length; i++)

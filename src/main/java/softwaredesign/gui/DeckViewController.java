@@ -71,7 +71,7 @@ public class DeckViewController implements Initializable {
 
     public void deckLoader() throws IOException {
         String fileContent = "";
-        try{ fileContent = Files.readString(Paths.get("resources/decks/" + ClientProgram.currentDeck + ".json"), StandardCharsets.US_ASCII); }
+        try{ fileContent = Files.readString(Paths.get("resources/decks/client/" + ClientProgram.currentDeck + ".json"), StandardCharsets.US_ASCII); }
         catch(Exception e){ System.out.println("Deck not found? " + e); return; }
         ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
 

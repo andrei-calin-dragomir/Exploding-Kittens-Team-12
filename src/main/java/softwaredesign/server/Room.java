@@ -12,10 +12,12 @@ public class Room {
     private final int[] gameRules; // 0: Max players, 1: NumberOfComputers
     private final ServerHeldGame onlineGame = new ServerHeldGame(this);
     private Player currentHost;
+    private String deckName;
     private final String roomName;
     public String getRoomName(){ return this.roomName; }
 
-    public Room(Player host, String name, int maxPlayers, int computerAmount){
+    public Room(Player host, String name, int maxPlayers, int computerAmount, String customDeckName){
+        this.deckName = customDeckName;
         gameRules = new int[]{maxPlayers, computerAmount};
         currentHost = host;
         roomName = name;
@@ -41,7 +43,7 @@ public class Room {
                     if(!hasFreeSpots()) {
                         for(Player p : roomPlayerList.values()) p.setPlayerState(State.PLAYING);
                         sendMsgToRoom(null, "START");
-                        onlineGame.start();
+                        onlineGame.start(deckName);
                     }
                     else ctx.writeAndFlush("NOSTART " + (getMaxPlayers() - roomPlayerList.size()));
                 }

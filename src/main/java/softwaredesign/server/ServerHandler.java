@@ -2,6 +2,7 @@ package softwaredesign.server;
 
 
 import io.netty.channel.*;
+import softwaredesign.core.Deck;
 import softwaredesign.core.Player;
 import softwaredesign.core.State;
 
@@ -70,7 +71,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 else{
                     if(roomList.keySet().contains(gameDetails[0])) ctx.writeAndFlush("ROOM TAKEN");
                     else{
-                        roomList.put(gameDetails[0], new Room(playerMap.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2])));
+                        String deckName = "default";
+                        if(gameDetails.length > 3) deckName = constructDeckFromMessage(gameDetails[3], gameDetails[0]);
+                        roomList.put(gameDetails[0], new Room(playerMap.get(ctx), gameDetails[0], Integer.parseInt(gameDetails[1]), Integer.parseInt(gameDetails[2]), deckName));
                         ctx.writeAndFlush("ROOM CREATED");
                     }
                 }
@@ -79,6 +82,18 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                 getRoom(ctx).channelRespond(ctx, msg);
                 break;
         }
+    }
+
+    private String constructDeckFromMessage(String customDeck, String roomName) throws Exception{
+        String[] cardAmounts = customDeck.split("==");
+        HashMap<String, Integer> cardAmountMap = new HashMap<>();
+        for(String card : cardAmounts){
+            String[] singleCard = card.split(":");
+            cardAmountMap.put(singleCard[0], Integer.parseInt(singleCard[1]));
+        }
+        String customDeckName = "custom-" + roomName;
+        Deck.createCustom(cardAmountMap, customDeckName, "server");
+        return customDeckName;
     }
 
     private String getClientName(ChannelHandlerContext ctx){ return playerMap.get(ctx).getName(); }

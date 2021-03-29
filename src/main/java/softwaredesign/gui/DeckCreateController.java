@@ -70,7 +70,7 @@ public class DeckCreateController implements Initializable {
             deckCreationText.setText("You need at least 40 cards");
             return;
         }
-        Deck.createCustom(amountMap, deckN);
+        Deck.createCustom(amountMap, deckN, "client");
         deckCreationText.setText("Deck creation successful");
     }
 

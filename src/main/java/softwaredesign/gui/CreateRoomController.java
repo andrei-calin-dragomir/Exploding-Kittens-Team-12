@@ -9,6 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import softwaredesign.client.ClientProgram;
+import softwaredesign.core.Deck;
 
 import java.io.File;
 import java.net.URL;
@@ -65,7 +66,9 @@ public class CreateRoomController implements Initializable {
         Integer amountOfPlayers = Integer.parseInt(roomSize.getText());
         Integer amountOfComputers = Integer.parseInt(computerAmount.getText());
         String deckToUse = deckSelection.getText();     // Will be handled
-        ClientProgram.handleCommand("create " + roomName + "," + amountOfPlayers + "," + amountOfComputers);
+        String serializedDeck = "";
+        if(deckToUse != "default") serializedDeck = Deck.serializeDeck(deckToUse, "Client");
+        ClientProgram.handleCommand("create " + roomName + "," + amountOfPlayers + "," + amountOfComputers + "," + serializedDeck);
         ClientProgram.roomName = roomName;
         ClientProgram.gameRules[0] = roomSize.getText();
         ClientProgram.gameRules[1] = computerAmount.getText();
@@ -111,7 +114,7 @@ public class CreateRoomController implements Initializable {
 
     public String[] getDeckNames(){
         ArrayList<String> allDecks = new ArrayList<>();
-        File folder = new File("resources/decks");
+        File folder = new File("resources/decks/client");
         File[] allFiles = folder.listFiles();
 
         for (int i = 0; i < allFiles.length; i++)
