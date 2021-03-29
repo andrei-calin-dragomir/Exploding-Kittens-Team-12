@@ -13,46 +13,46 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
     public void channelRead0(ChannelHandlerContext ctx, String message){
         String tempString = "";     // Used for reconstructing messages with multiple whitespaces, saves a declaration for multiple "cases"
         String[] commands = message.trim().split(" ");
-        ClientProgram.serverMessage.add(message);
+        ClientInfo.getServerMessage().add(message);
         switch(commands[0]){
             case "START":
             case "LEAVEREGISTERED":
             case "DIED":
             case "ENDED":
             case "WINNER":
-                ClientProgram.ownHand = new ArrayList<>();  // Empty the hand because the player stopped playing in some way or form.
+                ClientInfo.setOwnHand(new ArrayList<>());  // Empty the hand because the player stopped playing in some way or form.
                 break;
             case "USERNAMEACCEPTED":
-                ClientProgram.username = commands[1];
+                ClientInfo.setUsername(commands[1]);
                 break;
             case "PLACEKITTEN":
-                ClientProgram.ownHand.remove("ExplodingKittenCard");
+                ClientInfo.getOwnHand().remove("ExplodingKittenCard");
                 break;
             case "PLAYCONFIRMED":
-                ClientProgram.ownHand.remove(ClientProgram.requestedCard);
+                ClientInfo.getOwnHand().remove(ClientInfo.getRequestedCard());
                 break;
             case "JOINED":
-                ClientProgram.playerNamesAndHandSizes.put(commands[1], -1);
+                ClientInfo.getPlayerNamesAndHandSizes().put(commands[1], -1);
                 break;
             case "JOINSUCCESS":
                 String[] playersInRoom = commands[1].split("@@");
                 for(String player : playersInRoom) {
                     tempString = tempString + player + " ";
-                    ClientProgram.playerNamesAndHandSizes.put(player, -1);
+                    ClientInfo.getPlayerNamesAndHandSizes().put(player, -1);
                 }
                 String[] rules = commands[2].split(",");
-                ClientProgram.gameRules = new String[]{rules[0], rules[1]};
+                ClientInfo.setGameRules(new String[]{rules[0], rules[1]});
                 break;
             case "LEFT":
-                ClientProgram.playerNamesAndHandSizes.remove(commands[1]);
+                ClientInfo.getPlayerNamesAndHandSizes().remove(commands[1]);
                 break;
             case "UPDATEHAND":
-                for(int i = 1; i < commands.length;i++) ClientProgram.ownHand.add(commands[i]);
+                for(int i = 1; i < commands.length;i++) ClientInfo.getOwnHand().add(commands[i]);
                 break;
             case "PLAYER":
                 switch(commands[2]){
                     case "EXPLODED":
-                        ClientProgram.playerNamesAndHandSizes.remove(commands[1]);
+                        ClientInfo.getPlayerNamesAndHandSizes().remove(commands[1]);
                         break;
                     default:
                         break;
@@ -60,19 +60,19 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
                 break;
             case "UPDATEPLAYERHANDS":
                 for(int i = 1; i < commands.length; i+=2) {
-                    if (ClientProgram.playerNamesAndHandSizes.containsKey(commands[i])) {
-                        ClientProgram.playerNamesAndHandSizes.replace(commands[i], Integer.parseInt(commands[i + 1]));
+                    if (ClientInfo.getPlayerNamesAndHandSizes().containsKey(commands[i])) {
+                        ClientInfo.getPlayerNamesAndHandSizes().replace(commands[i], Integer.parseInt(commands[i + 1]));
                     }
                 }
                 break;
             case "CREATEPLAYERHANDS":
                 for(int i = 1; i < commands.length; i+=2) {
-                    ClientProgram.playerNamesAndHandSizes.put(commands[i], Integer.parseInt(commands[i + 1]));
+                    ClientInfo.getPlayerNamesAndHandSizes().put(commands[i], Integer.parseInt(commands[i + 1]));
                 }
                 break;
             case "UPDATEDECKS":
-                ClientProgram.deckSize = commands[1];
-                if(commands[2] != null) ClientProgram.discardDeckTop = commands[2];
+                ClientInfo.setDeckSize(commands[1]);
+                if(commands[2] != null) ClientInfo.setDiscardDeckTop(commands[2]);
                 break;
             default:
                 break;
@@ -83,7 +83,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String>{
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         System.out.println("Server has ended connection abruptly");
         System.out.println(cause);
-        ClientProgram.serverMessage.add("SERVERCRASH");
+        ClientInfo.getServerMessage().add("SERVERCRASH");
         ctx.close();
     }
 }

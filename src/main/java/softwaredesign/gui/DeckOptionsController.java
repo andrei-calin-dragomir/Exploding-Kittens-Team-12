@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Shape;
+import softwaredesign.client.ClientInfo;
 import softwaredesign.client.ClientProgram;
 
 import java.io.File;
@@ -41,7 +42,7 @@ public class DeckOptionsController implements Initializable {
 
     @FXML
     private void viewDeck() throws Exception {
-        ClientProgram.currentDeck = deckSelection.getText();
+        ClientInfo.setCurrentDeck(deckSelection.getText());
         ViewsManager.loadScene(ViewsManager.SceneName.DECK_VIEW);
     }
 

@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
+import softwaredesign.client.ClientInfo;
 import softwaredesign.client.ClientProgram;
 import softwaredesign.gui.ViewsManager.SceneName;
 
@@ -58,7 +59,7 @@ public class DeckViewController implements Initializable {
             put("CatCardZombie",  zombieAmount);
         }};
 
-        deckName.setText(ClientProgram.currentDeck);
+        deckName.setText(ClientInfo.getCurrentDeck());
         try { deckLoader(); }
         catch (Exception e) {
             try {} catch (Exception ignore) {}
@@ -67,7 +68,7 @@ public class DeckViewController implements Initializable {
 
     public void deckLoader() throws IOException {
         String fileContent = "";
-        try{ fileContent = Files.readString(Paths.get("resources/decks/client/" + ClientProgram.currentDeck + ".json"), StandardCharsets.US_ASCII); }
+        try{ fileContent = Files.readString(Paths.get("resources/decks/client/" + ClientInfo.getCurrentDeck() + ".json"), StandardCharsets.US_ASCII); }
         catch(Exception e){ System.out.println("Deck not found? " + e); return; }
         ArrayList<LinkedTreeMap> cardAmounts = new Gson().fromJson(fileContent, ArrayList.class);
 

@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.text.Text;
+import softwaredesign.client.ClientInfo;
 import softwaredesign.client.ClientProgram;
 import softwaredesign.gui.ViewsManager.SceneName;
 import java.net.URL;
@@ -52,7 +53,7 @@ public class RoomSelectionViewController implements Initializable {
             return;
         }
         ClientProgram.handleCommand("join " + selectedRoom);
-        ClientProgram.roomName = roomSelectionList.getSelectionModel().getSelectedItem();
+        ClientInfo.setRoomName(roomSelectionList.getSelectionModel().getSelectedItem());
     }
 
     public void populateList(){
@@ -66,8 +67,8 @@ public class RoomSelectionViewController implements Initializable {
     AnimationTimer checkForRoomsLoop = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            if(ClientProgram.serverMessage.isEmpty()) return;
-            String[] cmdlist = ClientProgram.serverMessage.removeFirst().split(" ");
+            if(ClientInfo.getServerMessage().isEmpty()) return;
+            String[] cmdlist = ClientInfo.getServerMessage().removeFirst().split(" ");
             if(cmdlist[0].equals("ROOM")){
                 switch(cmdlist[1]){
                     case "NOROOM":
@@ -83,12 +84,12 @@ public class RoomSelectionViewController implements Initializable {
                     case "FULL":
                         Sounds.playErrorSound();
                         roomError.setText("Room is full");
-                        ClientProgram.roomName = "";
+                        ClientInfo.setRoomName("");
                         break;
                     case "STARTED":
                         Sounds.playErrorSound();
                         roomError.setText("Game in progress");
-                        ClientProgram.roomName = "";
+                        ClientInfo.setRoomName("");
                         break;
                 }
             }

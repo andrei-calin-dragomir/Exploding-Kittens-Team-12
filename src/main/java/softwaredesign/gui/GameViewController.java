@@ -20,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import softwaredesign.client.ClientInfo;
 import softwaredesign.client.ClientProgram;
 
 import java.net.URL;
@@ -85,7 +86,7 @@ public class GameViewController implements Initializable {
     void leave() throws Exception{
         gameLoop.stop();
         sendCommand("leave");
-        if(ClientProgram.offlineGame){
+        if(ClientInfo.getOfflineGame()){
             ClientProgram.killOffline();
             Thread.sleep(2000);
             ViewsManager.loadScene(ViewsManager.SceneName.SPLASH_SCREEN);
@@ -101,7 +102,7 @@ public class GameViewController implements Initializable {
             Sounds.playErrorSound();
             placeError.setText("Enter a valid number");
         }
-        else if(Integer.parseInt(index) > Integer.parseInt(ClientProgram.deckSize)){
+        else if(Integer.parseInt(index) > Integer.parseInt(ClientInfo.getDeckSize())){
             Sounds.playErrorSound();
             placeError.setText("That number is too big");
         }
@@ -118,7 +119,7 @@ public class GameViewController implements Initializable {
 
     @FXML
     void showDeckSize(){
-        deckSizeText.setText("The deck has " + ClientProgram.deckSize + " cards");
+        deckSizeText.setText("The deck has " + ClientInfo.getDeckSize() + " cards");
         deckSizeText.setTextAlignment(TextAlignment.CENTER);
     }
 
@@ -156,10 +157,10 @@ public class GameViewController implements Initializable {
     AnimationTimer gameLoop = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            if(ClientProgram.serverMessage.isEmpty()){
+            if(ClientInfo.getServerMessage().isEmpty()){
                 return;
             }
-            String cmd = ClientProgram.serverMessage.removeFirst();
+            String cmd = ClientInfo.getServerMessage().removeFirst();
             addText("r> " + cmd);
             String tempString = "";
             String[] commands = cmd.split(" ");
@@ -174,7 +175,7 @@ public class GameViewController implements Initializable {
                     Sounds.playExplosionSound();
                     personalAnnouncement.setText("You died, bummer. :( ");
                     setDisableAll(true);
-                    if(ClientProgram.playerNamesAndHandSizes.size() == 3 && !Sounds.isPlaying("lastPlayersLeft")){
+                    if(ClientInfo.getPlayerNamesAndHandSizes().size() == 3 && !Sounds.isPlaying("lastPlayersLeft")){
                         Sounds.stopSound();
                         Sounds.playLastPlayersMusic();
                     }
@@ -189,7 +190,7 @@ public class GameViewController implements Initializable {
                     break;
                 case "TURN":
                     Sounds.playNextTurnSound();
-                    if(commands[1].equals(ClientProgram.username)){ //if it's your turn
+                    if(commands[1].equals(ClientInfo.getUsername())){ //if it's your turn
                         announcementText.setText("It's your turn!");
                         personalAnnouncement.setText("Play a card or draw!");
                         setDisableAll(false);
@@ -201,7 +202,7 @@ public class GameViewController implements Initializable {
                     break;
                 case "WINNER":
                     //WINNER + name
-                    if(commands[1].equals(ClientProgram.username)){
+                    if(commands[1].equals(ClientInfo.getUsername())){
                         Sounds.stopSound();
                         Sounds.playWin();
                         announcementText.setText("You have won! Congrats");
@@ -245,7 +246,7 @@ public class GameViewController implements Initializable {
                             Sounds.playExplosionSound();
                             personalAnnouncement.setText(commands[1] + " has just exploded!");
                             updateAll();
-                            if(ClientProgram.playerNamesAndHandSizes.size() == 2 && !Sounds.isPlaying("lastPlayersLeft")){
+                            if(ClientInfo.getPlayerNamesAndHandSizes().size() == 2 && !Sounds.isPlaying("lastPlayersLeft")){
                                 Sounds.stopSound();
                                 Sounds.playLastPlayersMusic();
                             }
@@ -276,7 +277,7 @@ public class GameViewController implements Initializable {
                     updateAll();
                     break;
                 default:
-                    announcementText.setText("Unknown server command: " + cmd);
+//                    announcementText.setText("Unknown server command: " + cmd);
                     break;
             }
 
@@ -358,7 +359,7 @@ public class GameViewController implements Initializable {
 
 
     void actionPlaceBackKitten(){
-        placeError.setText("Insert value between \n0 (top of deck) and " + ClientProgram.deckSize);
+        placeError.setText("Insert value between \n0 (top of deck) and " + ClientInfo.getDeckSize());
         setDisableAll(true);
         setDisableInsertIndexBox(false);
     }
@@ -369,7 +370,7 @@ public class GameViewController implements Initializable {
     void updateAll(){
         refreshPlayers();
         populateHand();
-        setMostRecentDiscardedCard(ClientProgram.discardDeckTop);
+        setMostRecentDiscardedCard(ClientInfo.getDiscardDeckTop());
     }
 
     /**
@@ -448,7 +449,7 @@ public class GameViewController implements Initializable {
         cardsGridPane.getChildren().clear();
         cardImageViews.clear();
 
-        for(String card : ClientProgram.ownHand){
+        for(String card : ClientInfo.getOwnHand()){
             addCardToHand(card);
         }
         setDisableDefuseCards(true);
@@ -463,13 +464,13 @@ public class GameViewController implements Initializable {
 
     private void refreshPlayers(){
         enemyHBox.getChildren().clear();
-        for (String playerName : ClientProgram.playerNamesAndHandSizes.keySet()){
-            if(!playerName.equals(ClientProgram.username)) {
+        for (String playerName : ClientInfo.getPlayerNamesAndHandSizes().keySet()){
+            if(!playerName.equals(ClientInfo.getUsername())) {
                 VBox enemy = new VBox();
                 enemy.setAlignment(Pos.CENTER);
                 enemy.setUserData(playerName);
 
-                Text text = new Text("Player " + playerName + "\nhas " + ClientProgram.playerNamesAndHandSizes.get(playerName) + " cards.");
+                Text text = new Text("Player " + playerName + "\nhas " + ClientInfo.getPlayerNamesAndHandSizes().get(playerName) + " cards.");
                 text.setFont(Font.font("Bebas Neue", FontWeight.BOLD, 20));
                 text.setStyle("-fx-font-size: 25");
 

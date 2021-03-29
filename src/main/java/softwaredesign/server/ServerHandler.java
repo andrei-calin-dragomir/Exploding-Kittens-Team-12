@@ -118,7 +118,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             playerRoom.sendMsgToRoom(player,"LEFT " + player.getName() + " " + playerRoom.playerListAsString());
             if(playerRoom.isRoomEmpty()) {
                 File customDeck = new File("resources/decks/server/" + playerRoom.getDeckName() + ".json");
-                customDeck.delete();
+                if(!playerRoom.getDeckName().equals("default")) customDeck.delete();
                 roomList.remove(playerRoom.getRoomName());
             }
             else playerRoom.assignNewHost();

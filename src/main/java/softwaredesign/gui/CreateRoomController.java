@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
+import softwaredesign.client.ClientInfo;
 import softwaredesign.client.ClientProgram;
 import softwaredesign.core.Deck;
 
@@ -76,9 +77,8 @@ public class CreateRoomController implements Initializable {
         String serializedDeck = "";
         if(!deckToUse.equals("default")) serializedDeck = Deck.serializeDeck(deckToUse);
         ClientProgram.handleCommand("create " + roomName + "," + amountOfPlayers + "," + amountOfComputers + "," + serializedDeck);
-        ClientProgram.roomName = roomName;
-        ClientProgram.gameRules[0] = roomSize.getText();
-        ClientProgram.gameRules[1] = computerAmount.getText();
+        ClientInfo.setRoomName(roomName);
+        ClientInfo.setGameRules(new String[]{roomSize.getText(), computerAmount.getText()});
         Sounds.stopSound();
         waitForReply.start();
     }
@@ -89,8 +89,8 @@ public class CreateRoomController implements Initializable {
     AnimationTimer waitForReply = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            if (!ClientProgram.serverMessage.isEmpty()) {
-                String[] msg = ClientProgram.serverMessage.removeFirst().split(" ");
+            if (!ClientInfo.getServerMessage().isEmpty()) {
+                String[] msg = ClientInfo.getServerMessage().removeFirst().split(" ");
                 if (msg[0].equals("ROOM")) {
                     if (msg[1].equals("TAKEN")) {
                         roomNameExists.setVisible(true);
@@ -98,7 +98,7 @@ public class CreateRoomController implements Initializable {
                     }
                     else if (msg[1].equals("CREATED")) {
                         // Go to room mode
-                        ClientProgram.offlineGame = false;
+                        ClientInfo.setOfflineGame(false);
                         try { ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SCREEN); } catch (Exception ignore) {}
                         super.stop();
                     }

@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import softwaredesign.client.ClientInfo;
 import softwaredesign.client.ClientProgram;
 
 import java.io.File;
@@ -73,8 +74,8 @@ public class DebugBoxController extends Application implements Initializable  {
 
         @Override
         public void handle(long now) {
-            if(!ClientProgram.serverMessage.isEmpty()){
-                addText("r> " + ClientProgram.serverMessage.removeFirst());
+            if(!ClientInfo.getServerMessage().isEmpty()){
+                addText("r> " + ClientInfo.getServerMessage().removeFirst());
             }
         }
     };

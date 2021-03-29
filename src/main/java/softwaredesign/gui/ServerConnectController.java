@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import softwaredesign.client.ClientInfo;
 import softwaredesign.client.ClientProgram;
 
 import java.net.URL;
@@ -33,7 +34,7 @@ public class ServerConnectController implements Initializable {
 
     private Boolean tryConnect(String serverIP){
         if(serverIP.equals("")) serverIP = "127.0.0.1";
-        if(!ClientProgram.currentServer.equals(serverIP))       // Avoids unnecessary reconnects
+        if(!ClientInfo.getCurrentServer().equals(serverIP))       // Avoids unnecessary reconnects
             if(!ClientProgram.connectAndLoop(serverIP,false)) {
                 Sounds.playErrorSound();
                 serverField.setText("");
@@ -64,10 +65,10 @@ public class ServerConnectController implements Initializable {
     AnimationTimer waitForReply = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            if(!ClientProgram.serverMessage.isEmpty()){
-                String[] msg = ClientProgram.serverMessage.removeFirst().split(" ");
+            if(!ClientInfo.getServerMessage().isEmpty()){
+                String[] msg = ClientInfo.getServerMessage().removeFirst().split(" ");
                 if(msg[0].equals("USERNAMEACCEPTED")){
-                    ClientProgram.username = msg[1];
+                    ClientInfo.setUsername(msg[1]);
                     super.stop();
                     try {
                         ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);

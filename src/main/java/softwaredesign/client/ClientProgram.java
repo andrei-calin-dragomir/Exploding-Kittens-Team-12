@@ -11,27 +11,12 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import softwaredesign.server.ServerProgram;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 
 public class ClientProgram {
-    public static String username;
     static ChannelFuture correspondenceChannel;
     static EventLoopGroup group;
-    public static ArrayList<String> ownHand = new ArrayList<>();
-    public static LinkedHashMap<String,Integer> playerNamesAndHandSizes = new LinkedHashMap<>(); //todo maybe needs a getter/setter?
-    public static String requestedCard = "";
-    public static String currentServer = "";
-    public static String roomName = "";
-    public static String[] gameRules = new String[]{"", ""};
-    public static String deckSize;
-    public static String currentDeck;
-    public static String discardDeckTop;
-    public static Boolean offlineGame;
-    public static ServerProgram server;
-    public static LinkedList<String> serverMessage = new LinkedList<>();
+
 
     public static Boolean isInteger(String intString){
         try { Integer.parseInt(intString); }
@@ -42,8 +27,8 @@ public class ClientProgram {
     // starts the client, which will communicate with the server. If its offline it will create a multithreaded shadow server which it can communicate with (aka local play)
     public static void startClient(String IP, boolean offline) {
         if(offline){
-            server = new ServerProgram();
-            server.start();
+            ClientInfo.setServer(new ServerProgram());
+            ClientInfo.getServer().start();
             connectAndLoop("127.0.0.1", true);
         }else{
             connectAndLoop(IP, false);
@@ -53,7 +38,7 @@ public class ClientProgram {
     // Kills the server if you exit out of offline
     public static void killOffline(){
         killConnectionSafely();
-        server.stop();
+        ClientInfo.getServer().stop();
     }
 
     // Disconnects from a server and resets server info so that reconnects are possible
@@ -65,7 +50,7 @@ public class ClientProgram {
                 group.shutdownGracefully();
                 correspondenceChannel = null;
                 group = null;
-                currentServer = "";
+                ClientInfo.setCurrentServer("");
             }
 
         } catch (Exception e){
@@ -108,8 +93,8 @@ public class ClientProgram {
                 System.out.println("Connected");
                 sendRequestToServer("USERNAME You SOLO");
             }
-            currentServer = HOST;
-            offlineGame = offline;
+            ClientInfo.setCurrentServer(HOST);
+            ClientInfo.setOfflineGame(offline);
             return true;
         }catch(Exception e){
             System.out.println("Connection failed.\nClosing...");
@@ -132,8 +117,8 @@ public class ClientProgram {
                     sendRequestToServer("START");
                     break;
                 case "leave":
-                    playerNamesAndHandSizes = new LinkedHashMap<>();
-                    playerNamesAndHandSizes.put(username, -1);
+                    ClientInfo.setPlayerNamesAndHandSizes(new LinkedHashMap<>());
+                    ClientInfo.getPlayerNamesAndHandSizes().put(ClientInfo.getUsername(), -1);
                     sendRequestToServer("LEAVEROOM");
                     break;
                 case "join":
@@ -153,10 +138,10 @@ public class ClientProgram {
                     System.exit(0);
                     break;
                 case "play":
-                    requestedCard = cmdList[1];
+                    ClientInfo.setRequestedCard(cmdList[1]);
                     String target = "";
                     if(cmdList.length > 2) target = cmdList[2];
-                    sendRequestToServer("PLAY " + ClientProgram.ownHand.indexOf(cmdList[1]) + " " + target);
+                    sendRequestToServer("PLAY " + ClientInfo.getOwnHand().indexOf(cmdList[1]) + " " + target);
                     break;
                 case "draw":
                     sendRequestToServer("DRAW");
@@ -168,12 +153,12 @@ public class ClientProgram {
                     sendRequestToServer(cmd);
                     break;
                 case "hand":
-                    System.out.println(ownHand);
+                    System.out.println(ClientInfo.getOwnHand());
                     break;
                 case "give":
                     //GIVE + CARD + TARGET
-                    sendRequestToServer("GIVE " + ownHand.indexOf(cmdList[1]) + " " + cmdList[2]);
-                    ownHand.remove(ownHand.indexOf(cmdList[1]));
+                    sendRequestToServer("GIVE " + ClientInfo.getOwnHand().indexOf(cmdList[1]) + " " + cmdList[2]);
+                    ClientInfo.getOwnHand().remove(ClientInfo.getOwnHand().indexOf(cmdList[1]));    // Removes card you are giving away
                     break;
                 default:
                     System.out.println("Unknown command, try again");

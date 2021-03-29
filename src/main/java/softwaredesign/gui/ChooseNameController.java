@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import softwaredesign.client.ClientInfo;
 import softwaredesign.client.ClientProgram;
 import softwaredesign.gui.ViewsManager.SceneName;
 
@@ -36,11 +37,11 @@ public class ChooseNameController {
     AnimationTimer waitForReply = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            if(!ClientProgram.serverMessage.isEmpty()){
-                String msg = ClientProgram.serverMessage.removeFirst();
+            if(!ClientInfo.getServerMessage().isEmpty()){
+                String msg = ClientInfo.getServerMessage().removeFirst();
                 if(msg.equals("USERNAMEACCEPTED")){
                     errorText.setText("Success!");
-                    ClientProgram.username = username;
+                    ClientInfo.setUsername(username);
                     try {
                         ViewsManager.loadScene(SceneName.ROOM_SELECTION);
                     } catch (Exception e) {

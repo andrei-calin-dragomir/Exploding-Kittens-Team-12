@@ -1,14 +1,11 @@
 package softwaredesign.gui;
 
-import java.util.Random;
-
 /**
  * Provides the right Url for the image of the card requested.
  */
 public class CardHelper {
 
     static String getCardImageUrl(String card){
-        Random rand = new Random();
         String res = "file:resources/images/normal/";
         if(card.equals("CatCardShy")
                 || card.equals("CatCardZombie")

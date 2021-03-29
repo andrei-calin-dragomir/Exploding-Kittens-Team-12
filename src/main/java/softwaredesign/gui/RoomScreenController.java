@@ -8,6 +8,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
+import softwaredesign.client.ClientInfo;
 import softwaredesign.client.ClientProgram;
 
 import java.net.URL;
@@ -46,11 +47,11 @@ public class RoomScreenController implements Initializable {
     @FXML
     void updatePlayerList(){
         Text[] playerTexts = new Text[]{player1, player2, player3, player4};
-        Object[] players = ClientProgram.playerNamesAndHandSizes.keySet().toArray();
+        Object[] players = ClientInfo.getPlayerNamesAndHandSizes().keySet().toArray();
         for(Integer i = 0; i < 4; i++){
             if(i < players.length) {
                 String player = players[i].toString();
-                if(player.equals(ClientProgram.username)) player += " (You)";
+                if(player.equals(ClientInfo.getUsername())) player += " (You)";
                 playerTexts[i].setText(player);
             }
             else playerTexts[i].setText("");
@@ -60,8 +61,8 @@ public class RoomScreenController implements Initializable {
     AnimationTimer lobbyUpdates = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            if (!ClientProgram.serverMessage.isEmpty()) {
-                String[] msg = ClientProgram.serverMessage.removeFirst().split(" ");
+            if (!ClientInfo.getServerMessage().isEmpty()) {
+                String[] msg = ClientInfo.getServerMessage().removeFirst().split(" ");
                 if(msg[0].equals("JOINED")) {
                     Sounds.playPlayerJoined();
                     updatePlayerList();
@@ -71,7 +72,7 @@ public class RoomScreenController implements Initializable {
                     Sounds.playPlayerLeft();
                 }
                 else if(msg[0].equals("CHAT")) {
-                    if(!msg[1].equals(ClientProgram.username)) {
+                    if(!msg[1].equals(ClientInfo.getUsername())) {
                         Sounds.playChatSound(true);
                     }
                     String tempString = "";
@@ -113,8 +114,8 @@ public class RoomScreenController implements Initializable {
     @FXML
     void leaveGame() throws Exception {
         Sounds.stopSound();
-        ClientProgram.playerNamesAndHandSizes = new LinkedHashMap<>();
-        ClientProgram.playerNamesAndHandSizes.put(ClientProgram.username, -1);
+        ClientInfo.setPlayerNamesAndHandSizes(new LinkedHashMap<>());
+        ClientInfo.getPlayerNamesAndHandSizes().put(ClientInfo.getUsername(), -1);  // Resets the local username list
         ClientProgram.handleCommand("leave");
         lobbyUpdates.stop();
         ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
@@ -125,13 +126,13 @@ public class RoomScreenController implements Initializable {
         Sounds.playRoomMusicWaiting();
         startError.setText("");
         chatBox.setFocusTraversable(false);
-        ClientProgram.playerNamesAndHandSizes.put(ClientProgram.username, -1);
-        roomSize.setText("Room Size: " + ClientProgram.gameRules[0]);
-        computerAmount.setText("Computers: " + ClientProgram.gameRules[1]);
-        lobbyPlaceholder.setText(ClientProgram.roomName);
+        ClientInfo.getPlayerNamesAndHandSizes().put(ClientInfo.getUsername(), -1);
+        roomSize.setText("Room Size: " + ClientInfo.getGameRules()[0]);
+        computerAmount.setText("Computers: " + ClientInfo.getGameRules()[1]);
+        lobbyPlaceholder.setText(ClientInfo.getRoomName());
         updatePlayerList();
         lobbyUpdates.start();
-        chatMessages.add("Welcome to room: " + ClientProgram.roomName);
+        chatMessages.add("Welcome to room: " + ClientInfo.getRoomName());
         chatBox.setItems(chatMessages);
 
         sendMessageField.setOnKeyPressed(event -> {

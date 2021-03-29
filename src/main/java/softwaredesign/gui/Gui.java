@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import softwaredesign.client.ClientInfo;
 import softwaredesign.client.ClientProgram;
 
 import java.io.File;
@@ -29,8 +30,8 @@ public class Gui extends Application {
 
         @Override
         public void handle(long now) {
-            if(!ClientProgram.serverMessage.isEmpty()){
-                latestMessage = ClientProgram.serverMessage.removeFirst();
+            if(!ClientInfo.getServerMessage().isEmpty()){
+                latestMessage = ClientInfo.getServerMessage().removeFirst();
             }
         }
     };
