@@ -1,44 +1,46 @@
 package softwaredesign.server;
 
 
-import io.netty.channel.*;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 import softwaredesign.core.Deck;
 import softwaredesign.core.Player;
 import softwaredesign.core.State;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class ServerHandler extends SimpleChannelInboundHandler<String>{
     public static HashMap<ChannelHandlerContext, Player> playerMap = new HashMap<>();
     private static HashMap<String,Room> roomList = new HashMap<>();
 
     @Override
-    public void channelActive(final ChannelHandlerContext ctx) {
+    public void channelActive(final ChannelHandlerContext ctx) {        // Standard netty function that gets called when a new connection is made
         System.out.println("Client joined - " + ctx);
         playerMap.put(ctx, new Player(ctx));
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {  // Standard netty function that gets called when a new message has been received
         System.out.println("Server received - " + msg);
         channelRespond(ctx,msg);
     }
 
-    public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception {
+    public void channelRespond(ChannelHandlerContext ctx, String msg) throws Exception { // This handles the received message by checking what it is and handling the action.
         String[] message = msg.split("\\s+");
         switch(message[0].toUpperCase(Locale.ROOT)){
-            case "DISCONNECTING":
+            case "DISCONNECTING":               // When a player disconnect in any way this message is sent from that player
                 disconnectPlayer(ctx, null);
                 break;
-            case "AVAILABLEROOMS" :
+            case "AVAILABLEROOMS":              // Returns the rooms that are available, this is used by the client to refresh the room screen
                 if(message.length < 3){
                     String str = String.join(",", roomList.keySet());
                     if(roomList.isEmpty()) ctx.writeAndFlush("ROOM NOROOM");
                     else ctx.writeAndFlush("ROOM AVAILABLE " + str);
                 }
                 break;
-            case "USERNAME":
+            case "USERNAME":                    // Register the username of the player, checks if its already in use as well
                 if(checkNameInUse(message[1])) ctx.writeAndFlush("USERNAMETAKEN");
                 else{
                     ctx.writeAndFlush("USERNAMEACCEPTED " + message[1]);
@@ -50,7 +52,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                     }
                 }
                 break;
-            case "JOIN":
+            case "JOIN":                        // Lets a player join a room, will return appropriate errors (room full, room not found etc)
                 Room roomObj = roomList.get(message[1]);
                 if(roomObj == null) ctx.writeAndFlush("ROOM NOTFOUND");
                 else if(roomObj.hasStarted()) ctx.writeAndFlush("ROOM STARTED");
@@ -66,7 +68,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             case "LEAVEROOM":
                 cleanRoomOfEntity(ctx);
                 break;
-            case "CREATE":
+            case "CREATE":                      // Lets a player create a room, it takes the parameters: <Roomname>,<PlayerTotal>,<ComputerTotal>,(Optional)<CustomDeck>
                 String[] gameDetails = message[1].split(",");
                 if (message.length > 2 && message[2].equals("SOLO")) ctx.writeAndFlush("ROOM CREATED SOLO");
                 else{
@@ -79,12 +81,13 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
                     }
                 }
                 break;
-            default:
+            default:    // If none of these commands match then the command is passed onto the room and that will handle the message further
                 getRoom(ctx).channelRespond(ctx, msg);
                 break;
         }
     }
 
+    // Used to construct the custom deck that was sent over a message. This is not needed if the deck is "default"
     private String constructDeckFromMessage(String customDeck, String roomName) throws Exception{
         String[] cardAmounts = customDeck.split("==");
         HashMap<String, Integer> cardAmountMap = new HashMap<>();
@@ -100,10 +103,13 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
     private String getClientName(ChannelHandlerContext ctx){ return playerMap.get(ctx).getName(); }
     private Room getRoom(ChannelHandlerContext ctx){ return playerMap.get(ctx).getCurrentRoom(); }
 
+    // Returns true if the player name already exists
     private Boolean checkNameInUse(String name){
         for(Player player : playerMap.values()) if(player.getName().equals(name)) return true;
         return false;
     }
+
+    // Removes the player from a room, and will also remove the room if no human players are left.
     private void cleanRoomOfEntity(ChannelHandlerContext ctx) {
         Room playerRoom = getRoom(ctx);
         if(playerRoom != null){
@@ -118,6 +124,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
             else playerRoom.assignNewHost();
         }
     }
+
+    // This closes the actual connection for the player, which means they left the server completely (and not only a room)
     private void disconnectPlayer(ChannelHandlerContext ctx, Throwable cause){
         System.out.println("Closing connection for client - " + getClientName(ctx));
         if(cause != null) System.out.println("He disconnected because of: " + cause);
@@ -127,7 +135,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String>{
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws InterruptedException {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         disconnectPlayer(ctx,cause);
     }
 }
