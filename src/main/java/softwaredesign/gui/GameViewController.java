@@ -22,54 +22,39 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import softwaredesign.client.ClientProgram;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * Controller during game view, responsible of all interactions during game
+ */
 public class GameViewController implements Initializable {
 
-    @FXML
-    private VBox root;
+    /**
+     * Variables and methods referenced in the FXML files
+     */
 
     @FXML
-    private VBox debugArea;
-
-    @FXML
-    private Button leaveButton;
-
-    @FXML
-    private TextField commandField;
-
-    @FXML
-    private TextArea receivedMessages;
-
-    @FXML
-    private Text personalAnnouncement;
-
-    @FXML
-    private TextArea debugBox;
+    private VBox root, debugArea, insertIndexBox;
 
     @FXML
     private HBox enemyHBox;
 
     @FXML
-    private Text announcementText, placeError, deckSizeText;
+    private Button leaveButton, placeButton, sendCommandButton;
 
     @FXML
-    private ImageView mainDeck;
+    private TextField commandField, indexField;
 
     @FXML
-    private VBox insertIndexBox;
+    private TextArea receivedMessages, debugBox;
 
     @FXML
-    private TextField indexField;
+    private Text announcementText, placeError, deckSizeText, personalAnnouncement;
 
     @FXML
-    private Button placeButton, sendCommandButton;
-
-    @FXML
-    private ImageView discardDeck;
+    private ImageView mainDeck, discardDeck;
 
     @FXML
     public ScrollPane cardScrollPane;
@@ -82,271 +67,32 @@ public class GameViewController implements Initializable {
         Sounds.playClick();
     }
 
-    ArrayList<Button> playerInteractionButtons = new ArrayList<>();
-    ArrayList<ImageView> cardImageViews = new ArrayList<>();
+    /**
+     * Controller specific variables
+     */
+    private ArrayList<Button> playerInteractionButtons = new ArrayList<>();
+    private ArrayList<ImageView> cardImageViews = new ArrayList<>();
     static public String cardsToShow; //ugly but functional
-    Boolean giveCardMode = false;
-    String giveCardTarget;
+    private Boolean giveCardMode = false;
+    private String giveCardTarget;
 
-
-    AnimationTimer gameLoop = new AnimationTimer() {
-        @Override
-        public void handle(long now) {
-            if(ClientProgram.serverMessage.isEmpty()){
-                return;
-            }
-            String cmd = ClientProgram.serverMessage.removeFirst();
-            addText("r> " + cmd);
-            String tempString = "";
-            String[] commands = cmd.split(" ");
-            switch(commands[0]){
-                case "LEAVEREGISTERED":
-                    //go back to room
-                    break;
-                case "EXPLODING":
-                    //must defuse it immediately
-                    //alert player, freeze non-defuse cards?
-                    Sounds.playExplodingKittenDrawn();
-                    setAnnouncementText("You drew an Exploding Kitten, quick, defuse it!");
-                    setDisableDefuseCards(false);
-                    setDisableOtherCards(true);
-                    break;
-                case "DIED":
-                    //u died
-                    //freeze all interactions
-                    Sounds.playExplosionSound();
-                    personalAnnouncement.setText("You died, bummer. :( ");
-                    setDisableAll(true);
-                    break;
-                case "PLACEKITTEN":
-                    //enable selection of index
-                    //then send "place + index"
-                    Sounds.playPlayCard();
-                    actionPutBackKitten();
-                    break;
-                case "ENDED":
-                    //make everything freeze/go back to room list view?
-                    //TODO check how it works with WINNER message
-                    setAnnouncementText("Game ended.");
-                    setDisableAll(true);
-                    break;
-                case "PLAYCONFIRMED":
-                    //display green tick?
-                    break;
-                case "NOTALLOWED":
-                    //hardcode into gui
-                    if(commands[1].equals("DEAD")) {
-                        System.out.println("You can't do that because you have already exploded.");
-                    }
-                    else if(commands[1].equals("BADPLACE")) {
-                        //in index selection, only accept between right range
-                        System.out.println("Invalid card placement, try placing again.");
-                    }
-                    else if(commands[1].equals("NOTEXPLODING")) {
-                        //make defuse unplayable in normal game phase
-                        System.out.println("You can only play a defuse card when you draw an Exploding Kitten!");
-                    }
-                    else if(commands[1].equals("MUSTDEFUSE")) {
-                        //make cards other than defuse freeze
-                        System.out.println("You have to play a defuse card when you draw an Exploding Kitten!");
-                    }
-                    break;
-                case "TURN":
-                    //unfreeze nodes if it's ur turn
-                    Sounds.playNextTurnSound();
-                    if(commands[1].equals(ClientProgram.username)){
-                        setAnnouncementText("It's your turn!");
-                        personalAnnouncement.setText("Play a card or draw!");
-                        setDisableAll(false);
-                    }
-                    else {
-                        setAnnouncementText("It's " + commands[1] + "'s turn!");
-                        personalAnnouncement.setText("");
-                        setDisableAll(true);
-                    }
-                    break;
-                case "WINNER":
-                    //WINNER + name
-                    //update announcement and freeze everything
-                    if(commands[1].equals(ClientProgram.username)){
-                        Sounds.stopSound();
-                        Sounds.playWin();
-                        setAnnouncementText("You have won! Congrats");
-                    }
-                    else {
-                        setAnnouncementText(commands[1] + " has won!");
-                    }
-                    setDisableAll(true);
-                    break;
-                case "LEFT":
-                    //LEFT + whoLeft + remaining1@@remaning2
-                    //global update + announcment
-                    Sounds.playPlayerLeft();
-                    setAnnouncementText(commands[1] + " has left the game");
-                    updateAll();
-                    break;
-                case "UPDATEHAND":
-                    //global update
-                    updateAll();
-                    break;
-                case "SEEFUTURE":
-                    //SEEFUTURE cardname cardname cardname
-                    //open windows with the cards
-                    try {
-                        launchSeeTheFutureDialog(cmd);
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                    }
-                    break;
-                case "ATTACKED":
-                    //update announcment
-                    personalAnnouncement.setText(commands[1] + " has attacked you, you draw twice");
-                    break;
-                case "TARGETED":
-                    //targeted + name
-                    //enable exclusively handview and select one card reply with
-                    //TODO
-                    Sounds.playGiveCard();
-                    setAnnouncementText(commands[1] + " has asked you a favor, select which card you want to give up");
-                    giveCardTarget = commands[1];
-                    setGiveCardMode(true);
-                    break;
-                case "PLAYER":
-                    //PLAYER name ACTION ACTION2
-                    //announce + global update
-//                    updateAll();
-                    switch(commands[2]){
-                        case "EXPLODED":
-                            Sounds.playExplosionSound();
-                            personalAnnouncement.setText(commands[1] + " has just exploded!");
-                            updateAll();
-                            System.out.println(ClientProgram.playerNamesAndHandSizes.size());
-                            if(ClientProgram.playerNamesAndHandSizes.size() == 2 && !Sounds.isPlaying("lastPlayersLeft")){
-                                Sounds.stopSound();
-                                Sounds.playLastPlayersMusic();
-                            }
-                            break;
-                        case "DREW":
-                            Sounds.drawnCard();
-                            personalAnnouncement.setText(commands[1] + " has drawn a card.");
-                            break;
-                        case "DREWEXP":
-                            Sounds.playMeow();
-                            personalAnnouncement.setText(commands[1] + " has drawn an exploding kitten!");
-                            break;
-                        case "DEFUSED":
-                            Sounds.playPlayCard();
-                            personalAnnouncement.setText(commands[1] + " has defused the kitten.");
-                            break;
-                        case "PLAYED":
-                            Sounds.playPlayCard();
-                            personalAnnouncement.setText(commands[1] + " played the " + commands[3] + " card.");
-                            break;
-                    }
-                    break;
-                case "UPDATEPLAYERHANDS":
-                    //global refresh
-                    updateAll();
-                    System.out.println("YOUR HAND IS: " + ClientProgram.ownHand.toString());
-                    break;
-                case "CREATEPLAYERHANDS":
-                    //do nothing;
-                    System.out.println("YOUR HAND IS: " + ClientProgram.ownHand.toString());
-                case "UPDATEDECKS":
-                    //global update
-                    updateAll();
-                    break;
-                default:
-                    //update announcement?
-                    personalAnnouncement.setText("Unknown server command: " + cmd);
-                    break;
-            }
-
-        }
-    };
-
-    void setGiveCardMode(Boolean value){
-        giveCardMode = value;
-        setDisableAll(false);
-        mainDeck.setDisable(value);
-        setDisableDefuseCards(!value);
-        setDisableOtherCards(!value);
-    }
-
-    void setDisableDefuseCards(Boolean value){
-        for (ImageView card : cardImageViews) {
-            if(card.getUserData().equals("DefuseCard")){
-                card.setDisable(value);
-            }
-        }
-    }
-
-    void setDisableOtherCards(Boolean value){
-        for (ImageView card : cardImageViews) {
-            if(!card.getUserData().equals("DefuseCard")){
-//                System.out.println("userdata = " + card.getUserData());
-                card.setDisable(value);
-            }
-        }
-    }
-
-    void setDisableInsertIndexBox(Boolean value){
-        //enable => value = false
-        mainDeck.setVisible(value);
-        insertIndexBox.setVisible(!value);
-        insertIndexBox.setDisable(value);
-        indexField.setDisable(value);
-        placeButton.setDisable(value);
-    }
-
-    void setDisableAll(Boolean value){
-//        mainDeck.setDisable(value);
-        cardsGridPane.setDisable(value);
-    }
-
-    void updateAll(){
-        refreshPlayers();
-        populateHand();
-        setMostRecentDiscardedCard(ClientProgram.discardDeckTop);
-    }
-
-    void interactWithPlayer(String player, Boolean attack){
-        String actionType;
-        if (attack) actionType = "AttackCard ";
-        else actionType = "FavorCard ";
-        sendCommand("play " + actionType + player);
-        cardsGridPane.setDisable(false);
-        mainDeck.setDisable(false);
-        for(Button button : playerInteractionButtons){
-            button.setVisible(false);
-        }
-    }
 
     /**
-     * Enable buttons for favor or attack.
-     * @param attack true if attack, false if favor
+     * These are functions called with the FXML
      */
-    void enableInteraction(Boolean attack){
-        String buttonText;
-        if(attack) buttonText = "Attack!";
-        else buttonText = "Ask favor!";
 
-        cardsGridPane.setDisable(true);
-        mainDeck.setDisable(true);
-
-        for(Button button : playerInteractionButtons){
-            button.setText(buttonText);
-            button.setOnAction(event -> interactWithPlayer((String) button.getParent().getUserData(),attack));
-            button.setVisible(true);
+    @FXML
+    void leave() throws Exception{
+        gameLoop.stop();
+        sendCommand("leave");
+        if(ClientProgram.offlineGame){
+            ClientProgram.killOffline();
+            Thread.sleep(2000);
+            ViewsManager.loadScene(ViewsManager.SceneName.SPLASH_SCREEN);
         }
+        else ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
     }
 
-
-    void actionPutBackKitten(){
-        placeError.setText("Insert value between \n0 (top of deck) and " + ClientProgram.deckSize);
-        setDisableAll(true);
-        setDisableInsertIndexBox(false);
-    }
 
     @FXML
     void placeKitten(){
@@ -381,6 +127,251 @@ public class GameViewController implements Initializable {
         deckSizeText.setText("");
     }
 
+    @FXML
+    void sendCommand() {
+        String cmd = commandField.getText();
+        //debug
+        commandField.setText("");
+        addText("s> " + cmd);
+        ClientProgram.handleCommand(cmd);
+    }
+
+    /**
+     * This function executes the passed parameter. The @FXML version does so taking
+     * the cmd parameter from the textField
+     */
+    void sendCommand(String cmd){
+        //debug
+        commandField.setText("");
+        addText("s> " + cmd);
+        ClientProgram.handleCommand(cmd);
+    }
+
+
+
+    /**
+     * The main loop that checks for updates from the server. When it finds an update, it act accordingly.
+     * This function gets called at every frame, ~60 times a second.
+     */
+    AnimationTimer gameLoop = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            if(ClientProgram.serverMessage.isEmpty()){
+                return;
+            }
+            String cmd = ClientProgram.serverMessage.removeFirst();
+            addText("r> " + cmd);
+            String tempString = "";
+            String[] commands = cmd.split(" ");
+            switch(commands[0]){
+                case "EXPLODING":
+                    Sounds.playExplodingKittenDrawn();
+                    announcementText.setText("You drew an Exploding Kitten, quick, defuse it!");
+                    setDisableDefuseCards(false);
+                    setDisableOtherCards(true);
+                    break;
+                case "DIED":
+                    Sounds.playExplosionSound();
+                    personalAnnouncement.setText("You died, bummer. :( ");
+                    setDisableAll(true);
+                    break;
+                case "PLACEKITTEN":
+                    Sounds.playPlayCard();
+                    actionPlaceBackKitten();
+                    break;
+                case "ENDED":
+                    announcementText.setText("Game ended.");
+                    setDisableAll(true);
+                    break;
+                case "TURN":
+                    Sounds.playNextTurnSound();
+                    if(commands[1].equals(ClientProgram.username)){ //if it's your turn
+                        announcementText.setText("It's your turn!");
+                        personalAnnouncement.setText("Play a card or draw!");
+                        setDisableAll(false);
+                    }
+                    else {
+                        announcementText.setText("It's " + commands[1] + "'s turn!");
+                        setDisableAll(true);
+                    }
+                    break;
+                case "WINNER":
+                    //WINNER + name
+                    if(commands[1].equals(ClientProgram.username)){
+                        Sounds.stopSound();
+                        Sounds.playWin();
+                        announcementText.setText("You have won! Congrats");
+                    }
+                    else {
+                        announcementText.setText(commands[1] + " has won!");
+                    }
+                    setDisableAll(true);
+                    break;
+                case "LEFT":
+                    //LEFT + whoLeft + remaining1@@remaning2
+                    Sounds.playPlayerLeft();
+                    announcementText.setText(commands[1] + " has left the game");
+                    updateAll();
+                    break;
+                case "UPDATEHAND":
+                    updateAll();
+                    break;
+                case "SEEFUTURE":
+                    //SEEFUTURE cardname cardname cardname
+                    try {
+                        launchSeeTheFutureDialog(cmd);
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+                    break;
+                case "ATTACKED":
+                    personalAnnouncement.setText(commands[1] + " has attacked you, you draw twice");
+                    break;
+                case "TARGETED":
+                    //TARGETED + name
+                    Sounds.playGiveCard();
+                    announcementText.setText(commands[1] + " has asked you a favor, select which card you want to give up");
+                    giveCardTarget = commands[1];
+                    setGiveCardMode(true);
+                    break;
+                case "PLAYER":
+                    //PLAYER name ACTION ACTION2
+                    switch(commands[2]){
+                        case "EXPLODED":
+                            Sounds.playExplosionSound();
+                            personalAnnouncement.setText(commands[1] + " has just exploded!");
+                            updateAll();
+                            if(ClientProgram.playerNamesAndHandSizes.size() == 2 && !Sounds.isPlaying("lastPlayersLeft")){
+                                Sounds.stopSound();
+                                Sounds.playLastPlayersMusic();
+                            }
+                            break;
+                        case "DREW":
+                            Sounds.drawnCard();
+                            personalAnnouncement.setText(commands[1] + " has drawn a card.");
+                            break;
+                        case "DREWEXP":
+                            Sounds.playMeow();
+                            personalAnnouncement.setText(commands[1] + " has drawn an exploding kitten!");
+                            break;
+                        case "DEFUSED":
+                            Sounds.playPlayCard();
+                            personalAnnouncement.setText(commands[1] + " has defused the kitten.");
+                            break;
+                        case "PLAYED":
+                            Sounds.playPlayCard();
+                            personalAnnouncement.setText(commands[1] + " played the " + commands[3] + " card.");
+                            break;
+                    }
+                    break;
+                case "UPDATEPLAYERHANDS":
+                    //global refresh
+                    updateAll();
+                    break;
+                case "UPDATEDECKS":
+                    updateAll();
+                    break;
+                default:
+                    announcementText.setText("Unknown server command: " + cmd);
+                    break;
+            }
+
+        }
+    };
+
+    /*The following functions enable and disable parts of the interface depending on what action
+      is being played. The names are self-explanatory.
+     */
+
+    void setGiveCardMode(Boolean value){
+        giveCardMode = value;
+        setDisableAll(false);
+        mainDeck.setDisable(value);
+        setDisableDefuseCards(!value);
+        setDisableOtherCards(!value);
+    }
+
+    void setDisableDefuseCards(Boolean value){
+        for (ImageView card : cardImageViews) {
+            if(card.getUserData().equals("DefuseCard")){
+                card.setDisable(value);
+            }
+        }
+    }
+
+    void setDisableOtherCards(Boolean value){
+        for (ImageView card : cardImageViews) {
+            if(!card.getUserData().equals("DefuseCard")){
+                card.setDisable(value);
+            }
+        }
+    }
+
+    void setDisableInsertIndexBox(Boolean value){
+        //enable => value = false
+        mainDeck.setVisible(value);
+        insertIndexBox.setVisible(!value);
+        insertIndexBox.setDisable(value);
+        indexField.setDisable(value);
+        placeButton.setDisable(value);
+    }
+
+    void setDisableAll(Boolean value){
+//        mainDeck.setDisable(value);
+        cardsGridPane.setDisable(value);
+    }
+
+    private void setupInteractionButtons(String player, Boolean attack){
+        String actionType;
+        if (attack) actionType = "AttackCard ";
+        else actionType = "FavorCard ";
+        sendCommand("play " + actionType + player);
+        cardsGridPane.setDisable(false);
+        mainDeck.setDisable(false);
+        for(Button button : playerInteractionButtons){
+            button.setVisible(false);
+        }
+    }
+
+    /**
+     * Enable buttons for favor or attack.
+     * @param attack true if attack, false if favor
+     */
+    private void enableInteraction(Boolean attack){
+        String buttonText;
+        if(attack) buttonText = "Attack!";
+        else buttonText = "Ask favor!";
+
+        cardsGridPane.setDisable(true);
+        mainDeck.setDisable(true);
+
+        for(Button button : playerInteractionButtons){
+            button.setText(buttonText);
+            button.setOnAction(event -> setupInteractionButtons((String) button.getParent().getUserData(),attack));
+            button.setVisible(true);
+        }
+    }
+
+
+    void actionPlaceBackKitten(){
+        placeError.setText("Insert value between \n0 (top of deck) and " + ClientProgram.deckSize);
+        setDisableAll(true);
+        setDisableInsertIndexBox(false);
+    }
+
+    /**
+     * Repopulate all the elements of the interface
+     */
+    void updateAll(){
+        refreshPlayers();
+        populateHand();
+        setMostRecentDiscardedCard(ClientProgram.discardDeckTop);
+    }
+
+    /**
+     * This gets called when clicking on a card. Depending on state of the player and card, it does
+     * the appropriate action
+     */
     private void playCard(ImageView iv){
         Sounds.stopTicking();
         if(iv.getUserData().equals("AttackCard") && !giveCardMode){
@@ -405,7 +396,7 @@ public class GameViewController implements Initializable {
         setMostRecentDiscardedCard((String) iv.getUserData());
     }
 
-    public void pickCard(){
+    public void drawCard(){
         Sounds.drawnCard();
         if(!cardsGridPane.isDisable()) {
             sendCommand("draw");
@@ -417,6 +408,11 @@ public class GameViewController implements Initializable {
         cardImageViews.remove(iv);
     }
 
+
+    /**
+     * Adds the specified card to the ScrollPane containing the player hand
+     * @param cardType for example FavorCard
+     */
     private void addCardToHand(String cardType){
         Image img = new Image(CardHelper.getCardImageUrl(cardType));
         int lastColumn = cardsGridPane.getColumnCount();
@@ -430,7 +426,7 @@ public class GameViewController implements Initializable {
         iv.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             Node src = (Node) e.getSource();
             playCard((ImageView)src);
-//            setAnnouncementText("test");
+//            announcementText.setText("test");
         });
         //zoom on hover
         iv.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> iv.setFitHeight(250));
@@ -444,10 +440,6 @@ public class GameViewController implements Initializable {
         discardDeck.setImage(newImage);
     }
 
-    private void setAnnouncementText(String text){
-        announcementText.setText(text);
-    }
-
     private void populateHand(){
         cardsGridPane.getChildren().clear();
         cardImageViews.clear();
@@ -457,12 +449,6 @@ public class GameViewController implements Initializable {
         }
         setDisableDefuseCards(true);
         setDisableOtherCards(false);
-    }
-
-    private void onHoverButton(Node node){
-        node.setStyle("-fx-background-color: #1f1f1f; -fx-background-radius: 15; -fx-font-size: 20; -fx-text-fill: white;");
-        node.setOnMouseEntered(mouseEvent -> node.setStyle("-fx-background-color: #797979; -fx-background-radius: 15; -fx-font-size: 20; -fx-text-fill: white;"));
-        node.setOnMouseExited(mouseEvent -> node.setStyle("-fx-background-color: #1f1f1f; -fx-background-radius: 15; -fx-font-size: 20; -fx-text-fill: white;"));
     }
 
     private void launchSeeTheFutureDialog(String cmd) {
@@ -498,16 +484,10 @@ public class GameViewController implements Initializable {
         }
     }
 
-    @FXML
-    void leave() throws Exception{
-        gameLoop.stop();
-        sendCommand("leave");
-        if(ClientProgram.offlineGame){
-            ClientProgram.killOffline();
-            Thread.sleep(2000);
-            ViewsManager.loadScene(ViewsManager.SceneName.SPLASH_SCREEN);
-        }
-        else ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SELECTION);
+    private void onHoverButton(Node node){
+        node.setStyle("-fx-background-color: #1f1f1f; -fx-background-radius: 15; -fx-font-size: 20; -fx-text-fill: white;");
+        node.setOnMouseEntered(mouseEvent -> node.setStyle("-fx-background-color: #797979; -fx-background-radius: 15; -fx-font-size: 20; -fx-text-fill: white;"));
+        node.setOnMouseExited(mouseEvent -> node.setStyle("-fx-background-color: #1f1f1f; -fx-background-radius: 15; -fx-font-size: 20; -fx-text-fill: white;"));
     }
 
     @Override
@@ -518,7 +498,9 @@ public class GameViewController implements Initializable {
         populateHand();
         gameLoop.start();
 
-        //disable debug stuff
+        /*
+         * disable debug interface
+         */
         debugArea.getChildren().clear();
 
 
@@ -531,24 +513,9 @@ public class GameViewController implements Initializable {
         });
     }
 
-
-    @FXML
-    void sendCommand() {
-        String cmd = commandField.getText();
-        //debug
-        commandField.setText("");
-        addText("s> " + cmd);
-        ClientProgram.handleCommand(cmd);
-    }
-
-
-    void sendCommand(String cmd){
-        //debug
-        commandField.setText("");
-        addText("s> " + cmd);
-        ClientProgram.handleCommand(cmd);
-    }
-
+    /**
+     * Debug function that updates the textField
+     */
     void addText(String text){
         debugBox.setText(debugBox.getText() + text + "\n");
         debugBox.positionCaret(debugBox.getLength());

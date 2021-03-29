@@ -16,6 +16,9 @@ import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
+/**
+ * Lobby view. You can chat and start the game (if you're the host)
+ */
 public class RoomScreenController implements Initializable {
 
     ObservableList<String> chatMessages = observableArrayList();
@@ -95,6 +98,9 @@ public class RoomScreenController implements Initializable {
         }
     };
 
+    /**
+     * Use chat.
+     */
     @FXML
     void sendMessage(){
         String textToSend = sendMessageField.getText();

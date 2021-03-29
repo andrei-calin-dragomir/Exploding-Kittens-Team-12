@@ -10,7 +10,7 @@ import softwaredesign.gui.ViewsManager.SceneName;
 
 public class ChooseNameController {
 
-    String username;
+    private String username;
 
     @FXML
     private TextField textField;
@@ -28,6 +28,11 @@ public class ChooseNameController {
         waitForReply.start();
     }
 
+
+    /**
+     * This loops while checking for replies, until it finds one and either
+     * accepts the username of asks for a correct one.
+     */
     AnimationTimer waitForReply = new AnimationTimer() {
         @Override
         public void handle(long now) {

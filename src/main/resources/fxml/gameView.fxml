@@ -40,7 +40,7 @@
          <children>
             <AnchorPane>
                <children>
-                  <ImageView fx:id="mainDeck" fitHeight="350.0" onMouseClicked="#pickCard" onMouseEntered="#showDeckSize" onMouseExited="#hideDeckSize" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="mainDeck" fitHeight="350.0" onMouseClicked="#drawCard" onMouseEntered="#showDeckSize" onMouseExited="#hideDeckSize" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../resources/images/BackSide.png" />
                      </image>
@@ -72,9 +72,9 @@
                         <Image url="@../../../../resources/images/BackSide.png" />
                      </image>
                   </ImageView>
-                  <Text fx:id="personalAnnouncement" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 25;" styleClass="text" wrappingWidth="195.255859375" AnchorPane.bottomAnchor="0.0">
+                  <Text fx:id="personalAnnouncement" fill="WHITE" layoutY="414.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 25;" styleClass="text" textAlignment="CENTER" wrappingWidth="241.0" AnchorPane.bottomAnchor="-1.0">
                      <font>
-                        <Font size="15.0" />
+                        <Font size="14.0" />
                      </font>
                   </Text>
                </children>

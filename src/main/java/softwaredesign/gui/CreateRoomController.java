@@ -34,12 +34,15 @@ public class CreateRoomController implements Initializable {
     ScrollButton computerAmountScroll = new ScrollButton();
     ScrollButton deckSelectionScroll = new ScrollButton();
 
+
+    /**
+     * Adapt room size based on how many computers you want.
+     */
     @FXML
     void rotateRoomSize(MouseEvent event){
         roomSizeScroll.navigate((Shape) event.getSource());
-        computerAmountScroll.resetAndAddText(new String[]{"0", "1", "2", "3"});
+        computerAmountScroll.resetAndAddText("0", "1", "2", "3");
         for(Integer i = 3; i >= Integer.parseInt(roomSize.getText()); i--){
-            System.out.println("Removing " + i);
             computerAmountScroll.remove(i.toString());
         }
     }
@@ -59,12 +62,16 @@ public class CreateRoomController implements Initializable {
         deckSelectionScroll.navigate((Shape) event.getSource());
     }
 
+    /**
+     * Tries to create a new room, then joins it if servers accepts it.
+     * On-click function.
+     */
     @FXML
     void createRoom() throws Exception {
         String roomName = roomNameField.getText();
         if(roomName.isBlank()) return;
-        Integer amountOfPlayers = Integer.parseInt(roomSize.getText());
-        Integer amountOfComputers = Integer.parseInt(computerAmount.getText());
+        int amountOfPlayers = Integer.parseInt(roomSize.getText());
+        int amountOfComputers = Integer.parseInt(computerAmount.getText());
         String deckToUse = deckSelection.getText();     // Will be handled
         String serializedDeck = "";
         if(deckToUse != "default") serializedDeck = Deck.serializeDeck(deckToUse, "Client");
@@ -74,9 +81,11 @@ public class CreateRoomController implements Initializable {
         ClientProgram.gameRules[1] = computerAmount.getText();
         Sounds.stopSound();
         waitForReply.start();
-        // Go to room mode
     }
 
+    /**
+     * Sends server the request for a room, joins it if accepted.
+     */
     AnimationTimer waitForReply = new AnimationTimer() {
         @Override
         public void handle(long now) {
@@ -88,6 +97,7 @@ public class CreateRoomController implements Initializable {
                         super.stop();
                     }
                     else if (msg[1].equals("CREATED")) {
+                        // Go to room mode
                         ClientProgram.offlineGame = false;
                         try { ViewsManager.loadScene(ViewsManager.SceneName.ROOM_SCREEN); } catch (Exception ignore) {}
                         super.stop();
@@ -107,8 +117,8 @@ public class CreateRoomController implements Initializable {
         roomSizeScroll.initButtons(roomSizeLeft, roomSizeRight, roomSize);
         deckSelectionScroll.initButtons(deckSelectionLeft, deckSelectionRight, deckSelection);
         computerAmountScroll.initButtons(computerAmountLeft, computerAmountRight, computerAmount);
-        roomSizeScroll.addText(new String[]{"2", "3", "4"});
-        computerAmountScroll.addText(new String[]{"0", "1"});
+        roomSizeScroll.addText("2", "3", "4");
+        computerAmountScroll.addText("0", "1");
         deckSelectionScroll.addText(getDeckNames());
     }
 

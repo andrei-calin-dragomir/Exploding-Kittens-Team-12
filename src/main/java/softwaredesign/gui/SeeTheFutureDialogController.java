@@ -1,5 +1,5 @@
 package softwaredesign.gui;
-import javafx.application.Application;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -10,6 +10,10 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+/**
+ * Opens when you play SeeTheFuture
+ */
 
 public class SeeTheFutureDialogController implements Initializable {
 
@@ -26,8 +30,6 @@ public class SeeTheFutureDialogController implements Initializable {
     }
 
     void loadCards(){
-        //format of the string: SEETHEFUTURE card card card
-//        cardBox.getChildren().clear();
         for(String cardType : GameViewController.cardsToShow.split(" ")){
             if(!cardType.equals("SEETHEFUTURE")) {
                 Image img = new Image(CardHelper.getCardImageUrl(cardType));
@@ -36,7 +38,6 @@ public class SeeTheFutureDialogController implements Initializable {
                 iv.setPreserveRatio(true);
                 iv.setSmooth(true);
                 iv.setFitHeight(260);
-
                 cardBox.getChildren().add(iv);
             }
         }

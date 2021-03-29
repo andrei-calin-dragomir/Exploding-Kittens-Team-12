@@ -13,7 +13,9 @@ import java.io.File;
 import java.net.URL;
 
 public class Gui extends Application {
-
+    /**
+     * Global variables that are used throughout the GUI
+     */
     static String latestMessage = "";
     static Scene mainScene;
     public static Sounds mixer = new Sounds();

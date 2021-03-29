@@ -12,6 +12,9 @@ import softwaredesign.client.ClientProgram;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Scene where you select a username and server ip.
+ */
 public class ServerConnectController implements Initializable {
 
     @FXML

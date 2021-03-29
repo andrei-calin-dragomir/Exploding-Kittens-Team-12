@@ -13,6 +13,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * To setup and start a solo game.
+ */
 public class OfflineSettingsController implements Initializable {
     ScrollButton playerAmountScroll = new ScrollButton();
     ScrollButton deckSelectionScroll = new ScrollButton();

@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Debug class. It breaks some dependencies.
+ */
 public class DebugBoxController extends Application implements Initializable  {
 
     @FXML

@@ -1,34 +1,23 @@
 package softwaredesign.gui;
 
-import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import softwaredesign.cards.*;
 import softwaredesign.client.ClientProgram;
 import softwaredesign.core.Deck;
 import softwaredesign.gui.ViewsManager.SceneName;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-
+/**
+ * Scene where you create a deck.
+ */
 public class DeckCreateController implements Initializable {
     HashMap<String, TextField> mapCardAmounts;
 

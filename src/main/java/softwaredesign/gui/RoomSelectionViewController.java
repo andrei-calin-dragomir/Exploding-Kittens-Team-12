@@ -4,16 +4,13 @@ import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.text.Text;
 import softwaredesign.client.ClientProgram;
 import softwaredesign.gui.ViewsManager.SceneName;
-
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import static javafx.collections.FXCollections.observableArrayList;
 
 public class RoomSelectionViewController implements Initializable {
@@ -23,15 +20,6 @@ public class RoomSelectionViewController implements Initializable {
 
     @FXML
     private Text noRoomsText, roomError;
-
-    @FXML
-    private Button joinButton;
-
-    @FXML
-    private Button createButton;
-
-    @FXML
-    private Button backButton;
 
     @FXML
     void returnButton() throws Exception {
@@ -71,6 +59,9 @@ public class RoomSelectionViewController implements Initializable {
         ClientProgram.handleCommand("list_rooms");
     }
 
+    /**
+     * Loop that constantly check for new rooms.
+     */
     AnimationTimer checkForRoomsLoop = new AnimationTimer() {
         @Override
         public void handle(long now) {
