@@ -42,6 +42,9 @@ public class GameViewController implements Initializable {
     private TextArea receivedMessages;
 
     @FXML
+    private Text personalAnnouncement;
+
+    @FXML
     private TextArea debugBox;
 
     @FXML
@@ -109,7 +112,7 @@ public class GameViewController implements Initializable {
                     //u died
                     //freeze all interactions
                     Sounds.playExplosionSound();
-                    setAnnouncementText("You died, bummer. :( ");
+                    personalAnnouncement.setText("You died, bummer. :( ");
                     setDisableAll(true);
                     break;
                 case "PLACEKITTEN":
@@ -150,10 +153,12 @@ public class GameViewController implements Initializable {
                     Sounds.playNextTurnSound();
                     if(commands[1].equals(ClientProgram.username)){
                         setAnnouncementText("It's your turn!");
+                        personalAnnouncement.setText("Play a card or draw!");
                         setDisableAll(false);
                     }
                     else {
                         setAnnouncementText("It's " + commands[1] + "'s turn!");
+                        personalAnnouncement.setText("");
                         setDisableAll(true);
                     }
                     break;
@@ -192,7 +197,7 @@ public class GameViewController implements Initializable {
                     break;
                 case "ATTACKED":
                     //update announcment
-                    setAnnouncementText(commands[1] + " has attacked you, you draw twice");
+                    personalAnnouncement.setText(commands[1] + " has attacked you, you draw twice");
                     break;
                 case "TARGETED":
                     //targeted + name
@@ -210,23 +215,23 @@ public class GameViewController implements Initializable {
                     switch(commands[2]){
                         case "EXPLODED":
                             Sounds.playExplosionSound();
-                            setAnnouncementText(commands[1] + " has just exploded!");
+                            personalAnnouncement.setText(commands[1] + " has just exploded!");
                             break;
                         case "DREW":
                             Sounds.drawnCard();
-                            setAnnouncementText(commands[1] + " has drawn a card.");
+                            personalAnnouncement.setText(commands[1] + " has drawn a card.");
                             break;
                         case "DREWEXP":
                             Sounds.playMeow();
-                            setAnnouncementText(commands[1] + " has drawn an exploding kitten!");
+                            personalAnnouncement.setText(commands[1] + " has drawn an exploding kitten!");
                             break;
                         case "DEFUSED":
                             Sounds.playPlayCard();
-                            setAnnouncementText(commands[1] + " has defused the kitten.");
+                            personalAnnouncement.setText(commands[1] + " has defused the kitten.");
                             break;
                         case "PLAYED":
                             Sounds.playPlayCard();
-                            setAnnouncementText(commands[1] + " played the " + commands[3] + " card.");
+                            personalAnnouncement.setText(commands[1] + " played the " + commands[3] + " card.");
                             break;
                     }
                     break;
@@ -248,7 +253,7 @@ public class GameViewController implements Initializable {
                     break;
                 default:
                     //update announcement?
-                    setAnnouncementText("Unknown server command: " + cmd);
+                    personalAnnouncement.setText("Unknown server command: " + cmd);
                     break;
             }
 
@@ -442,11 +447,9 @@ public class GameViewController implements Initializable {
         cardsGridPane.getChildren().clear();
         cardImageViews.clear();
 
-
         for(String card : ClientProgram.ownHand){
             addCardToHand(card);
         }
-
         setDisableDefuseCards(true);
         setDisableOtherCards(false);
     }
@@ -516,29 +519,27 @@ public class GameViewController implements Initializable {
         //  DEBUG STUFF
         commandField.setOnKeyPressed(event -> {
             if(event.getCode() == KeyCode.ENTER ){
-                try {
-                    sendTextAsCommand();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                sendCommand();
             }
         });
     }
 
 
-
-
-
-    void sendCommand(String cmd) {
+    @FXML
+    void sendCommand() {
+        String cmd = commandField.getText();
+        //debug
         commandField.setText("");
         addText("s> " + cmd);
         ClientProgram.handleCommand(cmd);
     }
 
-    @FXML
-    void sendTextAsCommand() throws IOException {
-        String cmd = commandField.getText();
-        sendCommand(cmd);
+
+    void sendCommand(String cmd){
+        //debug
+        commandField.setText("");
+        addText("s> " + cmd);
+        ClientProgram.handleCommand(cmd);
     }
 
     void addText(String text){

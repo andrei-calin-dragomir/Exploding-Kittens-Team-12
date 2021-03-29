@@ -72,6 +72,11 @@
                         <Image url="@../../../../resources/images/BackSide.png" />
                      </image>
                   </ImageView>
+                  <Text fx:id="personalAnnouncement" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 25;" styleClass="text" wrappingWidth="195.255859375" AnchorPane.bottomAnchor="0.0">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Text>
                </children>
             </AnchorPane>
             <VBox>
@@ -80,7 +85,7 @@
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <TextField fx:id="commandField" promptText="Command" styleClass="textbox" />
-                        <Button fx:id="sendCommandButton" maxHeight="40.0" minHeight="25.0" mnemonicParsing="false" onAction="#sendTextAsCommand" prefHeight="40.0" prefWidth="92.0" style="-fx-font-size: 20;" styleClass="clickButton" text="Send" />
+                        <Button fx:id="sendCommandButton" maxHeight="40.0" minHeight="25.0" mnemonicParsing="false" onAction="#sendCommand" prefHeight="40.0" prefWidth="92.0" style="-fx-font-size: 20;" styleClass="clickButton" text="Send" />
                      </children>
                   </HBox>
                </children>
