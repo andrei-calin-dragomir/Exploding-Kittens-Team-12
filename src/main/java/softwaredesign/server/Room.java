@@ -51,7 +51,7 @@ public class Room {
                 if(onlineGame.isExploding()) {
                     onlineGame.placeExploding(Integer.parseInt(message[1]));
                     if(onlineGame.getCurrentPlayer().isComputer()) onlineGame.gameManager.endTurn();
-                    else onlineGame.handleNextTurn();
+                    else onlineGame.nextTurn();
                 }
                 break;
             case "GIVE":
