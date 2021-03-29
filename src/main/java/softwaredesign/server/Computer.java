@@ -85,6 +85,7 @@ public class Computer extends Player {  // TODO: Add time between actions if pos
         System.out.println(randCardIndex);
         if(frequency(cHand.getHand(), new DefuseCard()) == cHand.getHandSize() || randCardIndex == null) return false; // Return if hand is empty or contains only DefuseCard which you cant play
         Card randCard = getHand().getCard(randCardIndex);
+        if(randCard.getName().equals("FavorCard")) return false;
         System.out.println("Comparing: " + randCard.getName());
         switch(randCard.getName()){
             case("AttackCard"):

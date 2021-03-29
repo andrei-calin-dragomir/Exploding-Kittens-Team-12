@@ -59,7 +59,7 @@ public class ServerHeldGame {
         room.sendGameStateUpdates("UPDATEPLAYERHANDS");
     }
 
-    // Returns true if the player exploded
+    // Handles what happens if a player is exploding, will kill the player if they have no defuse.
     public Boolean handleExplodingKitten() throws InterruptedException {
         Player currentPlayer = gameManager.getCurrentPlayer();
         currentPlayer.setPlayerState(State.EXPLODING);
@@ -84,7 +84,9 @@ public class ServerHeldGame {
     }
 
     public void giveCard(int index,String target, String sender){
-        Card cardToGive = room.roomPlayerList.get(sender).getHand().getCard(index);
+        Hand senderHand = room.roomPlayerList.get(sender).getHand();
+        if(senderHand.getHandSize() == 0) return;
+        Card cardToGive = senderHand.getCard(index);
         room.roomPlayerList.get(sender).getHand().removeCard(index);
         room.roomPlayerList.get(target).getHand().addToHand(cardToGive);
         room.sendMsgToPlayer(room.roomPlayerList.get(target), "UPDATEHAND " + cardToGive.getName());
