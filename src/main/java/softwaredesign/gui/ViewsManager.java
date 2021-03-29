@@ -1,7 +1,11 @@
 package softwaredesign.gui;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
@@ -10,7 +14,7 @@ import java.util.HashMap;
 class ViewsManager {
     static private HashMap<SceneName, String> scenes = new HashMap<>();
     public enum SceneName {
-        SPLASH_SCREEN, CHOOSE_NAME, ROOM_SELECTION, GAME_VIEW, SERVER_CONNECT, OFFLINE_SETTINGS, CREATE_ROOM, ROOM_SCREEN
+        SPLASH_SCREEN, CHOOSE_NAME, ROOM_SELECTION, GAME_VIEW, SERVER_CONNECT, OFFLINE_SETTINGS, CREATE_ROOM, ROOM_SCREEN, SEE_THE_FUTURE_DIALOG
     }
     static{
         scenes.put(SceneName.SPLASH_SCREEN,"src/main/resources/fxml/splashScreen.fxml");
@@ -21,6 +25,7 @@ class ViewsManager {
         scenes.put(SceneName.OFFLINE_SETTINGS,"src/main/resources/fxml/offlineSettings.fxml");
         scenes.put(SceneName.CREATE_ROOM,"src/main/resources/fxml/createRoom.fxml");
         scenes.put(SceneName.ROOM_SCREEN,"src/main/resources/fxml/roomScreen.fxml");
+        scenes.put(SceneName.SEE_THE_FUTURE_DIALOG,"src/main/resources/fxml/seeTheFutureDialog.fxml");
     }
 
     static void loadScene(SceneName name) throws Exception{
@@ -28,5 +33,18 @@ class ViewsManager {
         Pane newScene = FXMLLoader.load(newUrl);
         Gui.mainScene.setRoot(newScene);
         Gui.mainScene.getRoot().requestFocus();
+    }
+
+    static void loadInNewWindow(SceneName name){
+        try {
+            URL newUrl = new File(scenes.get(name)).toURI().toURL();
+            Parent root1 = FXMLLoader.load(newUrl);
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root1));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 }

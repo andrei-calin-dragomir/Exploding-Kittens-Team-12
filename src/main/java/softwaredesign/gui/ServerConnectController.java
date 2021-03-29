@@ -25,7 +25,7 @@ public class ServerConnectController implements Initializable {
 
     @FXML
     public void playClick(){
-        Sounds.playClick();
+        //Sounds.playClick();
     }
 
     private Boolean tryConnect(String serverIP){

@@ -31,18 +31,18 @@ public class RoomScreenController implements Initializable {
 
     @FXML
     void startGame(){
-        Sounds.stopSound();
+        //Sounds.stopSound();
         ClientProgram.handleCommand("start");
     }
 
     @FXML
     public void playClick(){
-        Sounds.stopSound();
-        Sounds.playClick();
+        //Sounds.stopSound();
+        //Sounds.playClick();
     }
     @FXML
     public void playMessageSent(){
-        Sounds.playChatSound(false);
+        //Sounds.playChatSound(false);
     }
 
     @FXML
@@ -66,12 +66,12 @@ public class RoomScreenController implements Initializable {
                 String[] msg = ClientProgram.serverMessage.removeFirst().split(" ");
                 if(msg[0].equals("JOINED") || msg[0].equals("LEFT")) updatePlayerList();
                 else if(msg[0].equals("CHAT")) {
-                    Sounds.playChatSound(true);
+                    //Sounds.playChatSound(true);
                     String tempString = "";
                     for(int i = 1; i < msg.length; ++i) tempString = tempString + msg[i] + " ";
                     chatMessages.add(tempString);
                     chatBox.setItems(chatMessages);
-                    Sounds.playChatSound(true);
+                    //Sounds.playChatSound(true);
                 }
                 else if(msg[0].equals("CANTSTART")) startError.setText("Only the host can start");
                 else if(msg[0].equals("NOSTART")) startError.setText("Not enough players");
@@ -104,7 +104,7 @@ public class RoomScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Sounds.playRoomMusicWaiting();
+        //Sounds.playRoomMusicWaiting();
         startError.setText("");
         chatBox.setFocusTraversable(false);
         ClientProgram.playerNamesAndHandSizes.put(ClientProgram.username, -1);
@@ -118,7 +118,7 @@ public class RoomScreenController implements Initializable {
 
         sendMessageField.setOnKeyPressed(event -> {
             if(event.getCode() == KeyCode.ENTER ){
-                Sounds.playChatSound(false);
+                //Sounds.playChatSound(false);
                 sendMessage();
             }
         });

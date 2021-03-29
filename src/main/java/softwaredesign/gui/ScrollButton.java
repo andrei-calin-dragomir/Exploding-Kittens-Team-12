@@ -13,7 +13,7 @@ public class ScrollButton {
     ArrayList<String> allTexts = new ArrayList<>();
 
     public void navigate(Shape button){
-        Sounds.playClick();
+        //Sounds.playClick();
         if(button.equals(leftButton)) Collections.rotate(allTexts, 1);
         else Collections.rotate(allTexts, -1);;
         rotationText.setText(allTexts.get(0));

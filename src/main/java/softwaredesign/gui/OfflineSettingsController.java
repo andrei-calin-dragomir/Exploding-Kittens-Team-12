@@ -18,7 +18,7 @@ public class OfflineSettingsController implements Initializable {
 
     @FXML
     public void playClick(){
-        Sounds.playClick();
+        //Sounds.playClick();
     }
 
     @FXML

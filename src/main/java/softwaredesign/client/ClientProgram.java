@@ -163,6 +163,7 @@ public class ClientProgram {
                     System.out.println(ownHand);
                     break;
                 case "give":
+                    //GIVE + CARD + TARGET
                     sendRequestToServer("GIVE " + ownHand.indexOf(cmdList[1]) + " " + cmdList[2]);
                     ownHand.remove(ownHand.indexOf(cmdList[1]));
                     break;

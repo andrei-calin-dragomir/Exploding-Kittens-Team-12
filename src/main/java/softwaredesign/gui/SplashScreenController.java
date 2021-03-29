@@ -37,7 +37,7 @@ public class SplashScreenController implements Initializable {
 
     @FXML
     public void playClick(){
-        Sounds.playClick();
+        //Sounds.playClick();
     }
 
     @FXML

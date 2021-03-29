@@ -13,13 +13,14 @@ public class CardHelper {
                 || card.equals("ReverseCard")){
             res = res.concat(card + ".png");
         } else {
-            res = res.concat(
-                    card
-                    + (rand.nextInt(3) + 1)
-                    + ".png"
-            );
+            res = res.concat(card+ "1.png");
+            //remove line above and uncomment this if you want multiple images for each card
+//            res = res.concat(
+//                    card
+//                    + (rand.nextInt(3) + 1)
+//                    + ".png"
+//            );
         }
-//        System.out.println("res = " + res);
         return res;
     }
 }
