@@ -79,7 +79,7 @@
                   </Text>
                </children>
             </AnchorPane>
-            <VBox>
+            <VBox fx:id="debugArea">
                <children>
                   <TextArea fx:id="debugBox" editable="false" prefHeight="419.0" prefWidth="371.0" />
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">

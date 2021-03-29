@@ -33,6 +33,9 @@ public class GameViewController implements Initializable {
     private VBox root;
 
     @FXML
+    private VBox debugArea;
+
+    @FXML
     private Button leaveButton;
 
     @FXML
@@ -63,7 +66,7 @@ public class GameViewController implements Initializable {
     private TextField indexField;
 
     @FXML
-    private Button placeButton;
+    private Button placeButton, sendCommandButton;
 
     @FXML
     private ImageView discardDeck;
@@ -515,6 +518,8 @@ public class GameViewController implements Initializable {
         populateHand();
         gameLoop.start();
 
+        //disable debug stuff
+        debugArea.getChildren().clear();
 
 
 
