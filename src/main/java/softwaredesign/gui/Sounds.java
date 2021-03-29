@@ -45,34 +45,41 @@ public class Sounds {
     }
 
     private static Random rand = new Random();
+    private static Boolean mute = false;
 
-    public static void playClick() { clickSound.play(0.2);}
-    public static void playWin() { winSound.play(0.3);}
+    public static void flipMute() { Sounds.mute = !Sounds.mute; }
+
+    private static void playSound(AudioClip clip, double volume){
+        if(!mute) clip.play(volume);
+    }
+
+    public static void playClick() { playSound(clickSound, 0.2);}
+    public static void playWin() { playSound(winSound, 0.3);}
     public static void playRoomMusicWaiting() {
-        roomMusicWaiting.play(0.2);
+        playSound(roomMusicWaiting, 0.2);
         roomMusicWaiting.setCycleCount(AudioClip.INDEFINITE);
     }
-    public static void playPlayCard(){ playCard.play(0.2); }
-    public static void drawnCard(){ drawnCard.play(0.2); }
-    public static void playExplodingKittenDrawn(){ drawnKitten.play(0.1); }
+    public static void playPlayCard(){ playSound(playCard, 0.2); }
+    public static void drawnCard(){ playSound(drawnCard, 0.2); }
+    public static void playExplodingKittenDrawn(){ playSound(drawnKitten, 0.1); }
     public static void playExplosionSound() {
         int soundToPlay = rand.nextInt(2);
         switch (soundToPlay){
-            case 0: playerExplosion_1.play(0.2); break;
-            case 1: playerExplosion_2.play(0.2); break;
-            case 2: playerExplosion_3.play(0.2); break;
+            case 0: playSound(playerExplosion_1, 0.2); break;
+            case 1: playSound(playerExplosion_2, 0.2); break;
+            case 2: playSound(playerExplosion_3, 0.2); break;
         }
     }
     public static void playChatSound(Boolean state){
-        if(state) chatReceived.play(0.2);
-        else chatSent.play(0.2);
+        if(state) playSound(chatReceived, (0.2));
+        else playSound(chatSent, (0.2));
     }
     public static void playMeow() {
         int soundToPlay = rand.nextInt(2);
         switch (soundToPlay){
-            case 0: meow_1.play(0.2); break;
-            case 1: meow_2.play(0.2); break;
-            case 2: meow_3.play(0.2); break;
+            case 0: playSound(meow_1, 0.2); break;
+            case 1: playSound(meow_2, 0.2); break;
+            case 2: playSound(meow_3, 0.2); break;
         }
     }
     public static void stopSound() {
