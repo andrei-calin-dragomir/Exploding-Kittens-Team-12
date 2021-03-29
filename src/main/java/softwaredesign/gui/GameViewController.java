@@ -111,6 +111,10 @@ public class GameViewController implements Initializable {
                     Sounds.playExplosionSound();
                     setAnnouncementText("You died, bummer. :( ");
                     setDisableAll(true);
+                    if(ClientProgram.playerNamesAndHandSizes.size() == 3 && !Sounds.isPlaying("lastPlayersLeft")){
+                        Sounds.stopSound();
+                        Sounds.playLastPlayersMusic();
+                    }
                     break;
                 case "PLACEKITTEN":
                     //enable selection of index
@@ -211,6 +215,12 @@ public class GameViewController implements Initializable {
                         case "EXPLODED":
                             Sounds.playExplosionSound();
                             setAnnouncementText(commands[1] + " has just exploded!");
+                            updateAll();
+                            System.out.println(ClientProgram.playerNamesAndHandSizes.size());
+                            if(ClientProgram.playerNamesAndHandSizes.size() == 2 && !Sounds.isPlaying("lastPlayersLeft")){
+                                Sounds.stopSound();
+                                Sounds.playLastPlayersMusic();
+                            }
                             break;
                         case "DREW":
                             Sounds.drawnCard();
@@ -232,10 +242,6 @@ public class GameViewController implements Initializable {
                     break;
                 case "UPDATEPLAYERHANDS":
                     //global refresh
-                    if(ClientProgram.playerNamesAndHandSizes.size() == 2) {
-                        Sounds.stopSound();
-                        Sounds.playLastPlayersMusic();
-                    }
                     updateAll();
                     System.out.println("YOUR HAND IS: " + ClientProgram.ownHand.toString());
                     break;
