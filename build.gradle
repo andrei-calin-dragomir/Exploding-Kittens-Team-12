@@ -1,6 +1,6 @@
 plugins {
-    id 'java'
-    id 'org.openjfx.javafxplugin' version '0.0.9'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
 group 'org.example'
@@ -10,32 +10,94 @@ sourceCompatibility = 11
 
 repositories {
     mavenCentral()
-    flatDir{
-        dirs 'libs'
-    }
 }
 
-
+javafx {
+    version = "11.0.2"
+    modules = [ 'javafx.base', 'javafx.controls', 'javafx.fxml', 'javafx.graphics','javafx.media' ]
+}
 
 dependencies {
+    runtimeOnly "org.openjfx:javafx-base:$javafx.version:win"
+    runtimeOnly "org.openjfx:javafx-base:$javafx.version:linux"
+    runtimeOnly "org.openjfx:javafx-base:$javafx.version:mac"
+    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:win"
+    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:linux"
+    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:mac"
+    runtimeOnly "org.openjfx:javafx-fxml:$javafx.version:win"
+    runtimeOnly "org.openjfx:javafx-fxml:$javafx.version:linux"
+    runtimeOnly "org.openjfx:javafx-fxml:$javafx.version:mac"
+    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:win"
+    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:linux"
+    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:mac"
+    runtimeOnly "org.openjfx:javafx-media:$javafx.version:win"
+    runtimeOnly "org.openjfx:javafx-media:$javafx.version:linux"
+    runtimeOnly "org.openjfx:javafx-media:$javafx.version:mac"
+    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
     implementation group: 'io.netty', name: 'netty-all', version: '4.1.59.Final'
     testImplementation group: 'junit', name: 'junit', version: '4.13.1'
     implementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
+
+    // you can add your libraries, here is an example
+    implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.75'
 }
 
-javafx {
-    version = "11.0.2"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
-}
+mainClassName = "softwaredesign.gui.Gui"
 
-sourceSets {
-    main {
-        resources {
-            srcDirs = ["src/main/java"]
-            includes = ["**/*.fxml"]
-        }
+jar {
+    manifest {
+        attributes 'Main-Class': 'softwaredesign.gui.Launcher'
     }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    destinationDirectory = file("$rootDir/out")
+    // change the assignment number in filename of the jar
+    archiveFileName = "assignment3.jar"
 }
+//
+//plugins {
+//    id 'java'
+//    id 'org.openjfx.javafxplugin' version '0.0.9'
+//}
+//
+//group 'org.example'
+//version '1.0-SNAPSHOT'
+//
+//sourceCompatibility = 11
+//
+//repositories {
+//    mavenCentral()
+//    flatDir{
+//        dirs 'libs'
+//    }
+//}
+//
+//
+//
+//dependencies {
+//    implementation 'com.google.code.gson:gson:2.8.6'
+//    implementation 'org.jetbrains:annotations:20.1.0'
+//    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+//    implementation group: 'io.netty', name: 'netty-all', version: '4.1.59.Final'
+//    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
+//    implementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
+//}
+//
+//javafx {
+//    version = "11.0.2"
+//    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
+//}
+//
+//sourceSets {
+//    main {
+//        resources {
+//            srcDirs = ["src/main/java"]
+//            includes = ["**/*.fxml"]
+//        }
+//    }
+//}
