@@ -104,6 +104,7 @@ public class CreateRoomController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(!Sounds.isPlaying("startGameMusic")) Sounds.playStartGameMusic();
         roomSizeScroll.initButtons(roomSizeLeft, roomSizeRight, roomSize);
         deckSelectionScroll.initButtons(deckSelectionLeft, deckSelectionRight, deckSelection);
         computerAmountScroll.initButtons(computerAmountLeft, computerAmountRight, computerAmount);

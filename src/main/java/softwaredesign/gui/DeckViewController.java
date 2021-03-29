@@ -4,18 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import softwaredesign.cards.*;
 import softwaredesign.client.ClientProgram;
 import softwaredesign.gui.ViewsManager.SceneName;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -48,6 +41,7 @@ public class DeckViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(!Sounds.isPlaying("startGameMusic")) Sounds.playStartGameMusic();
         mapCardAmounts = new HashMap<>(){{
             put("ExplodingKittenCard", explodingAmount);
             put("ReverseCard", reverseAmount);

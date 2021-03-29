@@ -2,14 +2,10 @@ package softwaredesign.gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Shape;
-import javafx.stage.Stage;
 import softwaredesign.client.ClientProgram;
-import softwaredesign.gui.ViewsManager.SceneName;
 
 import java.io.File;
 import java.net.URL;
@@ -54,6 +50,7 @@ public class DeckOptionsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(!Sounds.isPlaying("startGameMusic")) Sounds.playStartGameMusic();
         deckSelectionScroll.initButtons(deckSelectionLeft, deckSelectionRight, deckSelection);
         deckSelectionScroll.addText(getDeckNames());
     }

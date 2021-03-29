@@ -66,7 +66,8 @@ public class Sounds {
     public static void setMute(Boolean mute) { Sounds.mute = mute; }
     public static Boolean getMute() { return mute; }
     public static Boolean isPlaying(String sound){
-        if(sound.equals("lastPlayersLeft")) if(lastPlayersLeft.isPlaying()) return true;
+        if(sound.equals("lastPlayersLeft") && lastPlayersLeft.isPlaying()) return true;
+        else if(sound.equals("startGameMusic") && startGameMusic.isPlaying()) return true;
         return false;
     }
 

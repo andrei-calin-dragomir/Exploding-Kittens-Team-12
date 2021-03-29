@@ -110,13 +110,7 @@ public class ClientProgram {
             System.out.println("Connection failed.\nClosing...");
             return false;
         }
-//        finally{
-//            // Shut down the event loop to terminate all threads.
-//            group.shutdownGracefully();
-//            System.out.println("Connection is successful!\nPlease input your username: ");
-//            // Wait until the connection is closed.
-//            correspondenceChannel.channel().closeFuture().sync();
-//        }
+
     }
     public static void handleCommand(String cmd){
         String[] cmdList = cmd.split(" ");

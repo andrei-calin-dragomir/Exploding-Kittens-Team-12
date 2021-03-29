@@ -22,7 +22,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import softwaredesign.client.ClientProgram;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -117,6 +116,10 @@ public class GameViewController implements Initializable {
                     Sounds.playExplosionSound();
                     personalAnnouncement.setText("You died, bummer. :( ");
                     setDisableAll(true);
+                    if(ClientProgram.playerNamesAndHandSizes.size() == 3 && !Sounds.isPlaying("lastPlayersLeft")){
+                        Sounds.stopSound();
+                        Sounds.playLastPlayersMusic();
+                    }
                     break;
                 case "PLACEKITTEN":
                     //enable selection of index
@@ -500,6 +503,7 @@ public class GameViewController implements Initializable {
 
     @FXML
     void leave() throws Exception{
+        Sounds.stopSound();
         gameLoop.stop();
         sendCommand("leave");
         if(ClientProgram.offlineGame){
